@@ -1,4 +1,4 @@
-![Logo](huobi-logo-alt.png)
+﻿![Logo](huobi-logo-alt.png)
 # Huobi websocket API client
 
 This is a C# implementation of the Huobi websocket API found here:
@@ -24,7 +24,13 @@ TODO
 
 ### API coverage
 
-TODO
+| PUBLIC                 |    Covered     |  
+|------------------------|:--------------:|
+| Ping-Pong              |  ✔            |
+
+| AUTHENTICATED          |    Covered     |  
+|------------------------|:--------------:|
+| Ping-Pong              |  ✔            |
 
 **Pull Requests are welcome!**
 

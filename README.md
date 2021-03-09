@@ -32,9 +32,8 @@ TODO
 | Market depth           |  ✔            |
 | Market by price        |                |
 | Market best bid/offer  |                |
-| Market trace           |                |
+| Market trade           |                |
 | Market details         |                |
-| Market trace           |                |
 
 | AUTHENTICATED          |    Covered     |  
 |------------------------|:--------------:|

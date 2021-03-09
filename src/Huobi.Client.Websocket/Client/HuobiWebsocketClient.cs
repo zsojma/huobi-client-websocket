@@ -5,8 +5,10 @@ using System.Net.WebSockets;
 using System.Text;
 using Huobi.Client.Websocket.Communicator;
 using Huobi.Client.Websocket.Messages;
+using Huobi.Client.Websocket.Messages.Subscription;
+using Huobi.Client.Websocket.Messages.Subscription.Ticks;
+using Huobi.Client.Websocket.Serializer;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using Websocket.Client;
 
 namespace Huobi.Client.Websocket.Client
@@ -14,12 +16,18 @@ namespace Huobi.Client.Websocket.Client
     internal class HuobiWebsocketClient : IHuobiWebsocketClient
     {
         private readonly IHuobiWebsocketCommunicator _communicator;
+        private readonly IHuobiSerializer _serializer;
         private readonly ILogger<HuobiWebsocketClient> _logger;
+
         private readonly IDisposable _messageReceivedSubscription;
 
-        public HuobiWebsocketClient(IHuobiWebsocketCommunicator communicator, ILogger<HuobiWebsocketClient> logger)
+        public HuobiWebsocketClient(
+            IHuobiWebsocketCommunicator communicator,
+            IHuobiSerializer serializer,
+            ILogger<HuobiWebsocketClient> logger)
         {
             _communicator = communicator;
+            _serializer = serializer;
             _logger = logger;
 
             _messageReceivedSubscription = _communicator.MessageReceived.Subscribe(HandleMessage);
@@ -43,18 +51,10 @@ namespace Huobi.Client.Websocket.Client
             SendInternal(message);
         }
 
-        public void Send(object message)
+        public void Send(RequestBase request)
         {
-            try
-            {
-                var serialized = JsonConvert.SerializeObject(message);
-                SendInternal(serialized);
-            }
-            catch (JsonSerializationException ex)
-            {
-                _logger.LogError(ex, $"Unable to serialize client message! Error: {ex.Message}");
-                throw;
-            }
+            var serialized = _serializer.Serialize(request);
+            SendInternal(serialized);
         }
 
         private void SendInternal(string message)
@@ -100,26 +100,51 @@ namespace Huobi.Client.Websocket.Client
             }
         }
 
-        private bool TryHandleObjectMessage(string message)
+        private bool TryHandleObjectMessage(string input)
         {
-            return TryHandleServerPingRequest(message);
+            if (TryHandleServerPingRequest(input))
+            {
+                return true;
+            }
+
+            if (SubscribeResponse.TryParse(_serializer, input, out var response))
+            {
+                Streams.SubscribeResponseSubject.OnNext(response);
+                return true;
+            }
+
+            if (MarketCandlestickTick.TryParse(_serializer, input, out var marketCandlestick))
+            {
+                Streams.MarketCandlestickSubject.OnNext(marketCandlestick);
+                return true;
+            }
+
+            if (MarketDepthTick.TryParse(_serializer, input, out var marketDepth))
+            {
+                Streams.MarketDepthSubject.OnNext(marketDepth);
+                return true;
+            }
+
+            return false;
         }
 
         private bool TryHandleServerPingRequest(string message)
         {
-            var pingRequest = JsonConvert.DeserializeObject<PingMessage>(message);
+            var pingRequest = _serializer.Deserialize<PingMessage>(message);
             if (pingRequest.Value > 0)
             {
                 var clientResponse = new PongMessage(pingRequest.Value);
-                Send(clientResponse);
+                var serialized = _serializer.Serialize(clientResponse);
+                Send(serialized);
                 return true;
             }
 
-            var serverRequest = JsonConvert.DeserializeObject<AuthMessage>(message);
+            var serverRequest = _serializer.Deserialize<AuthMessage>(message);
             if (string.Equals("ping", serverRequest.Action))
             {
                 var clientResponse = new AuthMessage("pong", serverRequest.Data);
-                Send(clientResponse);
+                var serialized = _serializer.Serialize(clientResponse);
+                Send(serialized);
                 return true;
             }
 
@@ -137,10 +162,10 @@ namespace Huobi.Client.Websocket.Client
             {
                 return Decompress(message.Binary);
             }
-            
+
             return message.Text?.Trim() ?? string.Empty;
         }
-        
+
         private static string Decompress(byte[] input)
         {
             using var inputStream = new MemoryStream(input);

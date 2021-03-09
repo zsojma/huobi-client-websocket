@@ -8,6 +8,6 @@ namespace Huobi.Client.Websocket.Client
         HuobiClientStreams Streams { get; }
         void Start();
         void Send(string message);
-        void Send(object message);
+        void Send(RequestBase request);
     }
 }

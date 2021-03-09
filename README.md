@@ -16,7 +16,6 @@ https://huobiapi.github.io/docs/spot/v1/en/
 * public and authenticated API
 * targeting .NET Standard 2.0 (.NET Core, Linux/MacOS compatible)
 * reactive extensions ([Rx.NET](https://github.com/Reactive-Extensions/Rx.NET))
-* integrated logging abstraction ([LibLog](https://github.com/damianh/LibLog))
 
 ### Usage
 
@@ -27,10 +26,23 @@ TODO
 | PUBLIC                 |    Covered     |  
 |------------------------|:--------------:|
 | Ping-Pong              |  ✔            |
+| Subscribe              |  ✔            |
+| Unsubscribe            |  ✔            |
+| Market candlestick     |  ✔            |
+| Market depth           |  ✔            |
+| Market by price        |                |
+| Market best bid/offer  |                |
+| Market trace           |                |
+| Market details         |                |
+| Market trace           |                |
 
 | AUTHENTICATED          |    Covered     |  
 |------------------------|:--------------:|
 | Ping-Pong              |  ✔            |
+| Authentication         |                |
+| Order updates          |                |
+| Trades                 |                |
+| Account changes        |                |
 
 **Pull Requests are welcome!**
 

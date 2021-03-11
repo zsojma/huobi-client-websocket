@@ -1,8 +1,6 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using Huobi.Client.Websocket.Serializer;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
-namespace Huobi.Client.Websocket.Messages.Subscription.Ticks
+namespace Huobi.Client.Websocket.Messages.Ticks
 {
     public class MarketCandlestickTick
     {
@@ -35,13 +33,5 @@ namespace Huobi.Client.Websocket.Messages.Subscription.Ticks
         public decimal Low { get; }
         public decimal High { get; }
         public decimal Vol { get; }
-
-        internal static bool TryParse(
-            IHuobiSerializer serializer,
-            string input,
-            [MaybeNullWhen(false)] out Message<MarketCandlestickTick> response)
-        {
-            return serializer.TryDeserializeIfContains(input, SubscriptionType.MarketCandlestick.ToTopicId(), out response);
-        }
     }
 }

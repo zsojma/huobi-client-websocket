@@ -1,14 +1,14 @@
-﻿using Huobi.Client.Websocket.Messages.Subscription.Ticks;
+﻿using Huobi.Client.Websocket.Messages.Subscription.Depth;
 using Huobi.Client.Websocket.Serializer;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 
 namespace Huobi.Client.Websocket.Tests
 {
-    public class MarketDepthMessageTests
+    public class MarketDepthUpdateMessageTests
     {
         [Fact]
-        public void TryParse_ParsedCorrectly()
+        public void TryParse_CorrectMessage_ParsedCorrectly()
         {
             // Arrange
             var serializer = new HuobiSerializer(NullLogger<HuobiSerializer>.Instance);
@@ -30,7 +30,7 @@ namespace Huobi.Client.Websocket.Tests
 }";
 
             // Act
-            var result = MarketDepthTick.TryParse(serializer, input, out var response);
+            var result = MarketDepthUpdateMessage.TryParse(serializer, input, out var response);
 
             // Assert
             Assert.True(result);
@@ -44,6 +44,24 @@ namespace Huobi.Client.Websocket.Tests
             Assert.Equal(70.52m, response!.Tick.Asks[1][1]);
             Assert.Equal(100434317651, response!.Tick.Version);
             Assert.Equal(1572362902012, response!.Tick.Timestamp);
+        }
+
+        [Fact]
+        public void TryParse_DiffMessageContainsKeywords_ReturnsFalse()
+        {
+            // Arrange
+            var serializer = new HuobiSerializer(NullLogger<HuobiSerializer>.Instance);
+            var input = @"{
+  ""sub"": ""market.btcusdt.depth.step0"",
+  ""id"": ""id1"",
+  ""tick"": {}
+}";
+
+            // Act
+            var result = MarketDepthUpdateMessage.TryParse(serializer, input, out _);
+
+            // Assert
+            Assert.False(result);
         }
     }
 }

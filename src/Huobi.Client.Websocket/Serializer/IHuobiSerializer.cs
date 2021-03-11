@@ -8,5 +8,7 @@ namespace Huobi.Client.Websocket.Serializer
         T Deserialize<T>(string input);
         bool TryDeserializeIfContains<T>(string input, string containsValue, [MaybeNullWhen(false)] out T deserialized)
             where T : class;
+        bool TryDeserializeIfContains<T>(string input, string[] containsValues, [MaybeNullWhen(false)] out T deserialized)
+            where T : class;
     }
 }

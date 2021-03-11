@@ -37,14 +37,29 @@ namespace Huobi.Client.Websocket.Serializer
         public bool TryDeserializeIfContains<T>(string input, string containsValue, [MaybeNullWhen(false)] out T deserialized)
             where T : class
         {
-            if (input.Contains(containsValue))
-            {
-                deserialized = Deserialize<T>(input);
-                return deserialized != null;
-            }
+            return TryDeserializeIfContains(
+                input,
+                new[]
+                {
+                    containsValue
+                },
+                out deserialized);
+        }
 
-            deserialized = default;
-            return false;
+        public bool TryDeserializeIfContains<T>(string input, string[] containsValues, [MaybeNullWhen(false)] out T deserialized)
+            where T : class
+        {
+            foreach (var containsValue in containsValues)
+            {
+                if (!input.Contains(containsValue))
+                {
+                    deserialized = null;
+                    return false;
+                }
+            }
+            
+            deserialized = Deserialize<T>(input);
+            return deserialized != null;
         }
     }
 }

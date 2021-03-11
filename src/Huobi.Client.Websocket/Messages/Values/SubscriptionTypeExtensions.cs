@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Huobi.Client.Websocket.Messages.Subscription
+namespace Huobi.Client.Websocket.Messages.Values
 {
     public static class SubscriptionTypeExtensions
     {

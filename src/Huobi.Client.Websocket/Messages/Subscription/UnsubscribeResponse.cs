@@ -15,7 +15,6 @@ namespace Huobi.Client.Websocket.Messages.Subscription
             Timestamp = timestamp;
         }
 
-        [JsonProperty("status")]
         public string Status { get; }
 
         [JsonProperty("unsubbed")]

@@ -1,0 +1,41 @@
+﻿using Huobi.Client.Websocket.Messages.Values;
+using Newtonsoft.Json;
+using NodaTime;
+
+namespace Huobi.Client.Websocket.Messages.Pulling.Candlestick
+{
+    public class MarketCandlestickPullRequest : PullRequest
+    {
+        public MarketCandlestickPullRequest(
+            string symbol,
+            MarketCandlestickPeriodType periodType,
+            string reqId)
+            : base(symbol, SubscriptionType.MarketCandlestick, periodType.ToStep(), reqId)
+        {
+        }
+
+        public MarketCandlestickPullRequest(
+            string symbol,
+            MarketCandlestickPeriodType periodType,
+            string reqId,
+            ZonedDateTime from,
+            ZonedDateTime to)
+            : base(symbol, SubscriptionType.MarketCandlestick, periodType.ToStep(), reqId)
+        {
+            From = from;
+            To = to;
+        }
+
+        [JsonIgnore]
+        public ZonedDateTime? From { get; }
+
+        [JsonIgnore]
+        public ZonedDateTime? To { get; }
+
+        [JsonProperty("from")]
+        public long? FromTick => From?.ToDateTimeOffset().ToUnixTimeSeconds();
+
+        [JsonProperty("to")]
+        public long? ToTick => To?.ToDateTimeOffset().ToUnixTimeSeconds();
+    }
+}

@@ -5,8 +5,11 @@ using System.Net.WebSockets;
 using System.Text;
 using Huobi.Client.Websocket.Communicator;
 using Huobi.Client.Websocket.Messages;
+using Huobi.Client.Websocket.Messages.Pulling.Candlestick;
+using Huobi.Client.Websocket.Messages.Pulling.Depth;
 using Huobi.Client.Websocket.Messages.Subscription;
-using Huobi.Client.Websocket.Messages.Subscription.Ticks;
+using Huobi.Client.Websocket.Messages.Subscription.Candlestick;
+using Huobi.Client.Websocket.Messages.Subscription.Depth;
 using Huobi.Client.Websocket.Serializer;
 using Microsoft.Extensions.Logging;
 using Websocket.Client;
@@ -33,11 +36,10 @@ namespace Huobi.Client.Websocket.Client
             _messageReceivedSubscription = _communicator.MessageReceived.Subscribe(HandleMessage);
         }
 
-        public HuobiClientStreams Streams { get; } = new HuobiClientStreams();
+        public HuobiClientStreams Streams { get; } = new();
 
         public void Dispose()
         {
-            _communicator.Dispose();
             _messageReceivedSubscription.Dispose();
         }
 
@@ -77,55 +79,27 @@ namespace Huobi.Client.Websocket.Client
             {
                 var message = ParseMessage(responseMessage);
 
-                if (message.StartsWith("{") && TryHandleObjectMessage(message))
+                if (!message.StartsWith("{"))
                 {
                     return;
                 }
 
-                if (TryHandleRawMessage(message))
-                {
-                    return;
-                }
+                var processed = TryHandleServerPingRequest(message)
+                             || TryHandleUpdateMessages(message)
+                             || TryHandlePullResponses(message)
+                             || TryHandleSubscribeResponses(message)
+                             || TryProcessErrorMessage(message);
 
-                if (!string.IsNullOrWhiteSpace(message))
+                if (!processed)
                 {
                     Streams.UnhandledMessageSubject.OnNext(message);
+                    _logger.LogError($"Unhandled message received: {message}");
                 }
-
-                _logger.LogWarning($"Unhandled response: '{message}'");
             }
             catch (Exception e)
             {
                 _logger.LogError(e, "Exception while receiving authMessage");
             }
-        }
-
-        private bool TryHandleObjectMessage(string input)
-        {
-            if (TryHandleServerPingRequest(input))
-            {
-                return true;
-            }
-
-            if (SubscribeResponse.TryParse(_serializer, input, out var response))
-            {
-                Streams.SubscribeResponseSubject.OnNext(response);
-                return true;
-            }
-
-            if (MarketCandlestickTick.TryParse(_serializer, input, out var marketCandlestick))
-            {
-                Streams.MarketCandlestickSubject.OnNext(marketCandlestick);
-                return true;
-            }
-
-            if (MarketDepthTick.TryParse(_serializer, input, out var marketDepth))
-            {
-                Streams.MarketDepthSubject.OnNext(marketDepth);
-                return true;
-            }
-
-            return false;
         }
 
         private bool TryHandleServerPingRequest(string message)
@@ -139,20 +113,77 @@ namespace Huobi.Client.Websocket.Client
                 return true;
             }
 
-            var serverRequest = _serializer.Deserialize<AuthMessage>(message);
-            if (string.Equals("ping", serverRequest.Action))
+            //var serverRequest = _serializer.Deserialize<AuthMessage>(message);
+            //if (string.Equals("ping", serverRequest.Action))
+            //{
+            //    var clientResponse = new AuthMessage("pong", serverRequest.Data);
+            //    var serialized = _serializer.Serialize(clientResponse);
+            //    Send(serialized);
+            //    return true;
+            //}
+
+            return false;
+        }
+
+        private bool TryHandleUpdateMessages(string message)
+        {
+            if (MarketCandlestickUpdateMessage.TryParse(_serializer, message, out var marketCandlestick))
             {
-                var clientResponse = new AuthMessage("pong", serverRequest.Data);
-                var serialized = _serializer.Serialize(clientResponse);
-                Send(serialized);
+                Streams.MarketCandlestickUpdateSubject.OnNext(marketCandlestick);
+                return true;
+            }
+
+            if (MarketDepthUpdateMessage.TryParse(_serializer, message, out var marketDepth))
+            {
+                Streams.MarketDepthUpdateSubject.OnNext(marketDepth);
                 return true;
             }
 
             return false;
         }
 
-        private bool TryHandleRawMessage(string message)
+        private bool TryHandlePullResponses(string message)
         {
+            if (MarketCandlestickPullResponse.TryParse(_serializer, message, out var marketCandlestick))
+            {
+                Streams.MarketCandlestickPullSubject.OnNext(marketCandlestick);
+                return true;
+            }
+
+            if (MarketDepthPullResponse.TryParse(_serializer, message, out var marketDepth))
+            {
+                Streams.MarketDepthPullSubject.OnNext(marketDepth);
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool TryHandleSubscribeResponses(string message)
+        {
+            if (SubscribeResponse.TryParse(_serializer, message, out var subscribeResponse))
+            {
+                Streams.SubscribeResponseSubject.OnNext(subscribeResponse);
+                return true;
+            }
+
+            if (UnsubscribeResponse.TryParse(_serializer, message, out var unsubscribeResponse))
+            {
+                Streams.UnsubscribeResponseSubject.OnNext(unsubscribeResponse);
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool TryProcessErrorMessage(string message)
+        {
+            if (ErrorMessage.TryParse(_serializer, message, out var errorMessage))
+            {
+                Streams.ErrorMessageSubject.OnNext(errorMessage);
+                return true;
+            }
+
             return false;
         }
 

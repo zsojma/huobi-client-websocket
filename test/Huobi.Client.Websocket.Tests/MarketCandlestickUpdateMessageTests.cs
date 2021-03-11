@@ -1,14 +1,14 @@
-﻿using Huobi.Client.Websocket.Messages.Subscription.Ticks;
+﻿using Huobi.Client.Websocket.Messages.Subscription.Candlestick;
 using Huobi.Client.Websocket.Serializer;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 
 namespace Huobi.Client.Websocket.Tests
 {
-    public class MarketCandlestickMessageTests
+    public class MarketCandlestickUpdateMessageTests
     {
         [Fact]
-        public void TryParse_ParsedCorrectly()
+        public void TryParse_CorrectMessage_ParsedCorrectly()
         {
             // Arrange
             var serializer = new HuobiSerializer(NullLogger<HuobiSerializer>.Instance);
@@ -28,7 +28,7 @@ namespace Huobi.Client.Websocket.Tests
 }";
 
             // Act
-            var result = MarketCandlestickTick.TryParse(serializer, input, out var response);
+            var result = MarketCandlestickUpdateMessage.TryParse(serializer, input, out var response);
 
             // Assert
             Assert.True(result);
@@ -40,6 +40,24 @@ namespace Huobi.Client.Websocket.Tests
             Assert.Equal(7962.64m, response!.Tick.Low);
             Assert.Equal(7962.65m, response!.Tick.High);
             Assert.Equal(102.30m, response!.Tick.Vol);
+        }
+        
+        [Fact]
+        public void TryParse_DiffMessageContainsKeywords_ReturnsFalse()
+        {
+            // Arrange
+            var serializer = new HuobiSerializer(NullLogger<HuobiSerializer>.Instance);
+            var input = @"{
+  ""sub"": ""market.btcusdt.kline.1min"",
+  ""id"": ""id1"",
+  ""tick"": {}
+}";
+
+            // Act
+            var result = MarketCandlestickUpdateMessage.TryParse(serializer, input, out _);
+
+            // Assert
+            Assert.False(result);
         }
     }
 }

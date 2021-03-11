@@ -1,10 +1,11 @@
-﻿using Newtonsoft.Json;
+﻿using Huobi.Client.Websocket.Messages.Values;
+using Newtonsoft.Json;
 
 namespace Huobi.Client.Websocket.Messages.Subscription
 {
-    public class SubscribeRequest : RequestBase
+    public abstract class SubscribeRequest : RequestBase
     {
-        public SubscribeRequest(string symbol, SubscriptionType subscriptionType, string step, string reqId)
+        protected SubscribeRequest(string symbol, SubscriptionType subscriptionType, string step, string? reqId = null)
             : base(reqId)
         {
             Topic = $"market.{symbol}.{subscriptionType.ToTopicId()}.{step}";

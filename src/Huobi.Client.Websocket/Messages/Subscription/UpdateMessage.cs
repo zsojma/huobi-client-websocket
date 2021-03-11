@@ -1,20 +1,20 @@
 ﻿using Newtonsoft.Json;
 
-namespace Huobi.Client.Websocket.Messages
+namespace Huobi.Client.Websocket.Messages.Subscription
 {
-    public class Message<TTick>
+    public abstract class UpdateMessage<TTick>
         where TTick : class
     {
         [JsonConstructor]
-        public Message(string channel, long timestamp, TTick tick)
+        protected UpdateMessage(string topic, long timestamp, TTick tick)
         {
-            Channel = channel;
+            Topic = topic;
             Timestamp = timestamp;
             Tick = tick;
         }
 
         [JsonProperty("ch")]
-        public string Channel { get; }
+        public string Topic { get; }
 
         [JsonProperty("ts")]
         public long Timestamp { get; }

@@ -7,19 +7,18 @@ namespace Huobi.Client.Websocket.Messages.Subscription
     public class SubscribeResponse : ResponseBase
     {
         [JsonConstructor]
-        public SubscribeResponse(string reqId, string status, string subbed, long timestamp)
+        public SubscribeResponse(string reqId, string status, string topic, long timestamp)
             : base(reqId)
         {
             Status = status;
-            Subbed = subbed;
+            Topic = topic;
             Timestamp = timestamp;
         }
 
-        [JsonProperty("status")]
         public string Status { get; }
 
         [JsonProperty("subbed")]
-        public string Subbed { get; }
+        public string Topic { get; }
 
         [JsonProperty("ts")]
         public long Timestamp { get; }

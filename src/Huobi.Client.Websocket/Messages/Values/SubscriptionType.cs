@@ -1,4 +1,4 @@
-﻿namespace Huobi.Client.Websocket.Messages.Subscription
+﻿namespace Huobi.Client.Websocket.Messages.Values
 {
     public enum SubscriptionType
     {

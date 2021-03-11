@@ -4,12 +4,12 @@ namespace Huobi.Client.Websocket.Messages
 {
     public abstract class RequestBase
     {
-        public RequestBase(string reqId)
+        protected RequestBase(string? reqId = null)
         {
             ReqId = reqId;
         }
 
         [JsonProperty("id")]
-        public string ReqId { get; }
+        public string? ReqId { get; internal set; }
     }
 }

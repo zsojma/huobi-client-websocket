@@ -1,6 +1,6 @@
 ﻿using Huobi.Client.Websocket.Messages.Values;
 
-namespace Huobi.Client.Websocket.Messages.Subscription.Depth
+namespace Huobi.Client.Websocket.Messages.Subscription.MarketDepth
 {
     public class MarketDepthSubscribeRequest : SubscribeRequest
     {
@@ -9,6 +9,14 @@ namespace Huobi.Client.Websocket.Messages.Subscription.Depth
             MarketDepthStepType stepType,
             string? reqId = null)
             : base(symbol, SubscriptionType.MarketDepth, stepType.ToStep(), reqId)
+        {
+        }
+
+        public MarketDepthSubscribeRequest(
+            string symbol,
+            string stepType,
+            string? reqId = null)
+            : base(symbol, SubscriptionType.MarketDepth, stepType, reqId)
         {
         }
     }

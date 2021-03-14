@@ -11,6 +11,9 @@ namespace Huobi.Client.Websocket.Messages.Values
                 SubscriptionType.MarketCandlestick => "kline",
                 SubscriptionType.MarketDepth => "depth",
                 SubscriptionType.MarketByPrice => "mbp",
+                SubscriptionType.MarketByPriceRefresh => "mbp.refresh",
+                SubscriptionType.MarketBestBidOffer => "bbo",
+                SubscriptionType.MarketTradeDetail => "trade.detail",
                 _ => throw new ArgumentOutOfRangeException(
                     nameof(subscriptionType),
                     subscriptionType,

@@ -5,7 +5,7 @@ using Huobi.Client.Websocket.Messages.Values;
 using Huobi.Client.Websocket.Serializer;
 using Newtonsoft.Json;
 
-namespace Huobi.Client.Websocket.Messages.Pulling.Candlestick
+namespace Huobi.Client.Websocket.Messages.Pulling.MarketCandlestick
 {
     public class MarketCandlestickPullResponse : PullResponse<MarketCandlestickTick[]>
     {

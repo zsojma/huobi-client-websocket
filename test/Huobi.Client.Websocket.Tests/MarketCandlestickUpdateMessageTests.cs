@@ -1,4 +1,4 @@
-﻿using Huobi.Client.Websocket.Messages.Subscription.Candlestick;
+﻿using Huobi.Client.Websocket.Messages.Subscription.MarketCandlestick;
 using Huobi.Client.Websocket.Serializer;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;

@@ -4,7 +4,7 @@ using Huobi.Client.Websocket.Messages.Values;
 using Huobi.Client.Websocket.Serializer;
 using Newtonsoft.Json;
 
-namespace Huobi.Client.Websocket.Messages.Pulling.Depth
+namespace Huobi.Client.Websocket.Messages.Pulling.MarketDepth
 {
     public class MarketDepthPullResponse : PullResponse<MarketDepthTick>
     {

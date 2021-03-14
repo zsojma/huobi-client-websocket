@@ -5,5 +5,8 @@
         MarketCandlestick,
         MarketDepth,
         MarketByPrice,
+        MarketByPriceRefresh,
+        MarketBestBidOffer,
+        MarketTradeDetail,
     }
 }

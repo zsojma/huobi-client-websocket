@@ -5,11 +5,16 @@ using System.Net.WebSockets;
 using System.Text;
 using Huobi.Client.Websocket.Communicator;
 using Huobi.Client.Websocket.Messages;
-using Huobi.Client.Websocket.Messages.Pulling.Candlestick;
-using Huobi.Client.Websocket.Messages.Pulling.Depth;
+using Huobi.Client.Websocket.Messages.Pulling.MarketByPrice;
+using Huobi.Client.Websocket.Messages.Pulling.MarketCandlestick;
+using Huobi.Client.Websocket.Messages.Pulling.MarketDepth;
+using Huobi.Client.Websocket.Messages.Pulling.MarketTradeDetail;
 using Huobi.Client.Websocket.Messages.Subscription;
-using Huobi.Client.Websocket.Messages.Subscription.Candlestick;
-using Huobi.Client.Websocket.Messages.Subscription.Depth;
+using Huobi.Client.Websocket.Messages.Subscription.MarketBestBidOffer;
+using Huobi.Client.Websocket.Messages.Subscription.MarketByPrice;
+using Huobi.Client.Websocket.Messages.Subscription.MarketCandlestick;
+using Huobi.Client.Websocket.Messages.Subscription.MarketDepth;
+using Huobi.Client.Websocket.Messages.Subscription.MarketTradeDetail;
 using Huobi.Client.Websocket.Serializer;
 using Microsoft.Extensions.Logging;
 using Websocket.Client;
@@ -98,14 +103,13 @@ namespace Huobi.Client.Websocket.Client
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Exception while receiving authMessage");
+                _logger.LogError(e, "Exception while processing of response message");
             }
         }
 
         private bool TryHandleServerPingRequest(string message)
         {
-            var pingRequest = _serializer.Deserialize<PingMessage>(message);
-            if (pingRequest.Value > 0)
+            if (_serializer.TryDeserializeIfContains<PingMessage>(message, "ping", out var pingRequest))
             {
                 var clientResponse = new PongMessage(pingRequest.Value);
                 var serialized = _serializer.Serialize(clientResponse);
@@ -139,6 +143,30 @@ namespace Huobi.Client.Websocket.Client
                 return true;
             }
 
+            if (MarketByPriceUpdateMessage.TryParse(_serializer, message, out var marketByPrice))
+            {
+                Streams.MarketByPriceUpdateSubject.OnNext(marketByPrice);
+                return true;
+            }
+            
+            if (MarketByPriceRefreshUpdateMessage.TryParse(_serializer, message, out var marketByPriceRefresh))
+            {
+                Streams.MarketByPriceRefreshUpdateSubject.OnNext(marketByPriceRefresh);
+                return true;
+            }
+            
+            if (MarketBestBidOfferUpdateMessage.TryParse(_serializer, message, out var marketBestBidOffer))
+            {
+                Streams.MarketBestBidOfferUpdateSubject.OnNext(marketBestBidOffer);
+                return true;
+            }
+
+            if (MarketTradeDetailUpdateMessage.TryParse(_serializer, message, out var marketTradeDetail))
+            {
+                Streams.MarketTradeDetailUpdateSubject.OnNext(marketTradeDetail);
+                return true;
+            }
+
             return false;
         }
 
@@ -153,6 +181,18 @@ namespace Huobi.Client.Websocket.Client
             if (MarketDepthPullResponse.TryParse(_serializer, message, out var marketDepth))
             {
                 Streams.MarketDepthPullSubject.OnNext(marketDepth);
+                return true;
+            }
+
+            if (MarketByPricePullResponse.TryParse(_serializer, message, out var marketByPrice))
+            {
+                Streams.MarketByPricePullSubject.OnNext(marketByPrice);
+                return true;
+            }
+
+            if (MarketTradeDetailPullResponse.TryParse(_serializer, message, out var marketTradeDetail))
+            {
+                Streams.MarketTradeDetailPullSubject.OnNext(marketTradeDetail);
                 return true;
             }
 

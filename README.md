@@ -30,9 +30,9 @@ TODO
 | Unsubscribe            |  ✔            |
 | Market candlestick     |  ✔            |
 | Market depth           |  ✔            |
-| Market by price        |                |
-| Market best bid/offer  |                |
-| Market trade           |                |
+| Market by price        |  ✔            |
+| Market best bid/offer  |  ✔            |
+| Market trade           |  ✔            |
 | Market details         |                |
 
 | AUTHENTICATED          |    Covered     |  

@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using NodaTime;
 
-namespace Huobi.Client.Websocket.Messages.Pulling.Candlestick
+namespace Huobi.Client.Websocket.Messages.Pulling.MarketCandlestick
 {
     public class MarketCandlestickPullRequest : PullRequest
     {
@@ -16,11 +16,31 @@ namespace Huobi.Client.Websocket.Messages.Pulling.Candlestick
 
         public MarketCandlestickPullRequest(
             string symbol,
+            string periodType,
+            string reqId)
+            : base(symbol, SubscriptionType.MarketCandlestick, periodType, reqId)
+        {
+        }
+
+        public MarketCandlestickPullRequest(
+            string symbol,
             MarketCandlestickPeriodType periodType,
             string reqId,
             ZonedDateTime from,
             ZonedDateTime to)
             : base(symbol, SubscriptionType.MarketCandlestick, periodType.ToStep(), reqId)
+        {
+            From = from;
+            To = to;
+        }
+
+        public MarketCandlestickPullRequest(
+            string symbol,
+            string periodType,
+            string reqId,
+            ZonedDateTime from,
+            ZonedDateTime to)
+            : base(symbol, SubscriptionType.MarketCandlestick, periodType, reqId)
         {
             From = from;
             To = to;

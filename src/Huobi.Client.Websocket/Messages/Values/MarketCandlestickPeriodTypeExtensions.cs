@@ -18,7 +18,10 @@ namespace Huobi.Client.Websocket.Messages.Values
                 MarketCandlestickPeriodType.OneWeek => "1week",
                 MarketCandlestickPeriodType.OneMonth => "1mon",
                 MarketCandlestickPeriodType.OneYear => "1year",
-                _ => throw new ArgumentOutOfRangeException(nameof(periodType), periodType, $"Unable to translate {periodType} to API step!")
+                _ => throw new ArgumentOutOfRangeException(
+                    nameof(periodType),
+                    periodType,
+                    $"Unable to translate {periodType} to API step!")
             };
         }
     }

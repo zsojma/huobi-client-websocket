@@ -14,7 +14,10 @@ namespace Huobi.Client.Websocket.Messages.Values
                 MarketDepthStepType.Level3 => "step3",
                 MarketDepthStepType.Level4 => "step4",
                 MarketDepthStepType.Level5 => "step5",
-                _ => throw new ArgumentOutOfRangeException(nameof(stepType), stepType, $"Unable to translate {stepType} to API step!")
+                _ => throw new ArgumentOutOfRangeException(
+                    nameof(stepType),
+                    stepType,
+                    $"Unable to translate {stepType} to API step!")
             };
         }
     }

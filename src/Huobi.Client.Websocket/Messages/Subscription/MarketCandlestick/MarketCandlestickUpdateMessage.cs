@@ -3,11 +3,11 @@ using Huobi.Client.Websocket.Messages.Ticks;
 using Huobi.Client.Websocket.Messages.Values;
 using Huobi.Client.Websocket.Serializer;
 
-namespace Huobi.Client.Websocket.Messages.Subscription.Depth
+namespace Huobi.Client.Websocket.Messages.Subscription.MarketCandlestick
 {
-    public class MarketDepthUpdateMessage : UpdateMessage<MarketDepthTick>
+    public class MarketCandlestickUpdateMessage : UpdateMessage<MarketCandlestickTick>
     {
-        public MarketDepthUpdateMessage(string topic, long timestamp, MarketDepthTick tick)
+        public MarketCandlestickUpdateMessage(string topic, long timestamp, MarketCandlestickTick tick)
             : base(topic, timestamp, tick)
         {
         }
@@ -15,18 +15,18 @@ namespace Huobi.Client.Websocket.Messages.Subscription.Depth
         internal static bool TryParse(
             IHuobiSerializer serializer,
             string input,
-            [MaybeNullWhen(false)] out MarketDepthUpdateMessage response)
+            [MaybeNullWhen(false)] out MarketCandlestickUpdateMessage response)
         {
             var result = serializer.TryDeserializeIfContains(
                 input,
                 new[]
                 {
                     "\"tick\"",
-                    SubscriptionType.MarketDepth.ToTopicId()
+                    SubscriptionType.MarketCandlestick.ToTopicId()
                 },
                 out response);
 
-            return result && response?.Tick.Timestamp > 0;
+            return result && response?.Tick.Id > 0;
         }
     }
 }

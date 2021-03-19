@@ -25,7 +25,7 @@ namespace Huobi.Client.Websocket.Sample
 {
     public class Program
     {
-        private static readonly ManualResetEvent ExitEvent = new(false);
+        private static readonly ManualResetEvent _exitEvent = new(false);
 
         public static async Task Main()
         {
@@ -235,7 +235,7 @@ namespace Huobi.Client.Websocket.Sample
             var marketDetailsUnsubscribeRequest = new MarketDetailsUnsubscribeRequest("btcusdt", "id1");
             client.Send(marketDetailsUnsubscribeRequest);
 
-            ExitEvent.WaitOne();
+            _exitEvent.WaitOne();
         }
 
         private static void HandleMarketByPriceTick(UpdateMessage<MarketByPriceTick> message, ILogger<Program> logger)

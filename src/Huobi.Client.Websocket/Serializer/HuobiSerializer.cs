@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace Huobi.Client.Websocket.Serializer
 {
-    internal class HuobiSerializer : IHuobiSerializer
+    public class HuobiSerializer : IHuobiSerializer
     {
         private readonly ILogger<HuobiSerializer> _logger;
 

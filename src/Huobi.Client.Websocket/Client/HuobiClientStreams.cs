@@ -21,6 +21,7 @@ namespace Huobi.Client.Websocket.Client
     {
         internal readonly Subject<string> UnhandledMessageSubject = new();
         internal readonly Subject<ErrorMessage> ErrorMessageSubject = new();
+        internal readonly Subject<PingMessage> PingMessageSubject = new();
         internal readonly Subject<SubscribeResponse> SubscribeResponseSubject = new();
         internal readonly Subject<UnsubscribeResponse> UnsubscribeResponseSubject = new();
 
@@ -40,6 +41,7 @@ namespace Huobi.Client.Websocket.Client
 
         public IObservable<string> UnhandledMessageStream => UnhandledMessageSubject.AsObservable();
         public IObservable<ErrorMessage> ErrorMessageStream => ErrorMessageSubject.AsObservable();
+        public IObservable<PingMessage> PingMessageStream => PingMessageSubject.AsObservable();
         public IObservable<SubscribeResponse> SubscribeResponseStream => SubscribeResponseSubject.AsObservable();
         public IObservable<UnsubscribeResponse> UnsubscribeResponseStream => UnsubscribeResponseSubject.AsObservable();
         

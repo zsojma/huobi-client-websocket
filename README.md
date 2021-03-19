@@ -34,6 +34,7 @@ TODO
 | Market best bid/offer  |  ✔            |
 | Market trade detail    |  ✔            |
 | Market details         |  ✔            |
+| Errors                 |  ✔            |
 
 | AUTHENTICATED          |    Covered     |  
 |------------------------|:--------------:|

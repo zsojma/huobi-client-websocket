@@ -23,7 +23,7 @@ using Websocket.Client;
 
 namespace Huobi.Client.Websocket.Client
 {
-    internal class HuobiWebsocketClient : IHuobiWebsocketClient
+    public class HuobiWebsocketClient : IHuobiWebsocketClient
     {
         private readonly IHuobiSerializer _serializer;
         private readonly ILogger<HuobiWebsocketClient> _logger;
@@ -109,9 +109,8 @@ namespace Huobi.Client.Websocket.Client
         {
             if (_serializer.TryDeserializeIfContains<PingMessage>(message, "ping", out var pingRequest))
             {
-                var clientResponse = new PongMessage(pingRequest.Value);
-                var serialized = _serializer.Serialize(clientResponse);
-                Send(serialized);
+                Streams.PingMessageSubject.OnNext(pingRequest);
+                RespondWithPong(pingRequest.Value);
                 return true;
             }
 
@@ -125,6 +124,13 @@ namespace Huobi.Client.Websocket.Client
             //}
 
             return false;
+        }
+
+        private void RespondWithPong(long value)
+        {
+            var clientResponse = new PongMessage(value);
+            var serialized = _serializer.Serialize(clientResponse);
+            Send(serialized);
         }
 
         private bool TryHandlePullResponses(string message)

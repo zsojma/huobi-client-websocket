@@ -136,7 +136,7 @@ namespace Huobi.Client.Websocket.Sample
                     }
                 });
 
-            client.Start();
+            await client.Communicator.Start();
 
             //var marketCandlestickSubscribeRequest = new MarketCandlestickSubscribeRequest("btcusdt", MarketCandlestickPeriodType.OneMinute, "id1");
             //client.Send(marketCandlestickSubscribeRequest);

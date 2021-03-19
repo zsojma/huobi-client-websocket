@@ -3,6 +3,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Net.WebSockets;
 using System.Text;
+using System.Threading;
 using Huobi.Client.Websocket.Communicator;
 using Huobi.Client.Websocket.Messages;
 using Huobi.Client.Websocket.Messages.Pulling.MarketByPrice;
@@ -23,7 +24,6 @@ namespace Huobi.Client.Websocket.Client
 {
     internal class HuobiWebsocketClient : IHuobiWebsocketClient
     {
-        private readonly IHuobiWebsocketCommunicator _communicator;
         private readonly IHuobiSerializer _serializer;
         private readonly ILogger<HuobiWebsocketClient> _logger;
 
@@ -34,12 +34,14 @@ namespace Huobi.Client.Websocket.Client
             IHuobiSerializer serializer,
             ILogger<HuobiWebsocketClient> logger)
         {
-            _communicator = communicator;
+            Communicator = communicator;
             _serializer = serializer;
             _logger = logger;
 
-            _messageReceivedSubscription = _communicator.MessageReceived.Subscribe(HandleMessage);
+            _messageReceivedSubscription = Communicator.MessageReceived.Subscribe(HandleMessage);
         }
+
+        public IHuobiWebsocketCommunicator Communicator { get; }
 
         public HuobiClientStreams Streams { get; } = new();
 
@@ -48,9 +50,10 @@ namespace Huobi.Client.Websocket.Client
             _messageReceivedSubscription.Dispose();
         }
 
-        public void Start()
+        public void Send(RequestBase request)
         {
-            _communicator.Start();
+            var serialized = _serializer.Serialize(request);
+            SendInternal(serialized);
         }
 
         public void Send(string message)
@@ -58,18 +61,12 @@ namespace Huobi.Client.Websocket.Client
             SendInternal(message);
         }
 
-        public void Send(RequestBase request)
-        {
-            var serialized = _serializer.Serialize(request);
-            SendInternal(serialized);
-        }
-
         private void SendInternal(string message)
         {
             try
             {
                 _logger.LogDebug($"Sending client message: {message}");
-                _communicator.Send(message);
+                Communicator.Send(message);
             }
             catch (Exception ex)
             {
@@ -80,20 +77,19 @@ namespace Huobi.Client.Websocket.Client
 
         private void HandleMessage(ResponseMessage responseMessage)
         {
+            var message = ParseMessage(responseMessage);
+
             try
             {
-                var message = ParseMessage(responseMessage);
-
-                if (!message.StartsWith("{"))
+                var processed = false;
+                if (message.StartsWith("{"))
                 {
-                    return;
+                    processed = TryHandleServerPingRequest(message)
+                                 || TryHandleUpdateMessages(message)
+                                 || TryHandlePullResponses(message)
+                                 || TryHandleSubscribeResponses(message)
+                                 || TryProcessErrorMessage(message);
                 }
-
-                var processed = TryHandleServerPingRequest(message)
-                             || TryHandleUpdateMessages(message)
-                             || TryHandlePullResponses(message)
-                             || TryHandleSubscribeResponses(message)
-                             || TryProcessErrorMessage(message);
 
                 if (!processed)
                 {
@@ -103,6 +99,7 @@ namespace Huobi.Client.Websocket.Client
             }
             catch (Exception e)
             {
+                Streams.UnhandledMessageSubject.OnNext(message);
                 _logger.LogError(e, "Exception while processing of response message");
             }
         }
@@ -148,13 +145,13 @@ namespace Huobi.Client.Websocket.Client
                 Streams.MarketByPriceUpdateSubject.OnNext(marketByPrice);
                 return true;
             }
-            
+
             if (MarketByPriceRefreshUpdateMessage.TryParse(_serializer, message, out var marketByPriceRefresh))
             {
                 Streams.MarketByPriceRefreshUpdateSubject.OnNext(marketByPriceRefresh);
                 return true;
             }
-            
+
             if (MarketBestBidOfferUpdateMessage.TryParse(_serializer, message, out var marketBestBidOffer))
             {
                 Streams.MarketBestBidOfferUpdateSubject.OnNext(marketBestBidOffer);
@@ -227,14 +224,22 @@ namespace Huobi.Client.Websocket.Client
             return false;
         }
 
-        private static string ParseMessage(ResponseMessage message)
+        private string ParseMessage(ResponseMessage message)
         {
-            if (message.MessageType == WebSocketMessageType.Binary)
+            try
             {
-                return Decompress(message.Binary);
-            }
+                if (message.MessageType == WebSocketMessageType.Binary)
+                {
+                    return Decompress(message.Binary);
+                }
 
-            return message.Text?.Trim() ?? string.Empty;
+                return message.Text?.Trim() ?? string.Empty;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Exception while parsing response message. Error: " + ex.Message);
+                return string.Empty;
+            }
         }
 
         private static string Decompress(byte[] input)

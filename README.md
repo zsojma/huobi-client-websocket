@@ -32,8 +32,8 @@ TODO
 | Market depth           |  ✔            |
 | Market by price        |  ✔            |
 | Market best bid/offer  |  ✔            |
-| Market trade           |  ✔            |
-| Market details         |                |
+| Market trade detail    |  ✔            |
+| Market details         |  ✔            |
 
 | AUTHENTICATED          |    Covered     |  
 |------------------------|:--------------:|

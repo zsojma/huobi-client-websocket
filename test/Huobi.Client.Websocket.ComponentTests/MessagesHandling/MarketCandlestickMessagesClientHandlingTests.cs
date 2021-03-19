@@ -10,10 +10,13 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling
         public void UpdateMessage_StreamUpdated()
         {
             // Arrange
+            var triggered = false;
             var client = Initialize();
             client.Streams.MarketCandlestickUpdateStream.Subscribe(
                 msg =>
                 {
+                    triggered = true;
+
                     // Assert
                     Assert.NotNull(msg);
                     Assert.Contains(SubscriptionType.MarketCandlestick.ToTopicId(), msg.Topic);
@@ -28,16 +31,20 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling
 
             // Assert
             VerifyMessageNotUnhandled();
+            Assert.True(triggered);
         }
 
         [Fact]
         public void PullMessage_StreamUpdated()
         {
             // Arrange
+            var triggered = false;
             var client = Initialize();
             client.Streams.MarketCandlestickPullStream.Subscribe(
                 msg =>
                 {
+                    triggered = true;
+
                     // Assert
                     Assert.NotNull(msg);
                     Assert.Contains(SubscriptionType.MarketCandlestick.ToTopicId(), msg.Topic);
@@ -47,13 +54,14 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling
                     Assert.True(msg.Data[1].Id > 0);
                 });
 
-            var message = HuobiMessagesFactory.CreateMarketCandlestickPullMessage();
+            var message = HuobiMessagesFactory.CreateMarketCandlestickPullResponseMessage();
 
             // Act
             TriggerMessageReceive(message);
 
             // Assert
             VerifyMessageNotUnhandled();
+            Assert.True(triggered);
         }
     }
 }

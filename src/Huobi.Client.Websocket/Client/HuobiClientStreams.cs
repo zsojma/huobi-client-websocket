@@ -5,12 +5,14 @@ using Huobi.Client.Websocket.Messages;
 using Huobi.Client.Websocket.Messages.Pulling.MarketByPrice;
 using Huobi.Client.Websocket.Messages.Pulling.MarketCandlestick;
 using Huobi.Client.Websocket.Messages.Pulling.MarketDepth;
+using Huobi.Client.Websocket.Messages.Pulling.MarketDetails;
 using Huobi.Client.Websocket.Messages.Pulling.MarketTradeDetail;
 using Huobi.Client.Websocket.Messages.Subscription;
 using Huobi.Client.Websocket.Messages.Subscription.MarketBestBidOffer;
 using Huobi.Client.Websocket.Messages.Subscription.MarketByPrice;
 using Huobi.Client.Websocket.Messages.Subscription.MarketCandlestick;
 using Huobi.Client.Websocket.Messages.Subscription.MarketDepth;
+using Huobi.Client.Websocket.Messages.Subscription.MarketDetails;
 using Huobi.Client.Websocket.Messages.Subscription.MarketTradeDetail;
 
 namespace Huobi.Client.Websocket.Client
@@ -28,11 +30,13 @@ namespace Huobi.Client.Websocket.Client
         internal readonly Subject<MarketByPriceRefreshUpdateMessage> MarketByPriceRefreshUpdateSubject = new();
         internal readonly Subject<MarketBestBidOfferUpdateMessage> MarketBestBidOfferUpdateSubject = new();
         internal readonly Subject<MarketTradeDetailUpdateMessage> MarketTradeDetailUpdateSubject = new();
+        internal readonly Subject<MarketDetailsUpdateMessage> MarketDetailsUpdateSubject = new();
 
         internal readonly Subject<MarketCandlestickPullResponse> MarketCandlestickPullSubject = new();
         internal readonly Subject<MarketDepthPullResponse> MarketDepthPullSubject = new();
         internal readonly Subject<MarketByPricePullResponse> MarketByPricePullSubject = new();
         internal readonly Subject<MarketTradeDetailPullResponse> MarketTradeDetailPullSubject = new();
+        internal readonly Subject<MarketDetailsPullResponse> MarketDetailsPullSubject = new();
 
         public IObservable<string> UnhandledMessageStream => UnhandledMessageSubject.AsObservable();
         public IObservable<ErrorMessage> ErrorMessageStream => ErrorMessageSubject.AsObservable();
@@ -45,10 +49,12 @@ namespace Huobi.Client.Websocket.Client
         public IObservable<MarketByPriceRefreshUpdateMessage> MarketByPriceRefreshUpdateStream => MarketByPriceRefreshUpdateSubject.AsObservable();
         public IObservable<MarketBestBidOfferUpdateMessage> MarketBestBidOfferUpdateStream => MarketBestBidOfferUpdateSubject.AsObservable();
         public IObservable<MarketTradeDetailUpdateMessage> MarketTradeDetailUpdateStream => MarketTradeDetailUpdateSubject.AsObservable();
+        public IObservable<MarketDetailsUpdateMessage> MarketDetailsUpdateStream => MarketDetailsUpdateSubject.AsObservable();
         
         public IObservable<MarketCandlestickPullResponse> MarketCandlestickPullStream => MarketCandlestickPullSubject.AsObservable();
         public IObservable<MarketDepthPullResponse> MarketDepthPullStream => MarketDepthPullSubject.AsObservable();
         public IObservable<MarketByPricePullResponse> MarketByPricePullStream => MarketByPricePullSubject.AsObservable();
         public IObservable<MarketTradeDetailPullResponse> MarketTradeDetailPullStream => MarketTradeDetailPullSubject.AsObservable();
+        public IObservable<MarketDetailsPullResponse> MarketDetailsPullStream => MarketDetailsPullSubject.AsObservable();
     }
 }

@@ -10,10 +10,13 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling
         public void UpdateMessage_StreamUpdated()
         {
             // Arrange
+            var triggered = false;
             var client = Initialize();
             client.Streams.MarketBestBidOfferUpdateStream.Subscribe(
                 msg =>
                 {
+                    triggered = true;
+
                     // Assert
                     Assert.NotNull(msg);
                     Assert.Contains(SubscriptionType.MarketBestBidOffer.ToTopicId(), msg.Topic);
@@ -30,6 +33,7 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling
 
             // Assert
             VerifyMessageNotUnhandled();
+            Assert.True(triggered);
         }
     }
 }

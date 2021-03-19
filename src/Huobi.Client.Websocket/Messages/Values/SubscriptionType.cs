@@ -8,5 +8,6 @@
         MarketByPriceRefresh,
         MarketBestBidOffer,
         MarketTradeDetail,
+        MarketDetails
     }
 }

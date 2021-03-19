@@ -4,17 +4,17 @@ using Huobi.Client.Websocket.Messages.Values;
 using Huobi.Client.Websocket.Serializer;
 using Newtonsoft.Json;
 
-namespace Huobi.Client.Websocket.Messages.Pulling.MarketByPrice
+namespace Huobi.Client.Websocket.Messages.Pulling.MarketDetails
 {
-    public class MarketByPricePullResponse : PullResponse<MarketByPricePullTick>
+    public class MarketDetailsPullResponse : PullResponse<MarketDetailsTick>
     {
         [JsonConstructor]
-        public MarketByPricePullResponse(
+        public MarketDetailsPullResponse(
             string reqId,
             string status,
             string topic,
             long timestamp,
-            MarketByPricePullTick data)
+            MarketDetailsTick data)
             : base(reqId, status, topic, timestamp, data)
         {
         }
@@ -22,18 +22,22 @@ namespace Huobi.Client.Websocket.Messages.Pulling.MarketByPrice
         internal static bool TryParse(
             IHuobiSerializer serializer,
             string input,
-            [MaybeNullWhen(false)] out MarketByPricePullResponse response)
+            [MaybeNullWhen(false)] out MarketDetailsPullResponse response)
         {
             var result = serializer.TryDeserializeIfContains(
                 input,
                 new[]
                 {
                     "\"rep\"",
-                    SubscriptionType.MarketByPrice.ToTopicId()
+                    SubscriptionType.MarketDetails.ToTopicId()
+                },
+                new[]
+                {
+                    SubscriptionType.MarketTradeDetail.ToTopicId()
                 },
                 out response);
 
-            return result && !string.IsNullOrEmpty(response?.Data.SeqNum);
+            return result && response?.Data.Id > 0;
         }
     }
 }

@@ -45,10 +45,13 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling
         [Fact]
         public void HandleResponse_Subscribed_StreamUpdated()
         {
+            var triggered = false;
             var client = Initialize();
             client.Streams.SubscribeResponseStream.Subscribe(
                 msg =>
                 {
+                    triggered = true;
+
                     // Assert
                     Assert.NotNull(msg);
                     Assert.True(!string.IsNullOrEmpty(msg.Topic));
@@ -64,6 +67,7 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling
 
             // Assert
             VerifyMessageNotUnhandled();
+            Assert.True(triggered);
         }
     }
 }

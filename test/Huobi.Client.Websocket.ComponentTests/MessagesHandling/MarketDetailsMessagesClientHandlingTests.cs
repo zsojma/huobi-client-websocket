@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling
 {
-    public class MarketTradeDetailMessagesClientHandlingTests : ClientMessagesHandlingTestsBase
+    public class MarketDetailsMessagesClientHandlingTests : ClientMessagesHandlingTestsBase
     {
         [Fact]
         public void UpdateMessage_StreamUpdated()
@@ -12,23 +12,19 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling
             // Arrange
             var triggered = false;
             var client = Initialize();
-            client.Streams.MarketTradeDetailUpdateStream.Subscribe(
+            client.Streams.MarketDetailsUpdateStream.Subscribe(
                 msg =>
                 {
                     triggered = true;
 
                     // Assert
                     Assert.NotNull(msg);
-                    Assert.Contains(SubscriptionType.MarketTradeDetail.ToTopicId(), msg.Topic);
+                    Assert.Contains(SubscriptionType.MarketDetails.ToTopicId(), msg.Topic);
                     Assert.True(!string.IsNullOrEmpty(msg.Topic));
                     Assert.True(msg.Tick.Id > 0);
-                    Assert.NotNull(msg.Tick.Data);
-                    Assert.Equal(2, msg.Tick.Data.Length);
-                    Assert.True(msg.Tick.Data[0].TradeId > 0);
-                    Assert.True(msg.Tick.Data[1].TradeId > 0);
                 });
 
-            var message = HuobiMessagesFactory.CreateMarketTradeDetailUpdateMessage();
+            var message = HuobiMessagesFactory.CreateMarketDetailsUpdateMessage();
 
             // Act
             TriggerMessageReceive(message);
@@ -44,21 +40,19 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling
             // Arrange
             var triggered = false;
             var client = Initialize();
-            client.Streams.MarketTradeDetailPullStream.Subscribe(
+            client.Streams.MarketDetailsPullStream.Subscribe(
                 msg =>
                 {
                     triggered = true;
 
                     // Assert
                     Assert.NotNull(msg);
-                    Assert.Contains(SubscriptionType.MarketTradeDetail.ToTopicId(), msg.Topic);
+                    Assert.Contains(SubscriptionType.MarketDetails.ToTopicId(), msg.Topic);
                     Assert.True(!string.IsNullOrEmpty(msg.Topic));
-                    Assert.Equal(2, msg.Data.Length);
-                    Assert.True(msg.Data[0].TradeId > 0);
-                    Assert.True(msg.Data[1].TradeId > 0);
+                    Assert.True(msg.Data.Id > 0);
                 });
 
-            var message = HuobiMessagesFactory.CreateMarketTradeDetailPullResponseMessage();
+            var message = HuobiMessagesFactory.CreateMarketDetailsPullResponseMessage();
 
             // Act
             TriggerMessageReceive(message);

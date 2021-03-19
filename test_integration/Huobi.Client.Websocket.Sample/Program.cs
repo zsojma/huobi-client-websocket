@@ -1,20 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
 using Huobi.Client.Websocket.Client;
 using Huobi.Client.Websocket.Config;
 using Huobi.Client.Websocket.Messages.Pulling.MarketByPrice;
+using Huobi.Client.Websocket.Messages.Pulling.MarketCandlestick;
+using Huobi.Client.Websocket.Messages.Pulling.MarketDepth;
+using Huobi.Client.Websocket.Messages.Pulling.MarketDetails;
 using Huobi.Client.Websocket.Messages.Pulling.MarketTradeDetail;
 using Huobi.Client.Websocket.Messages.Subscription;
 using Huobi.Client.Websocket.Messages.Subscription.MarketBestBidOffer;
 using Huobi.Client.Websocket.Messages.Subscription.MarketByPrice;
+using Huobi.Client.Websocket.Messages.Subscription.MarketCandlestick;
+using Huobi.Client.Websocket.Messages.Subscription.MarketDepth;
+using Huobi.Client.Websocket.Messages.Subscription.MarketDetails;
 using Huobi.Client.Websocket.Messages.Subscription.MarketTradeDetail;
 using Huobi.Client.Websocket.Messages.Ticks;
 using Huobi.Client.Websocket.Messages.Values;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using NodaTime;
 
 namespace Huobi.Client.Websocket.Sample
 {
@@ -102,8 +107,9 @@ namespace Huobi.Client.Websocket.Sample
                     }
                 });
 
-            client.Streams.MarketByPriceUpdateStream.Subscribe(msg => { HandleMarketByPriceMarketMessage(msg, logger); });
-            client.Streams.MarketByPriceRefreshUpdateStream.Subscribe(msg => { HandleMarketByPriceMarketMessage(msg, logger); });
+            client.Streams.MarketByPriceUpdateStream.Subscribe(msg => { HandleMarketByPriceTick(msg, logger); });
+            client.Streams.MarketByPriceRefreshUpdateStream.Subscribe(msg => { HandleMarketByPriceTick(msg, logger); });
+            client.Streams.MarketByPricePullStream.Subscribe(msg => { HandleMarketByPricePullTick(msg, logger); });
             
             client.Streams.MarketBestBidOfferUpdateStream.Subscribe(
                 msg =>
@@ -136,97 +142,139 @@ namespace Huobi.Client.Websocket.Sample
                     }
                 });
 
+            client.Streams.MarketDetailsUpdateStream.Subscribe(
+                msg =>
+                {
+                    logger.LogInformation(
+                        $"Market details update {msg.Topic} | [amount={msg.Tick.Amount}] [open={msg.Tick.Open}] [close={msg.Tick.Close}] [low={msg.Tick.Low}] [high={msg.Tick.High}] [vol={msg.Tick.Vol}] [count={msg.Tick.Count}]");
+                });
+
+            client.Streams.MarketDetailsPullStream.Subscribe(
+                msg =>
+                {
+                    logger.LogInformation(
+                        $"Market details pull {msg.Topic} | [amount={msg.Data.Amount}] [open={msg.Data.Open}] [close={msg.Data.Close}] [low={msg.Data.Low}] [high={msg.Data.High}] [vol={msg.Data.Vol}] [count={msg.Data.Count}]");
+                });
+
             await client.Communicator.Start();
 
-            //var marketCandlestickSubscribeRequest = new MarketCandlestickSubscribeRequest("btcusdt", MarketCandlestickPeriodType.OneMinute, "id1");
-            //client.Send(marketCandlestickSubscribeRequest);
+            var marketCandlestickSubscribeRequest = new MarketCandlestickSubscribeRequest("btcusdt", MarketCandlestickPeriodType.OneMinute, "id1");
+            client.Send(marketCandlestickSubscribeRequest);
 
-            //var marketDepthSubscribeRequest = new MarketDepthSubscribeRequest("btcusdt", MarketDepthStepType.NoAggregation, "id1");
-            //client.Send(marketDepthSubscribeRequest);
-            
-            //var marketByPriceSubscribeRequest = new MarketByPriceSubscribeRequest("btcusdt", MarketByPriceLevelType.Five, "id1");
-            //client.Send(marketByPriceSubscribeRequest);
+            var marketDepthSubscribeRequest = new MarketDepthSubscribeRequest("btcusdt", MarketDepthStepType.NoAggregation, "id1");
+            client.Send(marketDepthSubscribeRequest);
 
-            //var marketByPriceRefreshSubscribeRequest = new MarketByPriceRefreshSubscribeRequest("btcusdt", MarketByPriceRefreshLevelType.Five, "id1");
-            //client.Send(marketByPriceRefreshSubscribeRequest);
+            var marketByPriceSubscribeRequest = new MarketByPriceSubscribeRequest("btcusdt", MarketByPriceLevelType.Five, "id1");
+            client.Send(marketByPriceSubscribeRequest);
 
-            //var marketBestBidOfferSubscribeRequest = new MarketBestBidOfferSubscribeRequest("btcusdt", "id1");
-            //client.Send(marketBestBidOfferSubscribeRequest);
+            var marketByPriceRefreshSubscribeRequest = new MarketByPriceRefreshSubscribeRequest("btcusdt", MarketByPriceRefreshLevelType.Five, "id1");
+            client.Send(marketByPriceRefreshSubscribeRequest);
 
-            //var marketTradeDetailSubscribeRequest = new MarketTradeDetailSubscribeRequest("btcusdt", "id1");
-            //client.Send(marketTradeDetailSubscribeRequest);
+            var marketBestBidOfferSubscribeRequest = new MarketBestBidOfferSubscribeRequest("btcusdt", "id1");
+            client.Send(marketBestBidOfferSubscribeRequest);
+
+            var marketTradeDetailSubscribeRequest = new MarketTradeDetailSubscribeRequest("btcusdt", "id1");
+            client.Send(marketTradeDetailSubscribeRequest);
+
+            var marketDetailsSubscribeRequest = new MarketDetailsSubscribeRequest("btcusdt", "id1");
+            client.Send(marketDetailsSubscribeRequest);
 
             await Task.Delay(1000);
 
-            //var now = new ZonedDateTime(Instant.FromDateTimeOffset(DateTimeOffset.UtcNow), DateTimeZone.Utc);
-            //var marketCandlestickPullRequest = new MarketCandlestickPullRequest(
-            //    "btcusdt",
-            //    MarketCandlestickPeriodType.SixtyMinutes,
-            //    "id1",
-            //    now.PlusHours(-5),
-            //    now.PlusHours(-2));
-            //client.Send(marketCandlestickPullRequest);
+            var now = new ZonedDateTime(Instant.FromDateTimeOffset(DateTimeOffset.UtcNow), DateTimeZone.Utc);
+            var marketCandlestickPullRequest = new MarketCandlestickPullRequest(
+                "btcusdt",
+                MarketCandlestickPeriodType.SixtyMinutes,
+                "id1",
+                now.PlusHours(-5),
+                now.PlusHours(-2));
+            client.Send(marketCandlestickPullRequest);
 
-            //var marketDepthPullRequest = new MarketDepthPullRequest(
-            //    "btcusdt",
-            //    MarketDepthStepType.NoAggregation,
-            //    "id1");
-            //client.Send(marketDepthPullRequest);
+            var marketDepthPullRequest = new MarketDepthPullRequest(
+                "btcusdt",
+                MarketDepthStepType.NoAggregation,
+                "id1");
+            client.Send(marketDepthPullRequest);
 
-            //var marketByPricePullRequest = new MarketByPricePullRequest(
-            //    "btcusdt",
-            //    MarketByPriceLevelType.Five,
-            //    "id1");
-            //client.Send(marketByPricePullRequest);
+            var marketByPricePullRequest = new MarketByPricePullRequest(
+                "btcusdt",
+                MarketByPriceLevelType.Five,
+                "id1");
+            client.Send(marketByPricePullRequest);
 
             var marketTradeDetailPullRequest = new MarketTradeDetailPullRequest(
                 "btcusdt",
                 "id1");
             client.Send(marketTradeDetailPullRequest);
 
+            var marketDetailsPullRequest = new MarketDetailsPullRequest(
+                "btcusdt",
+                "id1");
+            client.Send(marketDetailsPullRequest);
+
             await Task.Delay(5000);
 
-            //var candlestickUnsubscribeRequest = new MarketCandlestickUnsubscribeRequest("btcusdt", MarketCandlestickPeriodType.OneMinute, "id1");
-            //client.Send(candlestickUnsubscribeRequest);
+            var candlestickUnsubscribeRequest = new MarketCandlestickUnsubscribeRequest("btcusdt", MarketCandlestickPeriodType.OneMinute, "id1");
+            client.Send(candlestickUnsubscribeRequest);
 
-            //var depthUnsubscribeRequest = new MarketDepthUnsubscribeRequest("btcusdt", MarketDepthStepType.NoAggregation, "id1");
-            //client.Send(depthUnsubscribeRequest);
+            var depthUnsubscribeRequest = new MarketDepthUnsubscribeRequest("btcusdt", MarketDepthStepType.NoAggregation, "id1");
+            client.Send(depthUnsubscribeRequest);
 
-            //var marketByPriceUnsubscribeRequest = new MarketByPriceUnsubscribeRequest("btcusdt", MarketByPriceLevelType.Five, "id1");
-            //client.Send(marketByPriceUnsubscribeRequest);
+            var marketByPriceUnsubscribeRequest = new MarketByPriceUnsubscribeRequest("btcusdt", MarketByPriceLevelType.Five, "id1");
+            client.Send(marketByPriceUnsubscribeRequest);
 
-            //var marketByPriceRefreshUnsubscribeRequest = new MarketByPriceRefreshUnsubscribeRequest("btcusdt", MarketByPriceRefreshLevelType.Five, "id1");
-            //client.Send(marketByPriceRefreshUnsubscribeRequest);
+            var marketByPriceRefreshUnsubscribeRequest = new MarketByPriceRefreshUnsubscribeRequest("btcusdt", MarketByPriceRefreshLevelType.Five, "id1");
+            client.Send(marketByPriceRefreshUnsubscribeRequest);
 
-            //var marketBestBidOfferUnsubscribeRequest = new MarketBestBidOfferUnsubscribeRequest("btcusdt", "id1");
-            //client.Send(marketBestBidOfferUnsubscribeRequest);
+            var marketBestBidOfferUnsubscribeRequest = new MarketBestBidOfferUnsubscribeRequest("btcusdt", "id1");
+            client.Send(marketBestBidOfferUnsubscribeRequest);
 
             var marketTradeDetailUnsubscribeRequest = new MarketTradeDetailUnsubscribeRequest("btcusdt", "id1");
             client.Send(marketTradeDetailUnsubscribeRequest);
 
+            var marketDetailsUnsubscribeRequest = new MarketDetailsUnsubscribeRequest("btcusdt", "id1");
+            client.Send(marketDetailsUnsubscribeRequest);
+
             ExitEvent.WaitOne();
         }
 
-        private static void HandleMarketByPriceMarketMessage(UpdateMessage<MarketByPriceTick> msg, ILogger<Program> logger)
+        private static void HandleMarketByPriceTick(UpdateMessage<MarketByPriceTick> message, ILogger<Program> logger)
         {
-            if (msg.Tick.Bids != null)
+            if (message.Tick.Bids != null)
             {
-                for (var i = 0; i < msg.Tick.Bids.Length; ++i)
+                for (var i = 0; i < message.Tick.Bids.Length; ++i)
                 {
-                    var bid = msg.Tick.Bids[i];
+                    var bid = message.Tick.Bids[i];
 
-                    logger.LogInformation($"Market by price update {msg.Topic} | [bid {i}: price={bid[0]} size={bid[1]}]");
+                    logger.LogInformation($"Market by price update {message.Topic} | [bid {i}: price={bid[0]} size={bid[1]}]");
                 }
             }
 
-            if (msg.Tick.Asks != null)
+            if (message.Tick.Asks != null)
             {
-                for (var i = 0; i < msg.Tick.Asks.Length; ++i)
+                for (var i = 0; i < message.Tick.Asks.Length; ++i)
                 {
-                    var bid = msg.Tick.Asks[i];
+                    var bid = message.Tick.Asks[i];
 
-                    logger.LogInformation($"Market by price update {msg.Topic} | [ask {i}: price={bid[0]} size={bid[1]}]");
+                    logger.LogInformation($"Market by price update {message.Topic} | [ask {i}: price={bid[0]} size={bid[1]}]");
                 }
+            }
+        }
+
+        private static void HandleMarketByPricePullTick(MarketByPricePullResponse response, ILogger<Program> logger)
+        {
+            for (var i = 0; i < response.Data.Bids.Length; ++i)
+            {
+                var bid = response.Data.Bids[i];
+
+                logger.LogInformation($"Market by price pull {response.Topic} | [bid {i}: price={bid[0]} size={bid[1]}]");
+            }
+
+            for (var i = 0; i < response.Data.Asks.Length; ++i)
+            {
+                var bid = response.Data.Asks[i];
+
+                logger.LogInformation($"Market by price pull {response.Topic} | [ask {i}: price={bid[0]} size={bid[1]}]");
             }
         }
     }

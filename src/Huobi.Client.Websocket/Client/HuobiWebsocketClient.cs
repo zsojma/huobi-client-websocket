@@ -3,18 +3,19 @@ using System.IO;
 using System.IO.Compression;
 using System.Net.WebSockets;
 using System.Text;
-using System.Threading;
 using Huobi.Client.Websocket.Communicator;
 using Huobi.Client.Websocket.Messages;
 using Huobi.Client.Websocket.Messages.Pulling.MarketByPrice;
 using Huobi.Client.Websocket.Messages.Pulling.MarketCandlestick;
 using Huobi.Client.Websocket.Messages.Pulling.MarketDepth;
+using Huobi.Client.Websocket.Messages.Pulling.MarketDetails;
 using Huobi.Client.Websocket.Messages.Pulling.MarketTradeDetail;
 using Huobi.Client.Websocket.Messages.Subscription;
 using Huobi.Client.Websocket.Messages.Subscription.MarketBestBidOffer;
 using Huobi.Client.Websocket.Messages.Subscription.MarketByPrice;
 using Huobi.Client.Websocket.Messages.Subscription.MarketCandlestick;
 using Huobi.Client.Websocket.Messages.Subscription.MarketDepth;
+using Huobi.Client.Websocket.Messages.Subscription.MarketDetails;
 using Huobi.Client.Websocket.Messages.Subscription.MarketTradeDetail;
 using Huobi.Client.Websocket.Serializer;
 using Microsoft.Extensions.Logging;
@@ -85,10 +86,10 @@ namespace Huobi.Client.Websocket.Client
                 if (message.StartsWith("{"))
                 {
                     processed = TryHandleServerPingRequest(message)
-                                 || TryHandleUpdateMessages(message)
-                                 || TryHandlePullResponses(message)
-                                 || TryHandleSubscribeResponses(message)
-                                 || TryProcessErrorMessage(message);
+                             || TryHandlePullResponses(message)
+                             || TryHandleUpdateMessages(message)
+                             || TryHandleSubscribeResponses(message)
+                             || TryProcessErrorMessage(message);
                 }
 
                 if (!processed)
@@ -122,6 +123,41 @@ namespace Huobi.Client.Websocket.Client
             //    Send(serialized);
             //    return true;
             //}
+
+            return false;
+        }
+
+        private bool TryHandlePullResponses(string message)
+        {
+            if (MarketCandlestickPullResponse.TryParse(_serializer, message, out var marketCandlestick))
+            {
+                Streams.MarketCandlestickPullSubject.OnNext(marketCandlestick);
+                return true;
+            }
+
+            if (MarketDepthPullResponse.TryParse(_serializer, message, out var marketDepth))
+            {
+                Streams.MarketDepthPullSubject.OnNext(marketDepth);
+                return true;
+            }
+
+            if (MarketByPricePullResponse.TryParse(_serializer, message, out var marketByPrice))
+            {
+                Streams.MarketByPricePullSubject.OnNext(marketByPrice);
+                return true;
+            }
+
+            if (MarketTradeDetailPullResponse.TryParse(_serializer, message, out var marketTradeDetail))
+            {
+                Streams.MarketTradeDetailPullSubject.OnNext(marketTradeDetail);
+                return true;
+            }
+
+            if (MarketDetailsPullResponse.TryParse(_serializer, message, out var marketDetails))
+            {
+                Streams.MarketDetailsPullSubject.OnNext(marketDetails);
+                return true;
+            }
 
             return false;
         }
@@ -164,32 +200,9 @@ namespace Huobi.Client.Websocket.Client
                 return true;
             }
 
-            return false;
-        }
-
-        private bool TryHandlePullResponses(string message)
-        {
-            if (MarketCandlestickPullResponse.TryParse(_serializer, message, out var marketCandlestick))
+            if (MarketDetailsUpdateMessage.TryParse(_serializer, message, out var marketDetails))
             {
-                Streams.MarketCandlestickPullSubject.OnNext(marketCandlestick);
-                return true;
-            }
-
-            if (MarketDepthPullResponse.TryParse(_serializer, message, out var marketDepth))
-            {
-                Streams.MarketDepthPullSubject.OnNext(marketDepth);
-                return true;
-            }
-
-            if (MarketByPricePullResponse.TryParse(_serializer, message, out var marketByPrice))
-            {
-                Streams.MarketByPricePullSubject.OnNext(marketByPrice);
-                return true;
-            }
-
-            if (MarketTradeDetailPullResponse.TryParse(_serializer, message, out var marketTradeDetail))
-            {
-                Streams.MarketTradeDetailPullSubject.OnNext(marketTradeDetail);
+                Streams.MarketDetailsUpdateSubject.OnNext(marketDetails);
                 return true;
             }
 

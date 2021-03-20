@@ -1,4 +1,4 @@
-﻿using Huobi.Client.Websocket.Messages;
+﻿using Huobi.Client.Websocket.Messages.MarketData;
 using Huobi.Client.Websocket.Serializer;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
@@ -33,7 +33,7 @@ namespace Huobi.Client.Websocket.Tests
             var serializer = new HuobiSerializer(NullLogger<HuobiSerializer>.Instance);
 
             // Act
-            var result = serializer.TryDeserializeIfContains<PingMessage>("{ \"ping\": 1234 }", "ping", out var message);
+            var result = serializer.TryDeserializeIfContains<PingRequest>("{ \"ping\": 1234 }", "ping", out var message);
 
             // Assert
             Assert.True(result);
@@ -48,7 +48,7 @@ namespace Huobi.Client.Websocket.Tests
             var serializer = new HuobiSerializer(NullLogger<HuobiSerializer>.Instance);
 
             // Act
-            var result = serializer.TryDeserializeIfContains<PingMessage>("{ \"ping\": 1234 }", "unknown", out var message);
+            var result = serializer.TryDeserializeIfContains<PingRequest>("{ \"ping\": 1234 }", "unknown", out var message);
 
             // Assert
             Assert.False(result);
@@ -62,7 +62,7 @@ namespace Huobi.Client.Websocket.Tests
             var serializer = new HuobiSerializer(NullLogger<HuobiSerializer>.Instance);
 
             // Act
-            var result = serializer.TryDeserializeIfContains<PingMessage>("{ \"ping\": 1234 }", new [] { "\"ping\"", "23" }, out var message);
+            var result = serializer.TryDeserializeIfContains<PingRequest>("{ \"ping\": 1234 }", new [] { "\"ping\"", "23" }, out var message);
 
             // Assert
             Assert.True(result);
@@ -77,7 +77,7 @@ namespace Huobi.Client.Websocket.Tests
             var serializer = new HuobiSerializer(NullLogger<HuobiSerializer>.Instance);
 
             // Act
-            var result = serializer.TryDeserializeIfContains<PingMessage>("{ \"ping\": 1234 }", new [] { "\"ping\"", "unknown" }, out var message);
+            var result = serializer.TryDeserializeIfContains<PingRequest>("{ \"ping\": 1234 }", new [] { "\"ping\"", "unknown" }, out var message);
 
             // Assert
             Assert.False(result);
@@ -91,7 +91,7 @@ namespace Huobi.Client.Websocket.Tests
             var serializer = new HuobiSerializer(NullLogger<HuobiSerializer>.Instance);
 
             // Act
-            var result = serializer.TryDeserializeIfContains<PingMessage>("{ \"ping\": 1234 }", new [] { "\"ping\"", "23" }, new [] { "\"unknown\"" }, out var message);
+            var result = serializer.TryDeserializeIfContains<PingRequest>("{ \"ping\": 1234 }", new [] { "\"ping\"", "23" }, new [] { "\"unknown\"" }, out var message);
 
             // Assert
             Assert.True(result);
@@ -106,7 +106,7 @@ namespace Huobi.Client.Websocket.Tests
             var serializer = new HuobiSerializer(NullLogger<HuobiSerializer>.Instance);
 
             // Act
-            var result = serializer.TryDeserializeIfContains<PingMessage>("{ \"ping\": 1234 }", new [] { "\"ping\"", "23" }, new [] { "34" }, out var message);
+            var result = serializer.TryDeserializeIfContains<PingRequest>("{ \"ping\": 1234 }", new [] { "\"ping\"", "23" }, new [] { "34" }, out var message);
 
             // Assert
             Assert.False(result);

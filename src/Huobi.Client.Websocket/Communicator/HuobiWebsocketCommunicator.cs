@@ -8,7 +8,7 @@ namespace Huobi.Client.Websocket.Communicator
     public class HuobiWebsocketCommunicator : WebsocketClient, IHuobiWebsocketCommunicator
     {
         public HuobiWebsocketCommunicator(IOptions<HuobiWebsocketClientConfig> config)
-            : this(new Uri(config.Value.Url ?? throw new ArgumentNullException(nameof(config), "Huobi websocket url cannot be null")))
+            : this(GetUrl(config))
         {
             Name = config.Value.Name;
             ReconnectTimeout = TimeSpan.FromMinutes(config.Value.ReconnectTimeoutMinutes);
@@ -17,6 +17,13 @@ namespace Huobi.Client.Websocket.Communicator
         public HuobiWebsocketCommunicator(Uri url)
             : base(url)
         {
+        }
+
+        private static Uri GetUrl(IOptions<HuobiWebsocketClientConfig> config)
+        {
+            return new(
+                config.Value.Url
+             ?? throw new ArgumentNullException(nameof(config.Value.Url), "Huobi websocket url cannot be null"));
         }
     }
 }

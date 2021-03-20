@@ -4,19 +4,20 @@ using System.IO.Compression;
 using System.Net.WebSockets;
 using System.Text;
 using Huobi.Client.Websocket.Communicator;
-using Huobi.Client.Websocket.Messages;
-using Huobi.Client.Websocket.Messages.Pulling.MarketByPrice;
-using Huobi.Client.Websocket.Messages.Pulling.MarketCandlestick;
-using Huobi.Client.Websocket.Messages.Pulling.MarketDepth;
-using Huobi.Client.Websocket.Messages.Pulling.MarketDetails;
-using Huobi.Client.Websocket.Messages.Pulling.MarketTradeDetail;
-using Huobi.Client.Websocket.Messages.Subscription;
-using Huobi.Client.Websocket.Messages.Subscription.MarketBestBidOffer;
-using Huobi.Client.Websocket.Messages.Subscription.MarketByPrice;
-using Huobi.Client.Websocket.Messages.Subscription.MarketCandlestick;
-using Huobi.Client.Websocket.Messages.Subscription.MarketDepth;
-using Huobi.Client.Websocket.Messages.Subscription.MarketDetails;
-using Huobi.Client.Websocket.Messages.Subscription.MarketTradeDetail;
+using Huobi.Client.Websocket.Messages.Account;
+using Huobi.Client.Websocket.Messages.MarketData;
+using Huobi.Client.Websocket.Messages.MarketData.Pulling.MarketByPrice;
+using Huobi.Client.Websocket.Messages.MarketData.Pulling.MarketCandlestick;
+using Huobi.Client.Websocket.Messages.MarketData.Pulling.MarketDepth;
+using Huobi.Client.Websocket.Messages.MarketData.Pulling.MarketDetails;
+using Huobi.Client.Websocket.Messages.MarketData.Pulling.MarketTradeDetail;
+using Huobi.Client.Websocket.Messages.MarketData.Subscription;
+using Huobi.Client.Websocket.Messages.MarketData.Subscription.MarketBestBidOffer;
+using Huobi.Client.Websocket.Messages.MarketData.Subscription.MarketByPrice;
+using Huobi.Client.Websocket.Messages.MarketData.Subscription.MarketCandlestick;
+using Huobi.Client.Websocket.Messages.MarketData.Subscription.MarketDepth;
+using Huobi.Client.Websocket.Messages.MarketData.Subscription.MarketDetails;
+using Huobi.Client.Websocket.Messages.MarketData.Subscription.MarketTradeDetail;
 using Huobi.Client.Websocket.Serializer;
 using Microsoft.Extensions.Logging;
 using Websocket.Client;
@@ -52,6 +53,12 @@ namespace Huobi.Client.Websocket.Client
         }
 
         public void Send(RequestBase request)
+        {
+            var serialized = _serializer.Serialize(request);
+            SendInternal(serialized);
+        }
+
+        public void Send(AuthRequestBase request)
         {
             var serialized = _serializer.Serialize(request);
             SendInternal(serialized);
@@ -107,28 +114,33 @@ namespace Huobi.Client.Websocket.Client
 
         private bool TryHandleServerPingRequest(string message)
         {
-            if (_serializer.TryDeserializeIfContains<PingMessage>(message, "ping", out var pingRequest))
+            if (PingRequest.TryParse(_serializer, message, out var pingRequest))
             {
                 Streams.PingMessageSubject.OnNext(pingRequest);
-                RespondWithPong(pingRequest.Value);
+                RespondWithPong(pingRequest);
                 return true;
             }
 
-            //var serverRequest = _serializer.Deserialize<AuthMessage>(message);
-            //if (string.Equals("ping", serverRequest.Action))
-            //{
-            //    var clientResponse = new AuthMessage("pong", serverRequest.Data);
-            //    var serialized = _serializer.Serialize(clientResponse);
-            //    Send(serialized);
-            //    return true;
-            //}
+            if (AuthPingRequest.TryParse(_serializer, message, out var pingAuthRequest))
+            {
+                Streams.PingAuthMessageSubject.OnNext(pingAuthRequest);
+                RespondWithPong(pingAuthRequest);
+                return true;
+            }
 
             return false;
         }
 
-        private void RespondWithPong(long value)
+        private void RespondWithPong(PingRequest pingRequest)
         {
-            var clientResponse = new PongMessage(value);
+            var clientResponse = new PongResponse(pingRequest.Value);
+            var serialized = _serializer.Serialize(clientResponse);
+            Send(serialized);
+        }
+
+        private void RespondWithPong(AuthPingRequest authPingRequest)
+        {
+            var clientResponse = new AuthPongResponse(authPingRequest.Data.Timestamp);
             var serialized = _serializer.Serialize(clientResponse);
             Send(serialized);
         }

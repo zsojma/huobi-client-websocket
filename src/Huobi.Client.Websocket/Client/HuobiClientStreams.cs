@@ -1,19 +1,20 @@
 ﻿using System;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using Huobi.Client.Websocket.Messages;
-using Huobi.Client.Websocket.Messages.Pulling.MarketByPrice;
-using Huobi.Client.Websocket.Messages.Pulling.MarketCandlestick;
-using Huobi.Client.Websocket.Messages.Pulling.MarketDepth;
-using Huobi.Client.Websocket.Messages.Pulling.MarketDetails;
-using Huobi.Client.Websocket.Messages.Pulling.MarketTradeDetail;
-using Huobi.Client.Websocket.Messages.Subscription;
-using Huobi.Client.Websocket.Messages.Subscription.MarketBestBidOffer;
-using Huobi.Client.Websocket.Messages.Subscription.MarketByPrice;
-using Huobi.Client.Websocket.Messages.Subscription.MarketCandlestick;
-using Huobi.Client.Websocket.Messages.Subscription.MarketDepth;
-using Huobi.Client.Websocket.Messages.Subscription.MarketDetails;
-using Huobi.Client.Websocket.Messages.Subscription.MarketTradeDetail;
+using Huobi.Client.Websocket.Messages.Account;
+using Huobi.Client.Websocket.Messages.MarketData;
+using Huobi.Client.Websocket.Messages.MarketData.Pulling.MarketByPrice;
+using Huobi.Client.Websocket.Messages.MarketData.Pulling.MarketCandlestick;
+using Huobi.Client.Websocket.Messages.MarketData.Pulling.MarketDepth;
+using Huobi.Client.Websocket.Messages.MarketData.Pulling.MarketDetails;
+using Huobi.Client.Websocket.Messages.MarketData.Pulling.MarketTradeDetail;
+using Huobi.Client.Websocket.Messages.MarketData.Subscription;
+using Huobi.Client.Websocket.Messages.MarketData.Subscription.MarketBestBidOffer;
+using Huobi.Client.Websocket.Messages.MarketData.Subscription.MarketByPrice;
+using Huobi.Client.Websocket.Messages.MarketData.Subscription.MarketCandlestick;
+using Huobi.Client.Websocket.Messages.MarketData.Subscription.MarketDepth;
+using Huobi.Client.Websocket.Messages.MarketData.Subscription.MarketDetails;
+using Huobi.Client.Websocket.Messages.MarketData.Subscription.MarketTradeDetail;
 
 namespace Huobi.Client.Websocket.Client
 {
@@ -21,7 +22,8 @@ namespace Huobi.Client.Websocket.Client
     {
         internal readonly Subject<string> UnhandledMessageSubject = new();
         internal readonly Subject<ErrorMessage> ErrorMessageSubject = new();
-        internal readonly Subject<PingMessage> PingMessageSubject = new();
+        internal readonly Subject<PingRequest> PingMessageSubject = new();
+        internal readonly Subject<AuthPingRequest> PingAuthMessageSubject = new();
         internal readonly Subject<SubscribeResponse> SubscribeResponseSubject = new();
         internal readonly Subject<UnsubscribeResponse> UnsubscribeResponseSubject = new();
 
@@ -41,7 +43,8 @@ namespace Huobi.Client.Websocket.Client
 
         public IObservable<string> UnhandledMessageStream => UnhandledMessageSubject.AsObservable();
         public IObservable<ErrorMessage> ErrorMessageStream => ErrorMessageSubject.AsObservable();
-        public IObservable<PingMessage> PingMessageStream => PingMessageSubject.AsObservable();
+        public IObservable<PingRequest> PingMessageStream => PingMessageSubject.AsObservable();
+        public IObservable<AuthPingRequest> PingAuthMessageStream => PingAuthMessageSubject.AsObservable();
         public IObservable<SubscribeResponse> SubscribeResponseStream => SubscribeResponseSubject.AsObservable();
         public IObservable<UnsubscribeResponse> UnsubscribeResponseStream => UnsubscribeResponseSubject.AsObservable();
         

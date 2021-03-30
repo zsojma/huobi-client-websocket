@@ -2,11 +2,11 @@
 
 namespace Huobi.Client.Websocket.Messages.MarketData.Subscription
 {
-    public abstract class UpdateMessage<TTick>
+    public class UpdateMessage<TTick>
         where TTick : class
     {
         [JsonConstructor]
-        protected UpdateMessage(string topic, long timestamp, TTick tick)
+        public UpdateMessage(string topic, long timestamp, TTick tick)
         {
             Topic = topic;
             Timestamp = timestamp;

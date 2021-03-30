@@ -13,6 +13,17 @@
             return message;
         }
 
+        public static string CreateErrorMessage()
+        {
+            var message = @"{
+  ""status"": ""error"",
+  ""ts"": ""123456"",
+  ""err-code"": ""error code 123"",
+  ""err-msg"": ""error message 456""
+}";
+            return message;
+        }
+
         public static string CreateMarketCandlestickUpdateMessage()
         {
             var message = @"{

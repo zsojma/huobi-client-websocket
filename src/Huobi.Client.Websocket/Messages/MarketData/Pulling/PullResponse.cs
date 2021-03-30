@@ -2,10 +2,10 @@
 
 namespace Huobi.Client.Websocket.Messages.MarketData.Pulling
 {
-    public abstract class PullResponse<TTick> : ResponseBase
+    public class PullResponse<TTick> : ResponseBase
         where TTick : class
     {
-        protected PullResponse(string reqId, string status, string topic, long timestamp, TTick data)
+        public PullResponse(string reqId, string status, string topic, long timestamp, TTick data)
             : base(reqId)
         {
             Status = status;

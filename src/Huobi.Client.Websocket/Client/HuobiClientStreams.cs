@@ -41,6 +41,9 @@ namespace Huobi.Client.Websocket.Client
         internal readonly Subject<MarketTradeDetailPullResponse> MarketTradeDetailPullSubject = new();
         internal readonly Subject<MarketDetailsPullResponse> MarketDetailsPullSubject = new();
 
+        internal readonly Subject<AuthErrorMessage> AuthErrorMessageSubject = new();
+        internal readonly Subject<AuthenticationResponse> AuthenticationResponseSubject = new();
+
         public IObservable<string> UnhandledMessageStream => UnhandledMessageSubject.AsObservable();
         public IObservable<ErrorMessage> ErrorMessageStream => ErrorMessageSubject.AsObservable();
         public IObservable<PingRequest> PingMessageStream => PingMessageSubject.AsObservable();
@@ -61,5 +64,8 @@ namespace Huobi.Client.Websocket.Client
         public IObservable<MarketByPricePullResponse> MarketByPricePullStream => MarketByPricePullSubject.AsObservable();
         public IObservable<MarketTradeDetailPullResponse> MarketTradeDetailPullStream => MarketTradeDetailPullSubject.AsObservable();
         public IObservable<MarketDetailsPullResponse> MarketDetailsPullStream => MarketDetailsPullSubject.AsObservable();
+        
+        public IObservable<AuthErrorMessage> AuthErrorMessageStream => AuthErrorMessageSubject.AsObservable();
+        public IObservable<AuthenticationResponse> AuthenticationResponseStream => AuthenticationResponseSubject.AsObservable();
     }
 }

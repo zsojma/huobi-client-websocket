@@ -3,11 +3,22 @@ using System.Threading;
 using System.Threading.Tasks;
 using Huobi.Client.Websocket.Client;
 using Huobi.Client.Websocket.Config;
-using Huobi.Client.Websocket.Messages.Account;
+using Huobi.Client.Websocket.Messages.Account.Factories;
 using Huobi.Client.Websocket.Messages.MarketData.Pulling.MarketByPrice;
+using Huobi.Client.Websocket.Messages.MarketData.Pulling.MarketCandlestick;
+using Huobi.Client.Websocket.Messages.MarketData.Pulling.MarketDepth;
+using Huobi.Client.Websocket.Messages.MarketData.Pulling.MarketDetails;
+using Huobi.Client.Websocket.Messages.MarketData.Pulling.MarketTradeDetail;
 using Huobi.Client.Websocket.Messages.MarketData.Subscription;
+using Huobi.Client.Websocket.Messages.MarketData.Subscription.MarketBestBidOffer;
+using Huobi.Client.Websocket.Messages.MarketData.Subscription.MarketByPrice;
+using Huobi.Client.Websocket.Messages.MarketData.Subscription.MarketCandlestick;
+using Huobi.Client.Websocket.Messages.MarketData.Subscription.MarketDepth;
+using Huobi.Client.Websocket.Messages.MarketData.Subscription.MarketDetails;
+using Huobi.Client.Websocket.Messages.MarketData.Subscription.MarketTradeDetail;
 using Huobi.Client.Websocket.Messages.MarketData.Ticks;
 using Huobi.Client.Websocket.Messages.MarketData.Values;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NodaTime;
@@ -15,28 +26,24 @@ using NodaTime;
 namespace Huobi.Client.Websocket.Sample
 {
     public class Program
-    { 
-        private const string ACCESS_KEY = "1abca636-5540151d-bewr5drtmh-18574";
-        private const string SECRET_KEY = "e91b0e46-9cec52db-3bc147c3-c4276";
-
+    {
         private static readonly ManualResetEvent _exitEvent = new(false);
 
         public static async Task Main()
         {
             // setup DI
+            var configurationBuilder = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
+                .AddJsonFile("appsettings.dev.json", true);
+
+            var configuration = configurationBuilder.Build();
+            var clientConfig = configuration.GetSection("HuobiWebsocketClient");
+
             var serviceCollection = new ServiceCollection()
                 .AddLogging(builder => builder.AddConsole())
+                .AddSingleton(configuration)
+                .Configure<HuobiWebsocketClientConfig>(clientConfig)
                 .AddHuobiWebsocketServices();
-
-            serviceCollection
-                .AddOptions<HuobiWebsocketClientConfig>()
-                .Configure(
-                    x =>
-                    {
-                        x.Url = HuobiConstants.ApiAuthWebsocketUrl;
-                        x.Name = "Huobi-1";
-                        x.ReconnectTimeoutMinutes = 10;
-                    });
 
             var serviceProvider = serviceCollection
                 .BuildServiceProvider();
@@ -104,14 +111,14 @@ namespace Huobi.Client.Websocket.Sample
             client.Streams.MarketByPriceUpdateStream.Subscribe(msg => { HandleMarketByPriceTick(msg, logger); });
             client.Streams.MarketByPriceRefreshUpdateStream.Subscribe(msg => { HandleMarketByPriceTick(msg, logger); });
             client.Streams.MarketByPricePullStream.Subscribe(msg => { HandleMarketByPricePullTick(msg, logger); });
-            
+
             client.Streams.MarketBestBidOfferUpdateStream.Subscribe(
                 msg =>
                 {
                     logger.LogInformation(
                         $"Market best bid/offer update {msg.Topic} | [symbol={msg.Tick.Symbol}] [quoteTime={msg.Tick.QuoteTime}] [bid={msg.Tick.Bid}] [bidSize={msg.Tick.BidSize}] [ask={msg.Tick.Ask}] [askSize={msg.Tick.AskSize}] [seqId={msg.Tick.SeqId}]");
                 });
-            
+
             client.Streams.MarketTradeDetailUpdateStream.Subscribe(
                 msg =>
                 {
@@ -151,21 +158,31 @@ namespace Huobi.Client.Websocket.Sample
                 });
 
             await client.Communicator.Start();
-            
-            var now = new ZonedDateTime(Instant.FromDateTimeOffset(DateTimeOffset.UtcNow), DateTimeZone.Utc);
-            var ordersSubscribeRequest = new OrdersSubscribeRequest("btcusdt", ACCESS_KEY, now);
-            client.Send(ordersSubscribeRequest);
 
-            //var marketCandlestickSubscribeRequest = new MarketCandlestickSubscribeRequest("btcusdt", MarketCandlestickPeriodType.OneMinute, "id1");
+            await Task.Delay(1000);
+
+            var authenticationRequestFactory = serviceProvider.GetRequiredService<IHuobiAuthenticationRequestFactory>();
+
+            var authenticationRequest = authenticationRequestFactory.CreateRequest();
+            client.Send(authenticationRequest);
+
+            //var marketCandlestickSubscribeRequest = new MarketCandlestickSubscribeRequest(
+            //    "btcusdt",
+            //    MarketCandlestickPeriodType.OneMinute,
+            //    "id1");
             //client.Send(marketCandlestickSubscribeRequest);
 
-            //var marketDepthSubscribeRequest = new MarketDepthSubscribeRequest("btcusdt", MarketDepthStepType.NoAggregation, "id1");
+            //var marketDepthSubscribeRequest =
+            //    new MarketDepthSubscribeRequest("btcusdt", MarketDepthStepType.NoAggregation, "id1");
             //client.Send(marketDepthSubscribeRequest);
 
             //var marketByPriceSubscribeRequest = new MarketByPriceSubscribeRequest("btcusdt", MarketByPriceLevelType.Five, "id1");
             //client.Send(marketByPriceSubscribeRequest);
 
-            //var marketByPriceRefreshSubscribeRequest = new MarketByPriceRefreshSubscribeRequest("btcusdt", MarketByPriceRefreshLevelType.Five, "id1");
+            //var marketByPriceRefreshSubscribeRequest = new MarketByPriceRefreshSubscribeRequest(
+            //    "btcusdt",
+            //    MarketByPriceRefreshLevelType.Five,
+            //    "id1");
             //client.Send(marketByPriceRefreshSubscribeRequest);
 
             //var marketBestBidOfferSubscribeRequest = new MarketBestBidOfferSubscribeRequest("btcusdt", "id1");
@@ -212,16 +229,23 @@ namespace Huobi.Client.Websocket.Sample
 
             //await Task.Delay(5000);
 
-            //var candlestickUnsubscribeRequest = new MarketCandlestickUnsubscribeRequest("btcusdt", MarketCandlestickPeriodType.OneMinute, "id1");
+            //var candlestickUnsubscribeRequest = new MarketCandlestickUnsubscribeRequest(
+            //    "btcusdt",
+            //    MarketCandlestickPeriodType.OneMinute,
+            //    "id1");
             //client.Send(candlestickUnsubscribeRequest);
 
             //var depthUnsubscribeRequest = new MarketDepthUnsubscribeRequest("btcusdt", MarketDepthStepType.NoAggregation, "id1");
             //client.Send(depthUnsubscribeRequest);
 
-            //var marketByPriceUnsubscribeRequest = new MarketByPriceUnsubscribeRequest("btcusdt", MarketByPriceLevelType.Five, "id1");
+            //var marketByPriceUnsubscribeRequest =
+            //    new MarketByPriceUnsubscribeRequest("btcusdt", MarketByPriceLevelType.Five, "id1");
             //client.Send(marketByPriceUnsubscribeRequest);
 
-            //var marketByPriceRefreshUnsubscribeRequest = new MarketByPriceRefreshUnsubscribeRequest("btcusdt", MarketByPriceRefreshLevelType.Five, "id1");
+            //var marketByPriceRefreshUnsubscribeRequest = new MarketByPriceRefreshUnsubscribeRequest(
+            //    "btcusdt",
+            //    MarketByPriceRefreshLevelType.Five,
+            //    "id1");
             //client.Send(marketByPriceRefreshUnsubscribeRequest);
 
             //var marketBestBidOfferUnsubscribeRequest = new MarketBestBidOfferUnsubscribeRequest("btcusdt", "id1");

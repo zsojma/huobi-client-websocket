@@ -3,9 +3,9 @@ using Newtonsoft.Json;
 
 namespace Huobi.Client.Websocket.Messages.MarketData.Subscription
 {
-    public abstract class SubscribeRequest : RequestBase
+    public class SubscribeRequest : RequestBase
     {
-        protected SubscribeRequest(string symbol, SubscriptionType subscriptionType, string? step, string? reqId = null)
+        public SubscribeRequest(string symbol, SubscriptionType subscriptionType, string? step, string? reqId = null)
             : base(reqId)
         {
             if (!string.IsNullOrEmpty(step))

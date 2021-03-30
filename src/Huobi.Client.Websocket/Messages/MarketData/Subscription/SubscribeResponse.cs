@@ -23,7 +23,10 @@ namespace Huobi.Client.Websocket.Messages.MarketData.Subscription
         [JsonProperty("ts")]
         public long Timestamp { get; }
 
-        internal static bool TryParse(IHuobiSerializer serializer, string input, [MaybeNullWhen(false)] out SubscribeResponse response)
+        internal static bool TryParse(
+            IHuobiSerializer serializer,
+            string input,
+            [MaybeNullWhen(false)] out SubscribeResponse response)
         {
             return serializer.TryDeserializeIfContains(input, "\"subbed\"", out response);
         }

@@ -212,3 +212,6 @@ FakesAssemblies/
 GeneratedArtifacts/
 _Pvt_Extensions/
 ModelManifest.xml
+
+# Development config with secrets
+test_integration/**/appsettings.dev.json

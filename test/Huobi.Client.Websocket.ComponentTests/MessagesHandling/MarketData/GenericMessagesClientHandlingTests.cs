@@ -23,6 +23,30 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.MarketData
         }
 
         [Fact]
+        public void HandleResponse_ErrorMessage_StreamUpdated()
+        {
+            var triggered = false;
+            var client = Initialize();
+            client.Streams.ErrorMessageStream.Subscribe(
+                msg =>
+                {
+                    triggered = true;
+
+                    // Assert
+                    Assert.NotNull(msg);
+                });
+
+            var message = HuobiMessagesFactory.CreateErrorMessage();
+
+            // Act
+            TriggerMessageReceive(message);
+
+            // Assert
+            VerifyMessageNotUnhandled();
+            Assert.True(triggered);
+        }
+
+        [Fact]
         public void HandleResponse_Subscribed_StreamUpdated()
         {
             var triggered = false;

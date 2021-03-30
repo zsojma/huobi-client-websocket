@@ -241,6 +241,12 @@ namespace Huobi.Client.Websocket.Client
                 return true;
             }
 
+            if (AuthenticationResponse.TryParse(_serializer, message, out var authenticationResponse))
+            {
+                Streams.AuthenticationResponseSubject.OnNext(authenticationResponse);
+                return true;
+            }
+
             return false;
         }
 
@@ -249,6 +255,12 @@ namespace Huobi.Client.Websocket.Client
             if (ErrorMessage.TryParse(_serializer, message, out var errorMessage))
             {
                 Streams.ErrorMessageSubject.OnNext(errorMessage);
+                return true;
+            }
+
+            if (AuthErrorMessage.TryParse(_serializer, message, out var authErrorMessage))
+            {
+                Streams.AuthErrorMessageSubject.OnNext(authErrorMessage);
                 return true;
             }
 

@@ -3,7 +3,7 @@ using NodaTime;
 
 namespace Huobi.Client.Websocket.Utils
 {
-    internal class HuobiDateTimeProvider : IHuobiDateTimeProvider
+    public class HuobiDateTimeProvider : IHuobiDateTimeProvider
     {
         public ZonedDateTime UtcNow
         {

@@ -76,7 +76,6 @@ namespace Huobi.Client.Websocket.Tests.Integration
 
             // Act
             client.Send(request);
-
             receivedEvent.WaitOne(TimeSpan.FromSeconds(30));
 
             // Assert

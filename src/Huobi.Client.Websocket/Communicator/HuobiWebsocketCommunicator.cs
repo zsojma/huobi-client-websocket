@@ -1,5 +1,6 @@
 ﻿using System;
 using Huobi.Client.Websocket.Config;
+using Huobi.Client.Websocket.Utils;
 using Microsoft.Extensions.Options;
 using Websocket.Client;
 
@@ -25,9 +26,8 @@ namespace Huobi.Client.Websocket.Communicator
 
         private static Uri GetUrl(IOptions<HuobiWebsocketClientConfig> config)
         {
-            return new(
-                config.Value.Url
-             ?? throw new ArgumentNullException(nameof(config.Value.Url), "Huobi websocket url cannot be null"));
+            Validations.ValidateInput(config.Value.Url, nameof(Url));
+            return new Uri(config.Value.Url!);
         }
     }
 }

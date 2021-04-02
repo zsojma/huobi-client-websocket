@@ -2,15 +2,15 @@
 
 namespace Huobi.Client.Websocket.Messages.Account.Values
 {
-    public static class AuthSubscriptionTypeExtensions
+    public static class AccountSubscriptionTypeExtensions
     {
-        public static string ToTopicId(this AuthSubscriptionType subscriptionType)
+        public static string ToTopicId(this AccountSubscriptionType subscriptionType)
         {
             return subscriptionType switch
             {
-                AuthSubscriptionType.AccountUpdates => "accounts.update",
-                AuthSubscriptionType.Orders => "orders",
-                AuthSubscriptionType.TradeDetails => "trade.clearing",
+                AccountSubscriptionType.Orders => "orders",
+                AccountSubscriptionType.TradeDetails => "trade.clearing",
+                AccountSubscriptionType.AccountUpdates => "accounts.update",
                 _ => throw new ArgumentOutOfRangeException(
                     nameof(subscriptionType),
                     subscriptionType,

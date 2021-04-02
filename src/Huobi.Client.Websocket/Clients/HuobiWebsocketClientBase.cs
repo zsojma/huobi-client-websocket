@@ -102,7 +102,7 @@ namespace Huobi.Client.Websocket.Clients
                 return true;
             }
 
-            if (AuthPingRequest.TryParse(Serializer, message, out var pingAuthRequest))
+            if (AccountPingRequest.TryParse(Serializer, message, out var pingAuthRequest))
             {
                 Streams.PingAuthMessageSubject.OnNext(pingAuthRequest);
                 RespondWithPong(pingAuthRequest);
@@ -120,7 +120,7 @@ namespace Huobi.Client.Websocket.Clients
                 return true;
             }
 
-            if (AuthErrorMessage.TryParse(Serializer, message, out var authErrorMessage))
+            if (AccountErrorMessage.TryParse(Serializer, message, out var authErrorMessage))
             {
                 Streams.AuthErrorMessageSubject.OnNext(authErrorMessage);
                 return true;
@@ -136,9 +136,9 @@ namespace Huobi.Client.Websocket.Clients
             Send(serialized);
         }
 
-        private void RespondWithPong(AuthPingRequest authPingRequest)
+        private void RespondWithPong(AccountPingRequest accountPingRequest)
         {
-            var clientResponse = new AuthPongResponse(authPingRequest.Data.Timestamp);
+            var clientResponse = new AccountPongResponse(accountPingRequest.Data.Timestamp);
             var serialized = Serializer.Serialize(clientResponse);
             Send(serialized);
         }

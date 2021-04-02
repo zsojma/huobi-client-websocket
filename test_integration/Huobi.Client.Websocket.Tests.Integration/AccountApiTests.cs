@@ -18,7 +18,7 @@ namespace Huobi.Client.Websocket.Tests.Integration
                 "not_required_for_ping",
                 "not_required_for_ping");
 
-            AuthPingRequest? receivedPingMessage = null;
+            AccountPingRequest? receivedPingMessage = null;
             var receivedEvent = new ManualResetEvent(false);
 
             client.Streams.PingAuthMessageStream.Subscribe(

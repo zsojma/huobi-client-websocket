@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Huobi.Client.Websocket.Clients;
-using Huobi.Client.Websocket.Messages.MarketData.Subscription.MarketCandlestick;
-using Huobi.Client.Websocket.Messages.MarketData.Values;
+using Huobi.Client.Websocket.Messages.Account.Subscription.OrderUpdates;
 using Microsoft.Extensions.Logging;
 
 namespace Huobi.Client.Websocket.Sample.Examples
@@ -23,9 +22,14 @@ namespace Huobi.Client.Websocket.Sample.Examples
             SubscribeToStreams();
             
             await _client.Start();
+            await Task.Delay(1000);
 
-            //var request = new MarketCandlestickSubscribeRequest(symbol, MarketCandlestickPeriodType.FiveMinutes, "id1");
-            //_client.Send(request);
+            var tasks = new[]
+            {
+                OrderUpdatesExample(symbol, executionTimeMs)
+            };
+
+            await Task.WhenAll(tasks);
         }
 
         private void SubscribeToStreams()
@@ -33,8 +37,16 @@ namespace Huobi.Client.Websocket.Sample.Examples
             _client.Streams.UnhandledMessageStream.Subscribe(x => _logger.LogError($"Unhandled message: {x}"));
             _client.Streams.ErrorMessageStream.Subscribe(
                 x => _logger.LogError($"Error message received! Code: {x.ErrorCode}; Message: {x.Message}"));
-            
-            //_client.Streams.ResponseMessageStream.Subscribe(x => _logger.LogInformation($"Response message: {x}"));
+            _client.Streams.AuthenticationResponseStream.Subscribe(x => _logger.LogInformation($"Authenticated with response code: {x.Code}"));
+            _client.Streams.SubscribeResponseStream.Subscribe(x => _logger.LogInformation($"Subscribed to channel: {x.Channel}"));
+        }
+
+        private async Task OrderUpdatesExample(string symbol, int executionTimeMs)
+        {
+            var marketCandlestickSubscribeRequest = new AccountOrderUpdatesSubscribeRequest(symbol);
+            _client.Send(marketCandlestickSubscribeRequest);
+
+            await Task.Delay(executionTimeMs);
         }
     }
 }

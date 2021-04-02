@@ -2,18 +2,18 @@
 
 namespace Huobi.Client.Websocket.Messages.Account
 {
-    public class AuthPongResponse
+    public class AccountPongResponse
     {
-        public AuthPongResponse(long timestamp)
+        public AccountPongResponse(long timestamp)
         {
             Action = "pong";
-            Data = new AuthMessageData(timestamp);
+            Data = new AccountMessageData(timestamp);
         }
 
         [JsonProperty("action")]
         public string Action { get; }
         
         [JsonProperty("data")]
-        public AuthMessageData Data { get; }
+        public AccountMessageData Data { get; }
     }
 }

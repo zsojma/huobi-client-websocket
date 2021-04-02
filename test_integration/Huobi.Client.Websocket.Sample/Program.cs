@@ -25,13 +25,8 @@ namespace Huobi.Client.Websocket.Sample
             //var marketClientExecution = serviceProvider.GetRequiredService<MarketClientExample>();
             //await marketClientExecution.Execute("btcusdt");
 
-            //var authenticationRequestFactory = serviceProvider.GetRequiredService<IHuobiAuthenticationRequestFactory>();
-
-            //var authenticationRequest = authenticationRequestFactory.CreateRequest();
-            //client.Send(authenticationRequest);
-
-            //var accountUpdatesSubscribeRequest = new AccountUpdateSubscribeRequest();
-            //client.Send(accountUpdatesSubscribeRequest);
+            var accountClientExecution = serviceProvider.GetRequiredService<AccountClientExample>();
+            await accountClientExecution.Execute("btcusdt");
 
             _exitEvent.WaitOne();
         }

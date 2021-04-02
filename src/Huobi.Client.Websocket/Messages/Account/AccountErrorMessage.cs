@@ -4,10 +4,10 @@ using Newtonsoft.Json;
 
 namespace Huobi.Client.Websocket.Messages.Account
 {
-    public class AuthErrorMessage
+    public class AccountErrorMessage
     {
         [JsonConstructor]
-        public AuthErrorMessage(int code, string topic, string message)
+        public AccountErrorMessage(int code, string topic, string message)
         {
             Code = code;
             Topic = topic;
@@ -24,7 +24,7 @@ namespace Huobi.Client.Websocket.Messages.Account
         internal static bool TryParse(
             IHuobiSerializer serializer,
             string input,
-            [MaybeNullWhen(false)] out AuthErrorMessage response)
+            [MaybeNullWhen(false)] out AccountErrorMessage response)
         {
             return serializer.TryDeserializeIfContains(
                 input,

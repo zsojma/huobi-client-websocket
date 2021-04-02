@@ -2,9 +2,9 @@
 
 namespace Huobi.Client.Websocket.Messages.Account
 {
-    public class AuthMessageData
+    public class AccountMessageData
     {
-        public AuthMessageData(long timestamp)
+        public AccountMessageData(long timestamp)
         {
             Timestamp = timestamp;
         }

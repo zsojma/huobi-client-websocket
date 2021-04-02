@@ -18,6 +18,7 @@ namespace Huobi.Client.Websocket
             serviceCollection.AddTransient<IHuobiAuthenticationRequestFactory, HuobiAuthenticationRequestFactory>();
             
             serviceCollection.AddTransient<IHuobiWebsocketCommunicator, HuobiWebsocketCommunicator>();
+            serviceCollection.AddTransient<IHuobiAccountWebsocketCommunicator, HuobiAccountWebsocketCommunicator>();
 
             serviceCollection.AddTransient<IHuobiGenericWebsocketClient, HuobiGenericWebsocketClient>();
             serviceCollection.AddTransient<IHuobiMarketWebsocketClient, HuobiMarketWebsocketClient>();

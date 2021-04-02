@@ -2,12 +2,12 @@
 using Huobi.Client.Websocket.Serializer;
 using Newtonsoft.Json;
 
-namespace Huobi.Client.Websocket.Messages.Account
+namespace Huobi.Client.Websocket.Messages.Account.Subscription
 {
-    public class AuthenticationResponse : AccountResponseBase
+    public class AccountSubscribeResponse : AccountResponseBase
     {
         [JsonConstructor]
-        public AuthenticationResponse(string action, int code, string channel, object data)
+        public AccountSubscribeResponse(string action, int code, string channel, object data)
             : base(action, code, channel, data)
         {
         }
@@ -15,14 +15,14 @@ namespace Huobi.Client.Websocket.Messages.Account
         internal static bool TryParse(
             IHuobiSerializer serializer,
             string input,
-            [MaybeNullWhen(false)] out AuthenticationResponse response)
+            [MaybeNullWhen(false)] out AccountSubscribeResponse response)
         {
             return serializer.TryDeserializeIfContains(
                 input,
                 new[]
                 {
-                    "\"req\"",
-                    "\"auth\""
+                    "\"sub\"",
+                    "\"code\""
                 },
                 out response);
         }

@@ -84,7 +84,7 @@ namespace Huobi.Client.Websocket.Clients
             loggerFactory ??= NullLoggerFactory.Instance;
 
             var options = Options.Create(config);
-            var communicator = new HuobiWebsocketCommunicator(options);
+            var communicator = new HuobiAccountWebsocketCommunicator(options);
             var serializer = new HuobiSerializer(loggerFactory.CreateLogger<HuobiSerializer>());
             var dateTimeProvider = new HuobiDateTimeProvider();
             var signature = new HuobiSignature();

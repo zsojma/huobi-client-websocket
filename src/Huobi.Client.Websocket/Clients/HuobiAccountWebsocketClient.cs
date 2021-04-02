@@ -4,6 +4,7 @@ using Huobi.Client.Websocket.Clients.Streams;
 using Huobi.Client.Websocket.Communicator;
 using Huobi.Client.Websocket.Config;
 using Huobi.Client.Websocket.Messages.Account;
+using Huobi.Client.Websocket.Messages.Account.Subscription;
 using Huobi.Client.Websocket.Serializer;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -17,7 +18,7 @@ namespace Huobi.Client.Websocket.Clients
 
         public HuobiAccountWebsocketClient(
             IOptions<HuobiAccountWebsocketClientConfig> config,
-            IHuobiWebsocketCommunicator communicator,
+            IHuobiAccountWebsocketCommunicator communicator,
             IHuobiSerializer serializer,
             IHuobiAuthenticationRequestFactory authenticationRequestFactory,
             ILogger<HuobiAccountWebsocketClient> logger)
@@ -33,7 +34,7 @@ namespace Huobi.Client.Websocket.Clients
             Authenticate();
         }
 
-        public void Send(AuthRequestBase request)
+        public void Send(AccountRequestBase request)
         {
             var serialized = Serializer.Serialize(request);
             Send(serialized);
@@ -42,7 +43,8 @@ namespace Huobi.Client.Websocket.Clients
         protected override bool TryHandleMessage(string message)
         {
             return TryHandleUpdateMessages(message)
-                || TryHandleSubscribeResponses(message);
+                || TryHandleSubscribeResponses(message)
+                || TryHandleAuthenticationResponses(message);
         }
 
         private void Authenticate()
@@ -57,6 +59,17 @@ namespace Huobi.Client.Websocket.Clients
         }
 
         private bool TryHandleSubscribeResponses(string message)
+        {
+            if (AccountSubscribeResponse.TryParse(Serializer, message, out var subscribeResponse))
+            {
+                Streams.SubscribeResponseSubject.OnNext(subscribeResponse);
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool TryHandleAuthenticationResponses(string message)
         {
             if (AuthenticationResponse.TryParse(Serializer, message, out var authenticationResponse))
             {

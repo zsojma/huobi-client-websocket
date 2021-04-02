@@ -3,7 +3,7 @@ using Huobi.Client.Websocket.Messages.Account;
 
 namespace Huobi.Client.Websocket.Clients
 {
-    public interface IHuobiAccountWebsocketClient : IHuobiWebsocketClient<HuobiAccountClientStreams, AuthRequestBase>
+    public interface IHuobiAccountWebsocketClient : IHuobiWebsocketClient<HuobiAccountClientStreams, AccountRequestBase>
     {
     }
 }

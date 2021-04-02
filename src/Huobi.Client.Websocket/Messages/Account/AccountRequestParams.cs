@@ -5,9 +5,9 @@ using NodaTime;
 
 namespace Huobi.Client.Websocket.Messages.Account
 {
-    public class AuthRequestParams
+    public class AccountRequestParams
     {
-        public AuthRequestParams(string accessKey, string signature, ZonedDateTime timestamp)
+        public AccountRequestParams(string accessKey, string signature, ZonedDateTime timestamp)
         {
             AuthType = "api";
             AccessKey = accessKey;

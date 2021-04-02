@@ -20,6 +20,7 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling
     {
         internal Subject<ResponseMessage> ResponseMessageSubject { get; private set; } = null!;
         internal Mock<IHuobiWebsocketCommunicator> CommunicatorMock { get; private set; } = null!;
+        internal Mock<IHuobiAccountWebsocketCommunicator> AccountCommunicatorMock { get; private set; } = null!;
         internal Mock<IObserver<string>> UnhandledMessageObserverMock { get; private set; } = null!;
 
         internal HuobiMarketWebsocketClient InitializeMarketClient()
@@ -45,7 +46,7 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling
             var authFactoryMock = new Mock<IHuobiAuthenticationRequestFactory>();
             var client = new HuobiAccountWebsocketClient(
                 config,
-                CommunicatorMock.Object,
+                AccountCommunicatorMock.Object,
                 serializer,
                 authFactoryMock.Object,
                 NullLogger<HuobiAccountWebsocketClient>.Instance);
@@ -101,6 +102,9 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling
 
             CommunicatorMock = new Mock<IHuobiWebsocketCommunicator>();
             CommunicatorMock.Setup(m => m.MessageReceived).Returns(ResponseMessageSubject);
+
+            AccountCommunicatorMock = new Mock<IHuobiAccountWebsocketCommunicator>();
+            AccountCommunicatorMock.Setup(m => m.MessageReceived).Returns(ResponseMessageSubject);
 
             UnhandledMessageObserverMock = new Mock<IObserver<string>>();
         }

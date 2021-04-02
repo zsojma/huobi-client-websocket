@@ -12,13 +12,13 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.Account
         {
             // Arrange
             InitializeAccountClient();
-            var message = new AuthPingRequest(12345);
+            var message = new AccountPingRequest(12345);
 
             // Act
             TriggerMessageReceive(message);
 
             // Assert
-            CommunicatorMock.Verify(m => m.Send(It.Is<string>(x => x.Contains("pong") && x.Contains("12345"))), Times.Once);
+            AccountCommunicatorMock.Verify(m => m.Send(It.Is<string>(x => x.Contains("pong") && x.Contains("12345"))), Times.Once);
             VerifyMessageNotUnhandled();
         }
 
@@ -36,7 +36,7 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.Account
                     Assert.NotNull(msg);
                 });
 
-            var message = HuobiAuthMessagesFactory.CreateAuthErrorMessage();
+            var message = HuobiAccountMessagesFactory.CreateAuthErrorMessage();
 
             // Act
             TriggerMessageReceive(message);
@@ -58,10 +58,36 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.Account
 
                     // Assert
                     Assert.NotNull(msg);
-                    Assert.True(!string.IsNullOrEmpty(msg.Topic));
+                    Assert.True(!string.IsNullOrEmpty(msg.Channel));
                 });
 
-            var message = HuobiAuthMessagesFactory.CreateAuthenticationResponseMessage();
+            var message = HuobiAccountMessagesFactory.CreateAuthenticationResponseMessage();
+
+            // Act
+            TriggerMessageReceive(message);
+
+            // Assert
+            VerifyMessageNotUnhandled();
+            Assert.True(triggered);
+        }
+
+        [Fact]
+        public void HandleResponse_Subscribed_StreamUpdated()
+        {
+            var triggered = false;
+            var client = InitializeAccountClient();
+            client.Streams.SubscribeResponseStream.Subscribe(
+                msg =>
+                {
+                    triggered = true;
+
+                    // Assert
+                    Assert.NotNull(msg);
+                    Assert.True(msg.Code > 0);
+                    Assert.True(!string.IsNullOrEmpty(msg.Channel));
+                });
+
+            var message = HuobiAccountMessagesFactory.CreateSubscribeResponseMessage();
 
             // Act
             TriggerMessageReceive(message);

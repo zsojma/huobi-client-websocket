@@ -4,15 +4,15 @@ using Newtonsoft.Json;
 
 namespace Huobi.Client.Websocket.Messages.Account
 {
-    public class AuthPingRequest
+    public class AccountPingRequest
     {
-        public AuthPingRequest(long timestamp)
-            : this("ping", new AuthMessageData(timestamp))
+        public AccountPingRequest(long timestamp)
+            : this("ping", new AccountMessageData(timestamp))
         {
         }
         
         [JsonConstructor]
-        internal AuthPingRequest(string action, AuthMessageData data)
+        internal AccountPingRequest(string action, AccountMessageData data)
         {
             Action = action;
             Data = data;
@@ -22,12 +22,12 @@ namespace Huobi.Client.Websocket.Messages.Account
         public string Action { get; }
         
         [JsonProperty("data")]
-        public AuthMessageData Data { get; }
+        public AccountMessageData Data { get; }
 
         internal static bool TryParse(
             IHuobiSerializer serializer,
             string input,
-            [MaybeNullWhen(false)] out AuthPingRequest response)
+            [MaybeNullWhen(false)] out AccountPingRequest response)
         {
             var result = serializer.TryDeserializeIfContains(
                 input,

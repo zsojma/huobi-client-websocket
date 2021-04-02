@@ -11,7 +11,7 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.MarketData
         {
             // Arrange
             var triggered = false;
-            var client = Initialize();
+            var client = InitializeMarketClient();
             client.Streams.MarketDetailsUpdateStream.Subscribe(
                 msg =>
                 {
@@ -39,7 +39,7 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.MarketData
         {
             // Arrange
             var triggered = false;
-            var client = Initialize();
+            var client = InitializeMarketClient();
             client.Streams.MarketDetailsPullStream.Subscribe(
                 msg =>
                 {

@@ -8,7 +8,7 @@ using NodaTime;
 
 namespace Huobi.Client.Websocket.Authentication
 {
-    public class HuobiAuthentication : IHuobiAuthentication
+    public class HuobiSignature : IHuobiSignature
     {
         private const string METHOD = "GET";
         private const string NEW_LINE_CHAR = "\n";
@@ -21,7 +21,7 @@ namespace Huobi.Client.Websocket.Authentication
         private const string SIGNATURE_VERSION_NAME = "signatureVersion";
         internal const string SIGNATURE_VERSION_VERSION = "2.1";
 
-        public string GenerateSignature(string accessKey, string secretKey, string host, string uri, ZonedDateTime timestamp)
+        public string Create(string accessKey, string secretKey, string host, string uri, ZonedDateTime timestamp)
         {
             var secretKeyBytes = Encoding.UTF8.GetBytes(secretKey);
             using var hmacSha256 = new HMACSHA256(secretKeyBytes);

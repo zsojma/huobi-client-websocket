@@ -1,16 +1,8 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Huobi.Client.Websocket.Authentication;
-using Huobi.Client.Websocket.Client;
-using Huobi.Client.Websocket.Communicator;
-using Huobi.Client.Websocket.Config;
+using Huobi.Client.Websocket.Clients;
 using Huobi.Client.Websocket.Messages.Account;
-using Huobi.Client.Websocket.Messages.Account.Factories;
-using Huobi.Client.Websocket.Serializer;
-using Huobi.Client.Websocket.Utils;
-using Microsoft.Extensions.Logging.Abstractions;
-using Microsoft.Extensions.Options;
 using Xunit;
 
 namespace Huobi.Client.Websocket.Tests.Integration
@@ -21,15 +13,10 @@ namespace Huobi.Client.Websocket.Tests.Integration
         public async Task ConnectionEstablished_PingMessageReceived()
         {
             // Arrange
-            const string? url = HuobiConstants.ApiAuthWebsocketUrl;
-            using var communicator = new HuobiWebsocketCommunicator(new Uri(url));
-
-            var serializer = new HuobiSerializer(NullLogger<HuobiSerializer>.Instance);
-
-            using var client = new HuobiWebsocketClient(
-                communicator,
-                serializer,
-                NullLogger<HuobiWebsocketClient>.Instance);
+            using var client = HuobiWebsocketClientsFactory.CreateAccountClient(
+                HuobiConstants.ApiAuthWebsocketUrl,
+                "not_required_for_ping",
+                "not_required_for_ping");
 
             AuthPingRequest? receivedPingMessage = null;
             var receivedEvent = new ManualResetEvent(false);
@@ -42,10 +29,10 @@ namespace Huobi.Client.Websocket.Tests.Integration
                 });
 
             // Act
-            await communicator.Start();
-            receivedEvent.WaitOne(TimeSpan.FromSeconds(30));
+            await client.Start();
 
             // Assert
+            receivedEvent.WaitOne(TimeSpan.FromSeconds(30));
             Assert.NotNull(receivedPingMessage);
         }
 
@@ -54,28 +41,10 @@ namespace Huobi.Client.Websocket.Tests.Integration
         public async Task AuthenticationRequest_ResponseMessageReceived(string accessKey, string secretKey)
         {
             // Arrange
-            const string? url = HuobiConstants.ApiAuthWebsocketUrl;
-            using var communicator = new HuobiWebsocketCommunicator(new Uri(url));
-
-            var serializer = new HuobiSerializer(NullLogger<HuobiSerializer>.Instance);
-
-            using var client = new HuobiWebsocketClient(
-                communicator,
-                serializer,
-                NullLogger<HuobiWebsocketClient>.Instance);
-
-            var dateTimeProvider = new HuobiDateTimeProvider();
-            var authentication = new HuobiAuthentication();
-            var config = Options.Create(
-                new HuobiWebsocketClientConfig
-                {
-                    AccessKey = accessKey,
-                    SecretKey = secretKey,
-                    Url = url
-                });
-            var authRequestFactory = new HuobiAuthenticationRequestFactory(dateTimeProvider, authentication, config);
-
-            var request = authRequestFactory.CreateRequest();
+            using var client = HuobiWebsocketClientsFactory.CreateAccountClient(
+                HuobiConstants.ApiAuthWebsocketUrl,
+                accessKey,
+                secretKey);
 
             AuthenticationResponse? response = null;
             var receivedEvent = new ManualResetEvent(false);
@@ -87,13 +56,11 @@ namespace Huobi.Client.Websocket.Tests.Integration
                     receivedEvent.Set();
                 });
 
-            await communicator.Start();
-
             // Act
-            client.Send(request);
-            receivedEvent.WaitOne(TimeSpan.FromSeconds(30));
+            await client.Start();
 
             // Assert
+            receivedEvent.WaitOne(TimeSpan.FromSeconds(30));
             Assert.NotNull(response);
         }
     }

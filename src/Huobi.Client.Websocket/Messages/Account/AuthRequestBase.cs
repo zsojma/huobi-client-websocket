@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Huobi.Client.Websocket.Messages.Account.Values;
+using Newtonsoft.Json;
 
 namespace Huobi.Client.Websocket.Messages.Account
 {
@@ -15,5 +16,13 @@ namespace Huobi.Client.Websocket.Messages.Account
 
         [JsonProperty("ch")]
         public string Topic { get; }
+    }
+
+    public class AccountUpdateSubscribeRequest : AuthRequestBase
+    {
+        public AccountUpdateSubscribeRequest()
+            : base("sub", AuthSubscriptionType.AccountUpdates.ToTopicId())
+        {
+        }
     }
 }

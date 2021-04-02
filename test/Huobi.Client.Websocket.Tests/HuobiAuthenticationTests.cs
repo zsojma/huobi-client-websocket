@@ -11,13 +11,13 @@ namespace Huobi.Client.Websocket.Tests
         public void CreateSignature()
         {
             // Arrange
-            var authentication = new HuobiAuthentication();
+            var authentication = new HuobiSignature();
             var timestamp = new ZonedDateTime(
                 Instant.FromDateTimeUtc(new DateTime(2021, 03, 30, 12, 13, 14, DateTimeKind.Utc)),
                 DateTimeZone.Utc);
 
             // Act
-            var signature = authentication.GenerateSignature(
+            var signature = authentication.Create(
                 "123",
                 "456",
                 "api.huobi.pro",

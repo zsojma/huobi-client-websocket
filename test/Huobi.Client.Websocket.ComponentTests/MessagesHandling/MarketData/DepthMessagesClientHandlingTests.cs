@@ -4,15 +4,15 @@ using Xunit;
 
 namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.MarketData
 {
-    public class MarketDepthMessagesClientHandlingTests : ClientMessagesHandlingTestsBase
+    public class DepthMessagesClientHandlingTests : ClientMessagesHandlingTestsBase
     {
         [Fact]
         public void UpdateMessage_StreamUpdated()
         {
             // Arrange
             var triggered = false;
-            var client = Initialize();
-            client.Streams.MarketDepthUpdateStream.Subscribe(
+            var client = InitializeMarketClient();
+            client.Streams.DepthUpdateStream.Subscribe(
                 msg =>
                 {
                     triggered = true;
@@ -43,8 +43,8 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.MarketData
         {
             // Arrange
             var triggered = false;
-            var client = Initialize();
-            client.Streams.MarketDepthPullStream.Subscribe(
+            var client = InitializeMarketClient();
+            client.Streams.DepthPullStream.Subscribe(
                 msg =>
                 {
                     triggered = true;

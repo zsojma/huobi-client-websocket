@@ -10,8 +10,12 @@ namespace Huobi.Client.Websocket.Communicator
         public HuobiWebsocketCommunicator(IOptions<HuobiWebsocketClientConfig> config)
             : this(GetUrl(config))
         {
-            Name = config.Value.CommunicatorName;
-            ReconnectTimeout = TimeSpan.FromMinutes(config.Value.ReconnectTimeoutMin);
+            Name = config.Value.CommunicatorName ?? "Huobi";
+
+            if (config.Value.ReconnectTimeoutMin.HasValue)
+            {
+                ReconnectTimeout = TimeSpan.FromMinutes(config.Value.ReconnectTimeoutMin.Value);
+            }
         }
 
         public HuobiWebsocketCommunicator(Uri url)

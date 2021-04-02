@@ -11,8 +11,8 @@ namespace Huobi.Client.Websocket.Messages.Account
         {
             AuthType = "api";
             AccessKey = accessKey;
-            SignatureMethod = HuobiAuthentication.SIGNATURE_METHOD_VALUE;
-            SignatureVersion = HuobiAuthentication.SIGNATURE_VERSION_VERSION;
+            SignatureMethod = HuobiSignature.SIGNATURE_METHOD_VALUE;
+            SignatureVersion = HuobiSignature.SIGNATURE_VERSION_VERSION;
             Timestamp = timestamp.ToHuobiUtcString();
             Signature = signature;
         }

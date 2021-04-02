@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Huobi.Client.Websocket.Client;
-using Huobi.Client.Websocket.Communicator;
+using Huobi.Client.Websocket.Clients;
 using Huobi.Client.Websocket.Messages.MarketData;
 using Huobi.Client.Websocket.Messages.MarketData.Pulling.MarketCandlestick;
 using Huobi.Client.Websocket.Messages.MarketData.Values;
-using Huobi.Client.Websocket.Serializer;
-using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 
 namespace Huobi.Client.Websocket.Tests.Integration
@@ -18,15 +15,7 @@ namespace Huobi.Client.Websocket.Tests.Integration
         public async Task ConnectionEstablished_PingMessageReceived()
         {
             // Arrange
-            const string? url = HuobiConstants.ApiWebsocketUrl;
-            using var communicator = new HuobiWebsocketCommunicator(new Uri(url));
-
-            var serializer = new HuobiSerializer(NullLogger<HuobiSerializer>.Instance);
-
-            using var client = new HuobiWebsocketClient(
-                communicator,
-                serializer,
-                NullLogger<HuobiWebsocketClient>.Instance);
+            using var client = HuobiWebsocketClientsFactory.CreateMarketClient(HuobiConstants.ApiWebsocketUrl);
 
             PingRequest? receivedPingMessage = null;
             var receivedEvent = new ManualResetEvent(false);
@@ -39,10 +28,10 @@ namespace Huobi.Client.Websocket.Tests.Integration
                 });
 
             // Act
-            await communicator.Start();
-            receivedEvent.WaitOne(TimeSpan.FromSeconds(30));
+            await client.Start();
 
             // Assert
+            receivedEvent.WaitOne(TimeSpan.FromSeconds(30));
             Assert.NotNull(receivedPingMessage);
         }
 
@@ -50,35 +39,27 @@ namespace Huobi.Client.Websocket.Tests.Integration
         public async Task PullRequest_ResponseMessageReceived()
         {
             // Arrange
-            const string? url = HuobiConstants.ApiWebsocketUrl;
-            using var communicator = new HuobiWebsocketCommunicator(new Uri(url));
-
-            var serializer = new HuobiSerializer(NullLogger<HuobiSerializer>.Instance);
-
-            using var client = new HuobiWebsocketClient(
-                communicator,
-                serializer,
-                NullLogger<HuobiWebsocketClient>.Instance);
+            using var client = HuobiWebsocketClientsFactory.CreateMarketClient(HuobiConstants.ApiWebsocketUrl);
 
             var request = new MarketCandlestickPullRequest("btcusdt", MarketCandlestickPeriodType.SixtyMinutes, "req1");
 
             MarketCandlestickPullResponse? response = null;
             var receivedEvent = new ManualResetEvent(false);
 
-            client.Streams.MarketCandlestickPullStream.Subscribe(
+            client.Streams.CandlestickPullStream.Subscribe(
                 message =>
                 {
                     response = message;
                     receivedEvent.Set();
                 });
 
-            await communicator.Start();
+            await client.Start();
 
             // Act
             client.Send(request);
-            receivedEvent.WaitOne(TimeSpan.FromSeconds(30));
 
             // Assert
+            receivedEvent.WaitOne(TimeSpan.FromSeconds(30));
             Assert.NotNull(response);
         }
     }

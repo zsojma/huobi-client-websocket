@@ -11,7 +11,7 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.MarketData
         {
             // Arrange
             var triggered = false;
-            var client = Initialize();
+            var client = InitializeMarketClient();
             client.Streams.MarketByPriceUpdateStream.Subscribe(
                 msg =>
                 {
@@ -41,7 +41,7 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.MarketData
         {
             // Arrange
             var triggered = false;
-            var client = Initialize();
+            var client = InitializeMarketClient();
             client.Streams.MarketByPriceUpdateStream.Subscribe(
                 msg =>
                 {
@@ -71,7 +71,7 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.MarketData
         {
             // Arrange
             var triggered = false;
-            var client = Initialize();
+            var client = InitializeMarketClient();
             client.Streams.MarketByPriceRefreshUpdateStream.Subscribe(
                 msg =>
                 {
@@ -104,7 +104,7 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.MarketData
         {
             // Arrange
             var triggered = false;
-            var client = Initialize();
+            var client = InitializeMarketClient();
             client.Streams.MarketByPricePullStream.Subscribe(
                 msg =>
                 {

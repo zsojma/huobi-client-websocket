@@ -11,7 +11,7 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.Account
         public void Ping_RespondsWithPong()
         {
             // Arrange
-            Initialize();
+            InitializeAccountClient();
             var message = new AuthPingRequest(12345);
 
             // Act
@@ -26,7 +26,7 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.Account
         public void HandleResponse_AuthErrorMessage_StreamUpdated()
         {
             var triggered = false;
-            var client = Initialize();
+            var client = InitializeAccountClient();
             client.Streams.AuthErrorMessageStream.Subscribe(
                 msg =>
                 {
@@ -50,7 +50,7 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.Account
         public void HandleResponse_Authenticated_StreamUpdated()
         {
             var triggered = false;
-            var client = Initialize();
+            var client = InitializeAccountClient();
             client.Streams.AuthenticationResponseStream.Subscribe(
                 msg =>
                 {

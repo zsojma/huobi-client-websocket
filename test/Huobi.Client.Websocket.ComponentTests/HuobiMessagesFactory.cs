@@ -13,6 +13,17 @@
             return message;
         }
 
+        public static string CreateUnsubscribeResponseMessage()
+        {
+            var message = @"{
+  ""id"": ""id1"",
+  ""status"": ""ok"",
+  ""unsubbed"": ""market.ethbtc.kline.1min"",
+  ""ts"": 1489474081631
+}";
+            return message;
+        }
+
         public static string CreateErrorMessage()
         {
             var message = @"{

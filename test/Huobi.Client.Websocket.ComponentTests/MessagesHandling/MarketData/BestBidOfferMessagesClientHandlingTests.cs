@@ -4,15 +4,15 @@ using Xunit;
 
 namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.MarketData
 {
-    public class MarketBestBidOfferMessagesClientHandlingTests : ClientMessagesHandlingTestsBase
+    public class BestBidOfferMessagesClientHandlingTests : ClientMessagesHandlingTestsBase
     {
         [Fact]
         public void UpdateMessage_StreamUpdated()
         {
             // Arrange
             var triggered = false;
-            var client = Initialize();
-            client.Streams.MarketBestBidOfferUpdateStream.Subscribe(
+            var client = InitializeMarketClient();
+            client.Streams.BestBidOfferUpdateStream.Subscribe(
                 msg =>
                 {
                     triggered = true;

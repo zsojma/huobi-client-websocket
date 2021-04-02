@@ -2,6 +2,7 @@
 {
     public enum AuthSubscriptionType
     {
+        AccountUpdates,
         Orders,
         TradeDetails
     }

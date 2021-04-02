@@ -3,10 +3,13 @@ using System.IO;
 using System.IO.Compression;
 using System.Reactive.Subjects;
 using System.Text;
-using Huobi.Client.Websocket.Client;
+using Huobi.Client.Websocket.Authentication;
+using Huobi.Client.Websocket.Clients;
 using Huobi.Client.Websocket.Communicator;
+using Huobi.Client.Websocket.Config;
 using Huobi.Client.Websocket.Serializer;
 using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Options;
 using Moq;
 using Newtonsoft.Json;
 using Websocket.Client;
@@ -19,21 +22,33 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling
         internal Mock<IHuobiWebsocketCommunicator> CommunicatorMock { get; private set; } = null!;
         internal Mock<IObserver<string>> UnhandledMessageObserverMock { get; private set; } = null!;
 
-        internal HuobiWebsocketClient Initialize()
+        internal HuobiMarketWebsocketClient InitializeMarketClient()
         {
-            ResponseMessageSubject = new Subject<ResponseMessage>();
-
-            CommunicatorMock = new Mock<IHuobiWebsocketCommunicator>();
-            CommunicatorMock.Setup(m => m.MessageReceived).Returns(ResponseMessageSubject);
-
-            UnhandledMessageObserverMock = new Mock<IObserver<string>>();
+            InitializeBase();
 
             var serializer = new HuobiSerializer(NullLogger<HuobiSerializer>.Instance);
-
-            var client = new HuobiWebsocketClient(
+            var client = new HuobiMarketWebsocketClient(
                 CommunicatorMock.Object,
                 serializer,
-                NullLogger<HuobiWebsocketClient>.Instance);
+                NullLogger<HuobiMarketWebsocketClient>.Instance);
+
+            client.Streams.UnhandledMessageStream.Subscribe(UnhandledMessageObserverMock.Object);
+            return client;
+        }
+
+        internal HuobiAccountWebsocketClient InitializeAccountClient()
+        {
+            InitializeBase();
+
+            var config = Options.Create(new HuobiAccountWebsocketClientConfig());
+            var serializer = new HuobiSerializer(NullLogger<HuobiSerializer>.Instance);
+            var authFactoryMock = new Mock<IHuobiAuthenticationRequestFactory>();
+            var client = new HuobiAccountWebsocketClient(
+                config,
+                CommunicatorMock.Object,
+                serializer,
+                authFactoryMock.Object,
+                NullLogger<HuobiAccountWebsocketClient>.Instance);
 
             client.Streams.UnhandledMessageStream.Subscribe(UnhandledMessageObserverMock.Object);
             return client;
@@ -78,6 +93,16 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling
             outputStream.Position = 0;
             var output = outputStream.ToArray();
             return output;
+        }
+
+        private void InitializeBase()
+        {
+            ResponseMessageSubject = new Subject<ResponseMessage>();
+
+            CommunicatorMock = new Mock<IHuobiWebsocketCommunicator>();
+            CommunicatorMock.Setup(m => m.MessageReceived).Returns(ResponseMessageSubject);
+
+            UnhandledMessageObserverMock = new Mock<IObserver<string>>();
         }
     }
 }

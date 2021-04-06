@@ -40,7 +40,7 @@ TODO
 |------------------------|:--------------:|
 | Ping-Pong              |  ✔            |
 | Authentication         |  ✔            |
-| Order updates          |                |
+| Order updates          |  ✔            |
 | Trades                 |                |
 | Account changes        |                |
 

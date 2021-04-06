@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Huobi.Client.Websocket.Clients;
 using Huobi.Client.Websocket.Messages.MarketData;
-using Huobi.Client.Websocket.Messages.MarketData.Pulling.MarketCandlestick;
+using Huobi.Client.Websocket.Messages.MarketData.MarketCandlestick;
 using Huobi.Client.Websocket.Messages.MarketData.Values;
 using Xunit;
 

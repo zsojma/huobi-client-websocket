@@ -21,7 +21,7 @@ namespace Huobi.Client.Websocket.Tests.Integration
             AccountPingRequest? receivedPingMessage = null;
             var receivedEvent = new ManualResetEvent(false);
 
-            client.Streams.PingAuthMessageStream.Subscribe(
+            client.Streams.AccountPingMessageStream.Subscribe(
                 message =>
                 {
                     receivedPingMessage = message;

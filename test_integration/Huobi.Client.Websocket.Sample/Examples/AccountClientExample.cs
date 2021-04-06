@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Huobi.Client.Websocket.Clients;
-using Huobi.Client.Websocket.Messages.Account.Subscription.OrderUpdates;
+using Huobi.Client.Websocket.Messages.Account.OrderUpdates;
 using Microsoft.Extensions.Logging;
 
 namespace Huobi.Client.Websocket.Sample.Examples
@@ -22,7 +22,6 @@ namespace Huobi.Client.Websocket.Sample.Examples
             SubscribeToStreams();
             
             await _client.Start();
-            await Task.Delay(1000);
 
             var tasks = new[]
             {

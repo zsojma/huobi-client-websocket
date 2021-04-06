@@ -2,9 +2,9 @@
 
 namespace Huobi.Client.Websocket.Messages.Account
 {
-    public class AccountRequestBase
+    public abstract class AccountRequestBase
     {
-        public AccountRequestBase(string action, string channel)
+        protected AccountRequestBase(string action, string channel)
         {
             Action = action;
             Channel = channel;

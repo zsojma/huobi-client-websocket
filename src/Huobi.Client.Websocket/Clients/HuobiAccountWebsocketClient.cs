@@ -4,7 +4,7 @@ using Huobi.Client.Websocket.Clients.Streams;
 using Huobi.Client.Websocket.Communicator;
 using Huobi.Client.Websocket.Config;
 using Huobi.Client.Websocket.Messages.Account;
-using Huobi.Client.Websocket.Messages.Account.Subscription;
+using Huobi.Client.Websocket.Messages.Account.OrderUpdates;
 using Huobi.Client.Websocket.Serializer;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -42,7 +42,7 @@ namespace Huobi.Client.Websocket.Clients
 
         protected override bool TryHandleMessage(string message)
         {
-            return TryHandleUpdateMessages(message)
+            return TryHandleOrderUpdateMessages(message)
                 || TryHandleSubscribeResponses(message)
                 || TryHandleAuthenticationResponses(message);
         }
@@ -53,8 +53,38 @@ namespace Huobi.Client.Websocket.Clients
             Send(request);
         }
 
-        private bool TryHandleUpdateMessages(string message)
+        private bool TryHandleOrderUpdateMessages(string message)
         {
+            if (ConditionalOrderTriggerFailureMessage.TryParse(Serializer, message, out var conditionalOrderTriggerFailureMessage))
+            {
+                Streams.ConditionalOrderTriggerFailureMessageSubject.OnNext(conditionalOrderTriggerFailureMessage);
+                return true;
+            }
+
+            if (ConditionalOrderCanceledMessage.TryParse(Serializer, message, out var conditionalOrderCanceledMessage))
+            {
+                Streams.ConditionalOrderCanceledMessageSubject.OnNext(conditionalOrderCanceledMessage);
+                return true;
+            }
+
+            if (OrderSubmittedMessage.TryParse(Serializer, message, out var conditionalSubmittedMessage))
+            {
+                Streams.OrderSubmittedMessageSubject.OnNext(conditionalSubmittedMessage);
+                return true;
+            }
+
+            if (OrderTradedMessage.TryParse(Serializer, message, out var orderTradedMessage))
+            {
+                Streams.OrderTradedMessageSubject.OnNext(orderTradedMessage);
+                return true;
+            }
+
+            if (OrderCanceledMessage.TryParse(Serializer, message, out var orderCanceledMessage))
+            {
+                Streams.OrderCanceledMessageSubject.OnNext(orderCanceledMessage);
+                return true;
+            }
+
             return false;
         }
 

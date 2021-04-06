@@ -10,14 +10,14 @@ namespace Huobi.Client.Websocket.Clients.Streams
     {
         internal readonly Subject<string> UnhandledMessageSubject = new();
         internal readonly Subject<ErrorMessage> ErrorMessageSubject = new();
-        internal readonly Subject<AccountErrorMessage> AuthErrorMessageSubject = new();
         internal readonly Subject<PingRequest> PingMessageSubject = new();
-        internal readonly Subject<AccountPingRequest> PingAuthMessageSubject = new();
+        internal readonly Subject<AccountErrorMessage> AccountErrorMessageSubject = new();
+        internal readonly Subject<AccountPingRequest> AccountPingMessageSubject = new();
 
         public IObservable<string> UnhandledMessageStream => UnhandledMessageSubject.AsObservable();
         public IObservable<ErrorMessage> ErrorMessageStream => ErrorMessageSubject.AsObservable();
-        public IObservable<AccountErrorMessage> AuthErrorMessageStream => AuthErrorMessageSubject.AsObservable();
         public IObservable<PingRequest> PingMessageStream => PingMessageSubject.AsObservable();
-        public IObservable<AccountPingRequest> PingAuthMessageStream => PingAuthMessageSubject.AsObservable();
+        public IObservable<AccountErrorMessage> AccountErrorMessageStream => AccountErrorMessageSubject.AsObservable();
+        public IObservable<AccountPingRequest> AccountPingMessageStream => AccountPingMessageSubject.AsObservable();
     }
 }

@@ -2,9 +2,10 @@
 
 namespace Huobi.Client.Websocket.Messages.Account
 {
-    public abstract class AccountResponseBase
+    public abstract class AccountResponseBase<TData>
+        where TData : class
     {
-        protected AccountResponseBase(string action, int code, string channel, object data)
+        protected AccountResponseBase(string action, int code, string channel, TData data)
         {
             Action = action;
             Code = code;
@@ -19,6 +20,6 @@ namespace Huobi.Client.Websocket.Messages.Account
         [JsonProperty("ch")]
         public string Channel { get; }
 
-        public object Data { get; }
+        public TData Data { get; }
     }
 }

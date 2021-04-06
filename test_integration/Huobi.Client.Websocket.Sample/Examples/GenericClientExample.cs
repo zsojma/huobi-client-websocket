@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Huobi.Client.Websocket.Clients;
-using Huobi.Client.Websocket.Messages.MarketData.Subscription.MarketCandlestick;
+using Huobi.Client.Websocket.Messages.MarketData.MarketCandlestick;
 using Huobi.Client.Websocket.Messages.MarketData.Values;
 using Microsoft.Extensions.Logging;
 

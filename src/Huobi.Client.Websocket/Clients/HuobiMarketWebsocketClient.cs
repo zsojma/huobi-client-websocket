@@ -1,18 +1,12 @@
 ﻿using Huobi.Client.Websocket.Clients.Streams;
 using Huobi.Client.Websocket.Communicator;
 using Huobi.Client.Websocket.Messages.MarketData;
-using Huobi.Client.Websocket.Messages.MarketData.Pulling.MarketByPrice;
-using Huobi.Client.Websocket.Messages.MarketData.Pulling.MarketCandlestick;
-using Huobi.Client.Websocket.Messages.MarketData.Pulling.MarketDepth;
-using Huobi.Client.Websocket.Messages.MarketData.Pulling.MarketDetails;
-using Huobi.Client.Websocket.Messages.MarketData.Pulling.MarketTradeDetail;
-using Huobi.Client.Websocket.Messages.MarketData.Subscription;
-using Huobi.Client.Websocket.Messages.MarketData.Subscription.MarketBestBidOffer;
-using Huobi.Client.Websocket.Messages.MarketData.Subscription.MarketByPrice;
-using Huobi.Client.Websocket.Messages.MarketData.Subscription.MarketCandlestick;
-using Huobi.Client.Websocket.Messages.MarketData.Subscription.MarketDepth;
-using Huobi.Client.Websocket.Messages.MarketData.Subscription.MarketDetails;
-using Huobi.Client.Websocket.Messages.MarketData.Subscription.MarketTradeDetail;
+using Huobi.Client.Websocket.Messages.MarketData.MarketBestBidOffer;
+using Huobi.Client.Websocket.Messages.MarketData.MarketByPrice;
+using Huobi.Client.Websocket.Messages.MarketData.MarketCandlestick;
+using Huobi.Client.Websocket.Messages.MarketData.MarketDepth;
+using Huobi.Client.Websocket.Messages.MarketData.MarketDetails;
+using Huobi.Client.Websocket.Messages.MarketData.MarketTradeDetail;
 using Huobi.Client.Websocket.Serializer;
 using Microsoft.Extensions.Logging;
 

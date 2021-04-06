@@ -104,7 +104,7 @@ namespace Huobi.Client.Websocket.Clients
 
             if (AccountPingRequest.TryParse(Serializer, message, out var pingAuthRequest))
             {
-                Streams.PingAuthMessageSubject.OnNext(pingAuthRequest);
+                Streams.AccountPingMessageSubject.OnNext(pingAuthRequest);
                 RespondWithPong(pingAuthRequest);
                 return true;
             }
@@ -122,7 +122,7 @@ namespace Huobi.Client.Websocket.Clients
 
             if (AccountErrorMessage.TryParse(Serializer, message, out var authErrorMessage))
             {
-                Streams.AuthErrorMessageSubject.OnNext(authErrorMessage);
+                Streams.AccountErrorMessageSubject.OnNext(authErrorMessage);
                 return true;
             }
 

@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace Huobi.Client.Websocket.Messages.Account
 {
-    public class AuthenticationResponse : AccountResponseBase
+    public class AuthenticationResponse : AccountResponseBase<object>
     {
         [JsonConstructor]
         public AuthenticationResponse(string action, int code, string channel, object data)

@@ -27,7 +27,7 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.Account
         {
             var triggered = false;
             var client = InitializeAccountClient();
-            client.Streams.AuthErrorMessageStream.Subscribe(
+            client.Streams.AccountErrorMessageStream.Subscribe(
                 msg =>
                 {
                     triggered = true;
@@ -36,7 +36,7 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.Account
                     Assert.NotNull(msg);
                 });
 
-            var message = HuobiAccountMessagesFactory.CreateAuthErrorMessage();
+            var message = HuobiAccountMessagesFactory.CreateErrorMessage();
 
             // Act
             TriggerMessageReceive(message);

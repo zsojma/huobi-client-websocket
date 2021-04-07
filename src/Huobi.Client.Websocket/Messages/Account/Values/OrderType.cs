@@ -11,6 +11,10 @@
         BuyIoc,
         SellIoc,
         BuyLimitFok,
-        SellLimitFok
+        SellLimitFok,
+        BuyStopLimit,
+        SellStopLimit,
+        BuyStopLimitFok,
+        SellStopLimitFok
     }
 }

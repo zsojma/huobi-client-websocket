@@ -4,14 +4,13 @@ using Huobi.Client.Websocket.Serializer;
 
 namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
 {
-    public class ConditionalOrderTriggerFailureMessage : AccountResponseBase<ConditionalOrderTriggerFailureData>
+    public class ConditionalOrderTriggerFailureMessage : AccountResponseBase<ConditionalOrderTriggerFailureMessageData>
     {
         public ConditionalOrderTriggerFailureMessage(
             string action,
-            int code,
             string channel,
-            ConditionalOrderTriggerFailureData data)
-            : base(action, code, channel, data)
+            ConditionalOrderTriggerFailureMessageData data)
+            : base(action, channel, data)
         {
         }
 

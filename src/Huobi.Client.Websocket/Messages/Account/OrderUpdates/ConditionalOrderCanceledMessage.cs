@@ -4,14 +4,13 @@ using Huobi.Client.Websocket.Serializer;
 
 namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
 {
-    public class ConditionalOrderCanceledMessage : AccountResponseBase<ConditionalOrderCanceledData>
+    public class ConditionalOrderCanceledMessage : AccountResponseBase<ConditionalOrderCanceledMessageData>
     {
         public ConditionalOrderCanceledMessage(
             string action,
-            int code,
             string channel,
-            ConditionalOrderCanceledData data)
-            : base(action, code, channel, data)
+            ConditionalOrderCanceledMessageData data)
+            : base(action, channel, data)
         {
         }
 

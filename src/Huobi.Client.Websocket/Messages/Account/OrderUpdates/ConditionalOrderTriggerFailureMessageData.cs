@@ -3,49 +3,41 @@ using Newtonsoft.Json;
 
 namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
 {
-    public class ConditionalOrderTriggerFailureData
+    public class ConditionalOrderTriggerFailureMessageData
     {
         [JsonConstructor]
-        public ConditionalOrderTriggerFailureData(
+        public ConditionalOrderTriggerFailureMessageData(
             string eventTypeStr,
-            string symbol,
-            string clientOrderId,
             string orderSideStr,
             string orderStatusStr,
+            string symbol,
+            string clientOrderId,
             int errorCode,
             string errorMessage,
             long orderTriggeringFailureTime)
         {
             EventTypeStr = eventTypeStr;
-            Symbol = symbol;
-            ClientOrderId = clientOrderId;
             OrderSideStr = orderSideStr;
             OrderStatusStr = orderStatusStr;
+            
+            Symbol = symbol;
+            ClientOrderId = clientOrderId;
             ErrorCode = errorCode;
             ErrorMessage = errorMessage;
             OrderTriggeringFailureTime = orderTriggeringFailureTime;
         }
 
-        [JsonProperty("eventType")]
-        public string EventTypeStr { get; }
-
         [JsonIgnore]
         public OrderEventType EventType => OrderEventTypeHelper.FromMessageValue(EventTypeStr);
-
-        public string Symbol { get; }
-        public string ClientOrderId { get; }
-
-        [JsonProperty("orderSide")]
-        public string OrderSideStr { get; }
 
         [JsonIgnore]
         public OrderSide OrderSide => OrderSideHelper.FromMessageValue(OrderSideStr);
 
-        [JsonProperty("orderStatus")]
-        public string OrderStatusStr { get; }
-
         [JsonIgnore]
         public OrderStatus OrderStatus => OrderStatusHelper.FromMessageValue(OrderStatusStr);
+
+        public string Symbol { get; }
+        public string ClientOrderId { get; }
 
         [JsonProperty("errCode")]
         public int ErrorCode { get; }
@@ -55,5 +47,15 @@ namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
 
         [JsonProperty("lastActTime")]
         public long OrderTriggeringFailureTime { get; }
+
+
+        [JsonProperty("eventType")]
+        internal string EventTypeStr { get; }
+
+        [JsonProperty("orderSide")]
+        internal string OrderSideStr { get; }
+
+        [JsonProperty("orderStatus")]
+        internal string OrderStatusStr { get; }
     }
 }

@@ -18,6 +18,10 @@ namespace Huobi.Client.Websocket.Messages.Account.Values
                 "sell-ioc" => OrderType.SellIoc,
                 "buy-limit-fok" => OrderType.BuyLimitFok,
                 "sell-limit-fok" => OrderType.SellLimitFok,
+                "buy-stop-limit" => OrderType.BuyStopLimit,
+                "sell-stop-limit" => OrderType.SellStopLimit,
+                "buy-stop-limit-fok" => OrderType.BuyStopLimitFok,
+                "sell-stop-limit-fok" => OrderType.SellStopLimitFok,
                 _ => throw new ArgumentOutOfRangeException(
                     nameof(orderType),
                     orderType,
@@ -39,6 +43,10 @@ namespace Huobi.Client.Websocket.Messages.Account.Values
                 OrderType.SellIoc => "sell-ioc",
                 OrderType.BuyLimitFok => "buy-limit-fok",
                 OrderType.SellLimitFok => "sell-limit-fok",
+                OrderType.BuyStopLimit => "buy-stop-limit",
+                OrderType.SellStopLimit => "sell-stop-limit",
+                OrderType.BuyStopLimitFok => "buy-stop-limit-fok",
+                OrderType.SellStopLimitFok => "sell-stop-limit-fok",
                 _ => orderType.ToString().ToLower()
             };
         }

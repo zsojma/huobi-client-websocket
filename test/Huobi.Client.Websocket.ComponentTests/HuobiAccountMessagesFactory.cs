@@ -98,7 +98,7 @@ namespace Huobi.Client.Websocket.ComponentTests
             return message;
         }
 
-        public static string CreateOrderTradedMessage(OrderStatus orderStatus, OrderType orderType, bool aggressor)
+        public static string CreateOrderTradedMessage(OrderStatus orderStatus, OrderType orderType)
         {
             var message = @"{
     ""action"":""push"",
@@ -109,7 +109,7 @@ namespace Huobi.Client.Websocket.ComponentTests
         ""tradeVolume"":""1.013157894736842100"",
         ""tradeId"":301,
         ""tradeTime"":1583854188883,
-        ""aggressor"":" + (aggressor ? "true" : "false") + @",
+        ""aggressor"":true,
         ""remainAmt"":""0.000000000000000400000000000000000000"",
         ""execAmt"":""2"",
         ""orderId"":27163536,
@@ -145,6 +145,37 @@ namespace Huobi.Client.Websocket.ComponentTests
         ""orderStatus"":""canceled"",
         ""symbol"":""btcusdt"",
         ""eventType"":""cancellation""
+    }
+}";
+            return message;
+        }
+
+        public static string CreateTradeDetailsMessage(TradeEventType eventType, OrderSide orderSide, OrderType orderType, OrderStatus orderStatus)
+        {
+            var message = @"{
+    ""ch"": ""trade.clearing#btcusdt#0"",
+    ""data"": {
+         ""eventType"": """ + eventType.ToMessageValue() + @""",
+         ""symbol"": ""btcusdt"",
+         ""orderId"": 99998888,
+         ""tradePrice"": ""9999.99"",
+         ""tradeVolume"": ""0.96"",
+         ""orderSide"": """ + orderSide.ToMessageValue() + @""",
+         ""orderType"": """ + orderType.ToMessageValue() + @""",
+         ""aggressor"": true,
+         ""tradeId"": 919219323232,
+         ""tradeTime"": 998787897878,
+         ""transactFee"": ""19.88"",
+         ""feeDeduct "": ""0"",
+         ""feeDeductType"": """",
+         ""feeCurrency"": ""btc"",
+         ""accountId"": 9912791,
+         ""source"": ""spot-api"",
+         ""orderPrice"": ""10000"",
+         ""orderSize"": ""1"",
+         ""clientOrderId"": ""a001"",
+         ""orderCreateTime"": 998787897878,
+         ""orderStatus"": """ + orderStatus.ToMessageValue() + @"""
     }
 }";
             return message;

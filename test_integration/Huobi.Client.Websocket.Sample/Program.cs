@@ -1,4 +1,6 @@
-﻿using System.Threading;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Huobi.Client.Websocket.Config;
 using Huobi.Client.Websocket.Sample.Examples;
@@ -10,25 +12,33 @@ namespace Huobi.Client.Websocket.Sample
 {
     public static class Program
     {
-        private static readonly ManualResetEvent _exitEvent = new(false);
+        private const string SYMBOL = "btcusdt";
 
         public static async Task Main()
         {
             var serviceProvider = SetupServiceProvider();
             var logger = SetupLogging(serviceProvider);
 
-            logger.LogInformation("Starting application");
+            logger.LogInformation("Starting application...");
 
-            //var genericClientExecution = serviceProvider.GetRequiredService<GenericClientExample>();
-            //await genericClientExecution.Execute("btcusdt");
+            var examples = serviceProvider.GetRequiredService<IEnumerable<IExample>>().ToArray();
+            foreach (var example in examples)
+            {
+                await example.Start(SYMBOL);
+            }
+            
+            logger.LogInformation("Press any key to exit...");
+            Console.ReadKey();
+            
+            logger.LogInformation("Stopping application...");
 
-            //var marketClientExecution = serviceProvider.GetRequiredService<MarketClientExample>();
-            //await marketClientExecution.Execute("btcusdt");
+            foreach (var example in examples)
+            {
+                await example.Stop(SYMBOL);
+            }
 
-            var accountClientExecution = serviceProvider.GetRequiredService<AccountClientExample>();
-            await accountClientExecution.Execute("btcusdt");
-
-            _exitEvent.WaitOne();
+            // wait until unsubscribe requests are send
+            await Task.Delay(1000);
         }
 
         private static ILogger SetupLogging(ServiceProvider serviceProvider)
@@ -53,14 +63,22 @@ namespace Huobi.Client.Websocket.Sample
                 .AddSingleton(configuration)
                 .Configure<HuobiWebsocketClientConfig>(marketClientConfig)
                 .Configure<HuobiAccountWebsocketClientConfig>(accountClientConfig)
-                .AddHuobiWebsocketServices()
-                .AddTransient<GenericClientExample>()
-                .AddTransient<MarketClientExample>()
-                .AddTransient<AccountClientExample>();
+                .AddHuobiWebsocketServices();
+
+            SetupExamples(serviceCollection);
 
             var serviceProvider = serviceCollection
                 .BuildServiceProvider();
             return serviceProvider;
+        }
+
+        private static void SetupExamples(IServiceCollection serviceCollection)
+        {
+            serviceCollection
+                //.AddTransient<IExample, GenericClientExample>()
+                //.AddTransient<IExample, MarketClientExample>()
+                .AddTransient<IExample, AccountClientExample>()
+                ;
         }
     }
 }

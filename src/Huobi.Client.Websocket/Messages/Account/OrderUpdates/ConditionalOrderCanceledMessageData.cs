@@ -3,47 +3,49 @@ using Newtonsoft.Json;
 
 namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
 {
-    public class ConditionalOrderCanceledData
+    public class ConditionalOrderCanceledMessageData
     {
         [JsonConstructor]
-        public ConditionalOrderCanceledData(
+        public ConditionalOrderCanceledMessageData(
             string eventTypeStr,
-            string symbol,
-            string clientOrderId,
             string orderSideStr,
             string orderStatusStr,
+            string symbol,
+            string clientOrderId,
             long orderTriggerTime)
         {
             EventTypeStr = eventTypeStr;
-            Symbol = symbol;
-            ClientOrderId = clientOrderId;
             OrderSideStr = orderSideStr;
             OrderStatusStr = orderStatusStr;
+
+            Symbol = symbol;
+            ClientOrderId = clientOrderId;
             OrderTriggerTime = orderTriggerTime;
         }
 
-        [JsonProperty("eventType")]
-        public string EventTypeStr { get; }
-
         [JsonIgnore]
         public OrderEventType EventType => OrderEventTypeHelper.FromMessageValue(EventTypeStr);
-
-        public string Symbol { get; }
-        public string ClientOrderId { get; }
-
-        [JsonProperty("orderSide")]
-        public string OrderSideStr { get; }
-
+        
         [JsonIgnore]
         public OrderSide OrderSide => OrderSideHelper.FromMessageValue(OrderSideStr);
-
-        [JsonProperty("orderStatus")]
-        public string OrderStatusStr { get; }
 
         [JsonIgnore]
         public OrderStatus OrderStatus => OrderStatusHelper.FromMessageValue(OrderStatusStr);
 
+        public string Symbol { get; }
+        public string ClientOrderId { get; }
+
         [JsonProperty("lastActTime")]
         public long OrderTriggerTime { get; }
+        
+
+        [JsonProperty("eventType")]
+        internal string EventTypeStr { get; }
+        
+        [JsonProperty("orderSide")]
+        internal string OrderSideStr { get; }
+
+        [JsonProperty("orderStatus")]
+        internal string OrderStatusStr { get; }
     }
 }

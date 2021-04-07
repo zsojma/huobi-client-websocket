@@ -3,11 +3,13 @@ using Newtonsoft.Json;
 
 namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
 {
-    public class OrderSubmittedData
+    public class OrderSubmittedMessageData
     {
         [JsonConstructor]
-        public OrderSubmittedData(
+        public OrderSubmittedMessageData(
             string eventTypeStr,
+            string orderTypeStr,
+            string orderStatusStr,
             string symbol,
             long accountId,
             long orderId,
@@ -16,11 +18,12 @@ namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
             string orderPrice,
             string orderSize,
             string orderValue,
-            string orderTypeStr,
-            string orderStatusStr,
             long orderCreationTime)
         {
             EventTypeStr = eventTypeStr;
+            OrderTypeStr = orderTypeStr;
+            OrderStatusStr = orderStatusStr;
+
             Symbol = symbol;
             AccountId = accountId;
             OrderId = orderId;
@@ -29,17 +32,17 @@ namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
             OrderPrice = orderPrice;
             OrderSize = orderSize;
             OrderValue = orderValue;
-            OrderTypeStr = orderTypeStr;
-            OrderStatusStr = orderStatusStr;
             OrderCreationTime = orderCreationTime;
         }
 
-
-        [JsonProperty("eventType")]
-        public string EventTypeStr { get; }
-
         [JsonIgnore]
         public OrderEventType EventType => OrderEventTypeHelper.FromMessageValue(EventTypeStr);
+
+        [JsonIgnore]
+        public OrderType OrderType => OrderTypeHelper.FromMessageValue(OrderTypeStr);
+
+        [JsonIgnore]
+        public OrderStatus OrderStatus => OrderStatusHelper.FromMessageValue(OrderStatusStr);
 
         public string Symbol { get; }
         public long AccountId { get; }
@@ -49,19 +52,16 @@ namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
         public string OrderPrice { get; }
         public string OrderSize { get; }
         public string OrderValue { get; }
+        public long OrderCreationTime { get; }
+
+
+        [JsonProperty("eventType")]
+        internal string EventTypeStr { get; }
 
         [JsonProperty("type")]
-        public string OrderTypeStr { get; }
-
-        [JsonIgnore]
-        public OrderType OrderType => OrderTypeHelper.FromMessageValue(OrderTypeStr);
+        internal string OrderTypeStr { get; }
 
         [JsonProperty("orderStatus")]
-        public string OrderStatusStr { get; }
-
-        [JsonIgnore]
-        public OrderStatus OrderStatus => OrderStatusHelper.FromMessageValue(OrderStatusStr);
-
-        public long OrderCreationTime { get; }
+        internal string OrderStatusStr { get; }
     }
 }

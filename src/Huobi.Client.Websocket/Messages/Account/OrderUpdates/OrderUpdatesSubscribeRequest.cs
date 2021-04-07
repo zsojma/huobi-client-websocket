@@ -2,9 +2,9 @@
 
 namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
 {
-    public class AccountOrderUpdatesSubscribeRequest : AccountSubscribeRequest
+    public class OrderUpdatesSubscribeRequest : AccountSubscribeRequest
     {
-        public AccountOrderUpdatesSubscribeRequest(string symbol)
+        public OrderUpdatesSubscribeRequest(string symbol)
             : base(symbol, AccountSubscriptionType.Orders)
         {
         }

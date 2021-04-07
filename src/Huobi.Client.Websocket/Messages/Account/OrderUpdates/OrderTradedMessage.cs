@@ -4,10 +4,10 @@ using Huobi.Client.Websocket.Serializer;
 
 namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
 {
-    public class OrderTradedMessage : AccountResponseBase<OrderTradedData>
+    public class OrderTradedMessage : AccountResponseBase<OrderTradedMessageData>
     {
-        public OrderTradedMessage(string action, int code, string channel, OrderTradedData data)
-            : base(action, code, channel, data)
+        public OrderTradedMessage(string action, string channel, OrderTradedMessageData data)
+            : base(action, channel, data)
         {
         }
 

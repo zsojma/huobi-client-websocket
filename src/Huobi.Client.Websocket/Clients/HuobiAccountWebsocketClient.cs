@@ -5,6 +5,7 @@ using Huobi.Client.Websocket.Communicator;
 using Huobi.Client.Websocket.Config;
 using Huobi.Client.Websocket.Messages.Account;
 using Huobi.Client.Websocket.Messages.Account.OrderUpdates;
+using Huobi.Client.Websocket.Messages.Account.TradeDetails;
 using Huobi.Client.Websocket.Serializer;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -42,7 +43,8 @@ namespace Huobi.Client.Websocket.Clients
 
         protected override bool TryHandleMessage(string message)
         {
-            return TryHandleOrderUpdateMessages(message)
+            return TryHandleTradeDetailsMessages(message)
+                || TryHandleOrderUpdateMessages(message)
                 || TryHandleSubscribeResponses(message)
                 || TryHandleAuthenticationResponses(message);
         }
@@ -53,9 +55,23 @@ namespace Huobi.Client.Websocket.Clients
             Send(request);
         }
 
+        private bool TryHandleTradeDetailsMessages(string message)
+        {
+            if (TradeDetailsMessage.TryParse(Serializer, message, out var tradeDetailsMessage))
+            {
+                Streams.TradeDetailsMessageSubject.OnNext(tradeDetailsMessage);
+                return true;
+            }
+
+            return false;
+        }
+
         private bool TryHandleOrderUpdateMessages(string message)
         {
-            if (ConditionalOrderTriggerFailureMessage.TryParse(Serializer, message, out var conditionalOrderTriggerFailureMessage))
+            if (ConditionalOrderTriggerFailureMessage.TryParse(
+                Serializer,
+                message,
+                out var conditionalOrderTriggerFailureMessage))
             {
                 Streams.ConditionalOrderTriggerFailureMessageSubject.OnNext(conditionalOrderTriggerFailureMessage);
                 return true;

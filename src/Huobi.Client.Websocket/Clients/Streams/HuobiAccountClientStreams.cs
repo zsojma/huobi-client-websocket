@@ -3,6 +3,7 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Huobi.Client.Websocket.Messages.Account;
 using Huobi.Client.Websocket.Messages.Account.OrderUpdates;
+using Huobi.Client.Websocket.Messages.Account.TradeDetails;
 
 namespace Huobi.Client.Websocket.Clients.Streams
 {
@@ -16,6 +17,8 @@ namespace Huobi.Client.Websocket.Clients.Streams
         internal readonly Subject<OrderSubmittedMessage> OrderSubmittedMessageSubject = new();
         internal readonly Subject<OrderTradedMessage> OrderTradedMessageSubject = new();
         internal readonly Subject<OrderCanceledMessage> OrderCanceledMessageSubject = new();
+        
+        internal readonly Subject<TradeDetailsMessage> TradeDetailsMessageSubject = new();
 
         public IObservable<AuthenticationResponse> AuthenticationResponseStream => AuthenticationResponseSubject.AsObservable();
         public IObservable<AccountSubscribeResponse> SubscribeResponseStream => SubscribeResponseSubject.AsObservable();
@@ -25,5 +28,7 @@ namespace Huobi.Client.Websocket.Clients.Streams
         public IObservable<OrderSubmittedMessage> OrderSubmittedMessageStream => OrderSubmittedMessageSubject.AsObservable();
         public IObservable<OrderTradedMessage> OrderTradedMessageStream => OrderTradedMessageSubject.AsObservable();
         public IObservable<OrderCanceledMessage> OrderCanceledMessageStream => OrderCanceledMessageSubject.AsObservable();
+
+        public IObservable<TradeDetailsMessage> TradeDetailsMessageStream => TradeDetailsMessageSubject.AsObservable();
     }
 }

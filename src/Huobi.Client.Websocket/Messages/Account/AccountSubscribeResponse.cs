@@ -8,9 +8,12 @@ namespace Huobi.Client.Websocket.Messages.Account
     {
         [JsonConstructor]
         public AccountSubscribeResponse(string action, int code, string channel, object data)
-            : base(action, code, channel, data)
+            : base(action, channel, data)
         {
+            Code = code;
         }
+
+        public int Code { get; }
 
         internal static bool TryParse(
             IHuobiSerializer serializer,

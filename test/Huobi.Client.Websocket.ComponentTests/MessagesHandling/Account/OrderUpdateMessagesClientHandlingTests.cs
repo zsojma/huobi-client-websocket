@@ -39,7 +39,7 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.Account
             VerifyMessageNotUnhandled();
             Assert.True(triggered);
         }
-        
+
         [Theory]
         [InlineData(OrderSide.Buy)]
         [InlineData(OrderSide.Sell)]
@@ -102,10 +102,10 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.Account
             VerifyMessageNotUnhandled();
             Assert.True(triggered);
         }
-        
+
         [Theory]
         [ClassData(typeof(OrderTradedEnumsTestData))]
-        public void OrderTradedMessage_StreamUpdated(OrderStatus orderStatus, OrderType orderType, bool aggressor)
+        public void OrderTradedMessage_StreamUpdated(OrderStatus orderStatus, OrderType orderType)
         {
             // Arrange
             var triggered = false;
@@ -121,12 +121,11 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.Account
                     Assert.Equal(OrderEventType.Trade, msg.Data.EventType);
                     Assert.Equal(orderStatus, msg.Data.OrderStatus);
                     Assert.Equal(orderType, msg.Data.OrderType);
-                    Assert.Equal(aggressor, msg.Data.Aggressor);
                     Assert.True(msg.Data.TradeId > 0);
                     Assert.True(msg.Data.OrderId > 0);
                 });
 
-            var message = HuobiAccountMessagesFactory.CreateOrderTradedMessage(orderStatus, orderType, aggressor);
+            var message = HuobiAccountMessagesFactory.CreateOrderTradedMessage(orderStatus, orderType);
 
             // Act
             TriggerMessageReceive(message);
@@ -135,7 +134,7 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.Account
             VerifyMessageNotUnhandled();
             Assert.True(triggered);
         }
-        
+
         [Theory]
         [ClassData(typeof(OrderTypeTestData))]
         public void OrderCanceledMessage_StreamUpdated(OrderType orderType)
@@ -166,6 +165,42 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.Account
             VerifyMessageNotUnhandled();
             Assert.True(triggered);
         }
+
+        [Theory]
+        [ClassData(typeof(TradeDetailsEnumsTestData))]
+        public void TradeDetailsMessage_StreamUpdated(
+            TradeEventType eventType,
+            OrderSide orderSide,
+            OrderType orderType,
+            OrderStatus orderStatus)
+        {
+            // Arrange
+            var triggered = false;
+            var client = InitializeAccountClient();
+            client.Streams.TradeDetailsMessageStream.Subscribe(
+                msg =>
+                {
+                    triggered = true;
+
+                    // Assert
+                    Assert.NotNull(msg);
+                    Assert.NotNull(msg.Data);
+                    Assert.Equal(eventType, msg.Data.EventType);
+                    Assert.Equal(orderSide, msg.Data.OrderSide);
+                    Assert.Equal(orderType, msg.Data.OrderType);
+                    Assert.Equal(orderStatus, msg.Data.OrderStatus);
+                    Assert.True(msg.Data.OrderId > 0);
+                });
+
+            var message = HuobiAccountMessagesFactory.CreateTradeDetailsMessage(eventType, orderSide, orderType, orderStatus);
+
+            // Act
+            TriggerMessageReceive(message);
+
+            // Assert
+            VerifyMessageNotUnhandled();
+            Assert.True(triggered);
+        }
     }
 
     public class OrderTypeTestData : IEnumerable<object[]>
@@ -181,52 +216,63 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.Account
             }
         }
 
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
     }
 
     public class OrderTradedEnumsTestData : IEnumerable<object[]>
     {
         public IEnumerator<object[]> GetEnumerator()
         {
-            foreach (var orderType in GetOrderTypes())
+            foreach (OrderType? orderType in Enum.GetValues(typeof(OrderType)))
             {
-                foreach (var orderStatus in GetOrderStatuses())
+                foreach (OrderStatus? orderStatus in Enum.GetValues(typeof(OrderStatus)))
                 {
-                    // aggressor
                     yield return new[]
                     {
-                        (object)orderType,
-                        orderStatus,
-                        false
-                    };
-
-                    // NOT aggressor
-                    yield return new[]
-                    {
-                        (object)orderType,
-                        orderStatus,
-                        false
+                        (object)orderType!,
+                        orderStatus!
                     };
                 }
             }
         }
 
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-        private IEnumerable<OrderType> GetOrderTypes()
+        IEnumerator IEnumerable.GetEnumerator()
         {
-            foreach (OrderType? item in Enum.GetValues(typeof(OrderType)))
+            return GetEnumerator();
+        }
+    }
+
+    public class TradeDetailsEnumsTestData : IEnumerable<object[]>
+    {
+        public IEnumerator<object[]> GetEnumerator()
+        {
+            foreach (TradeEventType? eventType in Enum.GetValues(typeof(TradeEventType)))
             {
-                yield return item!.Value;
+                foreach (OrderSide? orderSide in Enum.GetValues(typeof(OrderSide)))
+                {
+                    foreach (OrderType? orderType in Enum.GetValues(typeof(OrderType)))
+                    {
+                        foreach (OrderStatus? orderStatus in Enum.GetValues(typeof(OrderStatus)))
+                        {
+                            yield return new[]
+                            {
+                                (object)eventType!,
+                                orderSide!,
+                                orderType!,
+                                orderStatus!
+                            };
+                        }
+                    }
+                }
             }
         }
 
-        private IEnumerable<OrderStatus> GetOrderStatuses()
+        IEnumerator IEnumerable.GetEnumerator()
         {
-            foreach (OrderStatus? item in Enum.GetValues(typeof(OrderStatus)))
-            {
-                yield return item!.Value;
-            }
+            return GetEnumerator();
         }
     }
 }

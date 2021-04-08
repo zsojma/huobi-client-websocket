@@ -25,6 +25,8 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.MarketData
         [Fact]
         public void HandleResponse_ErrorMessage_StreamUpdated()
         {
+            // Arrange
+            var timestamp = DateTimeOffset.UtcNow;
             var triggered = false;
             var client = InitializeMarketClient();
             client.Streams.ErrorMessageStream.Subscribe(
@@ -34,9 +36,10 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.MarketData
 
                     // Assert
                     Assert.NotNull(msg);
+                    Assert.True(TestUtils.UnixTimesEqual(timestamp, msg.Timestamp));
                 });
 
-            var message = HuobiMessagesFactory.CreateErrorMessage();
+            var message = HuobiMessagesFactory.CreateErrorMessage(timestamp);
 
             // Act
             TriggerMessageReceive(message);
@@ -49,6 +52,8 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.MarketData
         [Fact]
         public void HandleResponse_Subscribed_StreamUpdated()
         {
+            // Arrange
+            var timestamp = DateTimeOffset.UtcNow;
             var triggered = false;
             var client = InitializeMarketClient();
             client.Streams.SubscribeResponseStream.Subscribe(
@@ -61,10 +66,10 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.MarketData
                     Assert.True(!string.IsNullOrEmpty(msg.Topic));
                     Assert.True(!string.IsNullOrEmpty(msg.Status));
                     Assert.True(!string.IsNullOrEmpty(msg.ReqId));
-                    Assert.True(msg.Timestamp > 0);
+                    Assert.True(TestUtils.UnixTimesEqual(timestamp, msg.Timestamp));
                 });
 
-            var message = HuobiMessagesFactory.CreateSubscribeResponseMessage();
+            var message = HuobiMessagesFactory.CreateSubscribeResponseMessage(timestamp);
 
             // Act
             TriggerMessageReceive(message);
@@ -77,6 +82,8 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.MarketData
         [Fact]
         public void HandleResponse_Unsubscribed_StreamUpdated()
         {
+            // Arrange
+            var timestamp = DateTimeOffset.UtcNow;
             var triggered = false;
             var client = InitializeMarketClient();
             client.Streams.UnsubscribeResponseStream.Subscribe(
@@ -89,10 +96,10 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.MarketData
                     Assert.True(!string.IsNullOrEmpty(msg.Topic));
                     Assert.True(!string.IsNullOrEmpty(msg.Status));
                     Assert.True(!string.IsNullOrEmpty(msg.ReqId));
-                    Assert.True(msg.Timestamp > 0);
+                    Assert.True(TestUtils.UnixTimesEqual(timestamp, msg.Timestamp));
                 });
 
-            var message = HuobiMessagesFactory.CreateUnsubscribeResponseMessage();
+            var message = HuobiMessagesFactory.CreateUnsubscribeResponseMessage(timestamp);
 
             // Act
             TriggerMessageReceive(message);

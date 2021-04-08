@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Huobi.Client.Websocket.Serializer;
+using Huobi.Client.Websocket.Utils;
 using Newtonsoft.Json;
 
 namespace Huobi.Client.Websocket.Messages.Account
@@ -9,6 +10,9 @@ namespace Huobi.Client.Websocket.Messages.Account
         [JsonConstructor]
         public AccountErrorMessage(int code, string topic, string message)
         {
+            Validations.ValidateInput(topic, nameof(topic));
+            Validations.ValidateInput(message, nameof(message));
+
             Code = code;
             Topic = topic;
             Message = message;
@@ -26,7 +30,7 @@ namespace Huobi.Client.Websocket.Messages.Account
             string input,
             [MaybeNullWhen(false)] out AccountErrorMessage response)
         {
-            return serializer.TryDeserializeIfContains(
+            var result = serializer.TryDeserializeIfContains(
                 input,
                 new[]
                 {
@@ -34,6 +38,8 @@ namespace Huobi.Client.Websocket.Messages.Account
                     "\"message\""
                 },
                 out response);
+
+            return result && response?.Code != 200;
         }
     }
 }

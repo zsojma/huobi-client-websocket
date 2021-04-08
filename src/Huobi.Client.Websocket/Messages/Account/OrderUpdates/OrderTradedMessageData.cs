@@ -1,4 +1,5 @@
-﻿using Huobi.Client.Websocket.Messages.Account.Values;
+﻿using System;
+using Huobi.Client.Websocket.Messages.Account.Values;
 using Newtonsoft.Json;
 
 namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
@@ -10,24 +11,25 @@ namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
             string eventTypeStr,
             string orderTypeStr,
             string orderStatusStr,
+            long tradeTimeMs,
             string symbol,
-            string tradePrice,
-            string tradeVolume,
+            decimal tradePrice,
+            decimal tradeVolume,
             long orderId,
             string clientOrderId,
             string orderSource,
-            string orderPrice,
-            string orderSize,
-            string orderValue,
+            decimal orderPrice,
+            decimal orderSize,
+            decimal orderValue,
             long tradeId,
-            long tradeTime,
             bool aggressor,
-            string remainingAmount,
-            string accumulativeAmount)
+            decimal remainingAmount,
+            decimal accumulativeAmount)
         {
             EventTypeStr = eventTypeStr;
             OrderTypeStr = orderTypeStr;
             OrderStatusStr = orderStatusStr;
+            TradeTimeMs = tradeTimeMs;
 
             Symbol = symbol;
             TradePrice = tradePrice;
@@ -39,7 +41,6 @@ namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
             OrderSize = orderSize;
             OrderValue = orderValue;
             TradeId = tradeId;
-            TradeTime = tradeTime;
             Aggressor = aggressor;
             RemainingAmount = remainingAmount;
             AccumulativeAmount = accumulativeAmount;
@@ -54,24 +55,26 @@ namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
         [JsonIgnore]
         public OrderStatus OrderStatus => OrderStatusHelper.FromMessageValue(OrderStatusStr);
 
+        [JsonIgnore]
+        public DateTimeOffset TradeTime => DateTimeOffset.FromUnixTimeMilliseconds(TradeTimeMs);
+
         public string Symbol { get; }
-        public string TradePrice { get; }
-        public string TradeVolume { get; }
+        public decimal TradePrice { get; }
+        public decimal TradeVolume { get; }
         public long OrderId { get; }
         public string ClientOrderId { get; }
         public string OrderSource { get; }
-        public string OrderPrice { get; }
-        public string OrderSize { get; }
-        public string OrderValue { get; }
+        public decimal OrderPrice { get; }
+        public decimal OrderSize { get; }
+        public decimal OrderValue { get; }
         public long TradeId { get; }
-        public long TradeTime { get; }
         public bool Aggressor { get; }
 
         [JsonProperty("remainAmt")]
-        public string RemainingAmount { get; }
+        public decimal RemainingAmount { get; }
 
         [JsonProperty("execAmt")]
-        public string AccumulativeAmount { get; }
+        public decimal AccumulativeAmount { get; }
 
 
         [JsonProperty("eventType")]
@@ -82,5 +85,8 @@ namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
 
         [JsonProperty("orderStatus")]
         internal string OrderStatusStr { get; }
+
+        [JsonProperty("tradeTime")]
+        internal long TradeTimeMs { get; }
     }
 }

@@ -12,9 +12,9 @@ namespace Huobi.Client.Websocket.Messages.MarketData.MarketDepth
             string reqId,
             string status,
             string topic,
-            long timestamp,
+            long timestampMs,
             MarketDepthTick data)
-            : base(reqId, status, topic, timestamp, data)
+            : base(reqId, status, topic, timestampMs, data)
         {
         }
 
@@ -32,7 +32,7 @@ namespace Huobi.Client.Websocket.Messages.MarketData.MarketDepth
                 },
                 out response);
 
-            return result && response?.Data.Timestamp > 0;
+            return result && response?.Data.TimestampMs > 0;
         }
     }
 }

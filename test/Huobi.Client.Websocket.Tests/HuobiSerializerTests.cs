@@ -85,13 +85,13 @@ namespace Huobi.Client.Websocket.Tests
         }
 
         [Fact]
-        public void TryDeserializeIfContains_WithNotContains_MessageParsed()
+        public void TryDeserializeIfContains_SingleNotContains_MessageParsed()
         {
             // Arrange
             var serializer = new HuobiSerializer(NullLogger<HuobiSerializer>.Instance);
 
             // Act
-            var result = serializer.TryDeserializeIfContains<PingRequest>("{ \"ping\": 1234 }", new [] { "\"ping\"", "23" }, new [] { "\"unknown\"" }, out var message);
+            var result = serializer.TryDeserializeIfContains<PingRequest>("{ \"ping\": 1234 }", "\"ping\"", "\"unknown\"", out var message);
 
             // Assert
             Assert.True(result);
@@ -100,13 +100,42 @@ namespace Huobi.Client.Websocket.Tests
         }
 
         [Fact]
-        public void TryDeserializeIfContains_WithNotContains_MessageNotParsed()
+        public void TryDeserializeIfContains_SingleNotContains_MessageNotParsed()
         {
             // Arrange
             var serializer = new HuobiSerializer(NullLogger<HuobiSerializer>.Instance);
 
             // Act
-            var result = serializer.TryDeserializeIfContains<PingRequest>("{ \"ping\": 1234 }", new [] { "\"ping\"", "23" }, new [] { "34" }, out var message);
+            var result = serializer.TryDeserializeIfContains<PingRequest>("{ \"ping\": 1234 }", "\"ping\"", "34", out var message);
+
+            // Assert
+            Assert.False(result);
+            Assert.Null(message);
+        }
+
+        [Fact]
+        public void TryDeserializeIfContains_MultiNotContains_MessageParsed()
+        {
+            // Arrange
+            var serializer = new HuobiSerializer(NullLogger<HuobiSerializer>.Instance);
+
+            // Act
+            var result = serializer.TryDeserializeIfContains<PingRequest>("{ \"ping\": 1234 }", new [] { "\"ping\"", "23" }, new [] { "\"unknown\"", "456" }, out var message);
+
+            // Assert
+            Assert.True(result);
+            Assert.NotNull(message);
+            Assert.Equal(1234, message!.Value);
+        }
+
+        [Fact]
+        public void TryDeserializeIfContains_MultiNotContains_MessageNotParsed()
+        {
+            // Arrange
+            var serializer = new HuobiSerializer(NullLogger<HuobiSerializer>.Instance);
+
+            // Act
+            var result = serializer.TryDeserializeIfContains<PingRequest>("{ \"ping\": 1234 }", new [] { "\"ping\"", "23" }, new [] { "34", "\"unknown\"" }, out var message);
 
             // Assert
             Assert.False(result);

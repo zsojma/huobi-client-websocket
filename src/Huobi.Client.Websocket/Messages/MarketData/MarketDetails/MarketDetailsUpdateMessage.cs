@@ -6,8 +6,8 @@ namespace Huobi.Client.Websocket.Messages.MarketData.MarketDetails
 {
     public class MarketDetailsUpdateMessage : UpdateMessage<MarketDetailsTick>
     {
-        public MarketDetailsUpdateMessage(string topic, long timestamp, MarketDetailsTick tick)
-            : base(topic, timestamp, tick)
+        public MarketDetailsUpdateMessage(string topic, long timestampMs, MarketDetailsTick tick)
+            : base(topic, timestampMs, tick)
         {
         }
 

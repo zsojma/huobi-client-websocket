@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Huobi.Client.Websocket.Clients;
+using Huobi.Client.Websocket.Messages.Account.AccountUpdates;
 using Huobi.Client.Websocket.Messages.Account.OrderUpdates;
 using Huobi.Client.Websocket.Messages.Account.TradeDetails;
 using Huobi.Client.Websocket.Messages.Account.Values;
@@ -27,7 +28,9 @@ namespace Huobi.Client.Websocket.Sample.Examples
 
             var tasks = new[]
             {
-                OrderUpdatesExample(symbol)
+                OrderUpdatesExample(symbol),
+                TradeDetailsExample(symbol),
+                AccountUpdateExample()
             };
 
             await Task.WhenAll(tasks);
@@ -55,12 +58,30 @@ namespace Huobi.Client.Websocket.Sample.Examples
             _client.Streams.OrderCanceledMessageStream.Subscribe(Handle);
 
             _client.Streams.TradeDetailsMessageStream.Subscribe(Handle);
+
+            _client.Streams.AccountUpdateMessageStream.Subscribe(Handle);
         }
 
         private Task OrderUpdatesExample(string symbol)
         {
-            var marketCandlestickSubscribeRequest = new OrderUpdatesSubscribeRequest(symbol);
-            _client.Send(marketCandlestickSubscribeRequest);
+            var subscribeRequest = new OrderUpdatesSubscribeRequest(symbol);
+            _client.Send(subscribeRequest);
+
+            return Task.CompletedTask;
+        }
+
+        private Task TradeDetailsExample(string symbol)
+        {
+            var subscribeRequest = new TradeDetailsSubscribeRequest(symbol);
+            _client.Send(subscribeRequest);
+
+            return Task.CompletedTask;
+        }
+
+        private Task AccountUpdateExample()
+        {
+            var subscribeRequest = new AccountUpdateSubscribeRequest(true);
+            _client.Send(subscribeRequest);
 
             return Task.CompletedTask;
         }
@@ -97,16 +118,16 @@ namespace Huobi.Client.Websocket.Sample.Examples
 
         private void Handle(TradeDetailsMessage msg)
         {
-            if (msg.Data.EventType == TradeEventType.Trade)
-            {
-                _logger.LogInformation(
-                    $"Trade matched on {msg.Data.Symbol} | [orderType={msg.Data.OrderType}] [price={msg.Data.OrderPrice}] [size={msg.Data.OrderSize}] [orderId={msg.Data.OrderId}]");
-            }
-            else
-            {
-                _logger.LogInformation(
-                    $"Trade canceled on {msg.Data.Symbol} | [orderType={msg.Data.OrderType}] [price={msg.Data.OrderPrice}] [size={msg.Data.OrderSize}] [orderId={msg.Data.OrderId}]");
-            }
+            _logger.LogInformation(
+                msg.Data.EventType == TradeEventType.Trade
+                    ? $"Trade matched on {msg.Data.Symbol} | [orderType={msg.Data.OrderType}] [price={msg.Data.OrderPrice}] [size={msg.Data.OrderSize}] [orderId={msg.Data.OrderId}]"
+                    : $"Trade canceled on {msg.Data.Symbol} | [orderType={msg.Data.OrderType}] [price={msg.Data.OrderPrice}] [size={msg.Data.OrderSize}] [orderId={msg.Data.OrderId}]");
+        }
+
+        private void Handle(AccountUpdateMessage msg)
+        {
+            _logger.LogInformation(
+                $"Account updated | [currency={msg.Data.Currency}] [balance={msg.Data.Balance}] [available={msg.Data.Available}] [changeType={msg.Data.ChangeType}] [accountType={msg.Data.AccountType}]");
         }
     }
 }

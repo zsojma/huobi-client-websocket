@@ -5,9 +5,9 @@ namespace Huobi.Client.Websocket.Messages.MarketData.MarketBestBidOffer
     public class MarketBestBidOfferUnsubscribeRequest : UnsubscribeRequest
     {
         public MarketBestBidOfferUnsubscribeRequest(
-            string symbol,
-            string reqId)
-            : base(symbol, SubscriptionType.MarketBestBidOffer, null, reqId)
+            string reqId,
+            string symbol)
+            : base(reqId, symbol, SubscriptionType.MarketBestBidOffer)
         {
         }
     }

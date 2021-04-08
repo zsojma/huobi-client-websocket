@@ -44,7 +44,7 @@ namespace Huobi.Client.Websocket.Sample
         private static ILogger SetupLogging(ServiceProvider serviceProvider)
         {
             var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
-            var logger = loggerFactory.CreateLogger("SampleApp");
+            var logger = loggerFactory.CreateLogger("HuobiSampleApp");
             return logger;
         }
 
@@ -74,10 +74,12 @@ namespace Huobi.Client.Websocket.Sample
 
         private static void SetupExamples(IServiceCollection serviceCollection)
         {
+            // Comment out service for which you want to run the example:
+
             serviceCollection
                 //.AddTransient<IExample, GenericClientExample>()
-                //.AddTransient<IExample, MarketClientExample>()
-                .AddTransient<IExample, AccountClientExample>()
+                .AddTransient<IExample, MarketClientExample>()
+                //.AddTransient<IExample, AccountClientExample>()
                 ;
         }
     }

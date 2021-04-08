@@ -1,6 +1,5 @@
 ﻿using System;
 using Huobi.Client.Websocket.Authentication;
-using NodaTime;
 using Xunit;
 
 namespace Huobi.Client.Websocket.Tests
@@ -12,9 +11,7 @@ namespace Huobi.Client.Websocket.Tests
         {
             // Arrange
             var authentication = new HuobiSignature();
-            var timestamp = new ZonedDateTime(
-                Instant.FromDateTimeUtc(new DateTime(2021, 03, 30, 12, 13, 14, DateTimeKind.Utc)),
-                DateTimeZone.Utc);
+            var timestamp = new DateTimeOffset(2021, 03, 30, 12, 13, 14, TimeSpan.Zero);
 
             // Act
             var signature = authentication.Create(

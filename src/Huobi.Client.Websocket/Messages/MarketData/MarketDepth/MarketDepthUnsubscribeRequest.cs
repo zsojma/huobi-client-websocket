@@ -5,18 +5,10 @@ namespace Huobi.Client.Websocket.Messages.MarketData.MarketDepth
     public class MarketDepthUnsubscribeRequest : UnsubscribeRequest
     {
         public MarketDepthUnsubscribeRequest(
+            string reqId,
             string symbol,
-            MarketDepthStepType stepType,
-            string? reqId = null)
-            : base(symbol, SubscriptionType.MarketDepth, stepType.ToStep(), reqId)
-        {
-        }
-
-        public MarketDepthUnsubscribeRequest(
-            string symbol,
-            string stepType,
-            string? reqId = null)
-            : base(symbol, SubscriptionType.MarketDepth, stepType, reqId)
+            MarketDepthStepType stepType)
+            : base(reqId, symbol, SubscriptionType.MarketDepth, stepType.ToStep())
         {
         }
     }

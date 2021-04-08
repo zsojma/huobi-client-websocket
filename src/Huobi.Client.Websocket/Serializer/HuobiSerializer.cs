@@ -28,7 +28,10 @@ namespace Huobi.Client.Websocket.Serializer
             }
         }
 
-        public bool TryDeserializeIfContains<T>(string input, string containsValue, [MaybeNullWhen(false)] out T deserialized)
+        public bool TryDeserializeIfContains<T>(
+            string input,
+            string containsValue,
+            [MaybeNullWhen(false)] out T deserialized)
             where T : class
         {
             if (!input.Contains(containsValue))
@@ -41,7 +44,10 @@ namespace Huobi.Client.Websocket.Serializer
             return deserialized != null;
         }
 
-        public bool TryDeserializeIfContains<T>(string input, string[] containsValues, [MaybeNullWhen(false)] out T deserialized)
+        public bool TryDeserializeIfContains<T>(
+            string input,
+            string[] containsValues,
+            [MaybeNullWhen(false)] out T deserialized)
             where T : class
         {
             if (containsValues.Any(x => !input.Contains(x)))
@@ -52,6 +58,22 @@ namespace Huobi.Client.Websocket.Serializer
 
             deserialized = Deserialize<T>(input);
             return deserialized != null;
+        }
+
+        public bool TryDeserializeIfContains<T>(
+            string input,
+            string containsValue,
+            string notContainsValue,
+            [MaybeNullWhen(false)] out T deserialized)
+            where T : class
+        {
+            if (input.Contains(notContainsValue))
+            {
+                deserialized = null;
+                return false;
+            }
+
+            return TryDeserializeIfContains(input, containsValue, out deserialized);
         }
 
         public bool TryDeserializeIfContains<T>(

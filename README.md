@@ -23,7 +23,7 @@ TODO
 
 ### API coverage
 
-| PUBLIC                 |    Covered     |  
+| PUBLIC                 |    Covered     |
 |------------------------|:--------------:|
 | Ping-Pong              |  ✔            |
 | Subscribe              |  ✔            |
@@ -36,13 +36,13 @@ TODO
 | Market details         |  ✔            |
 | Errors                 |  ✔            |
 
-| AUTHENTICATED          |    Covered     |  
 |------------------------|:--------------:|
+| AUTHENTICATED          |    Covered     |
 | Ping-Pong              |  ✔            |
 | Authentication         |  ✔            |
 | Order updates          |  ✔            |
-| Trades                 |                |
-| Account changes        |                |
+| Trade details          |  ✔            |
+| Account updates        |  ✔            |
 
 **Pull Requests are welcome!**
 

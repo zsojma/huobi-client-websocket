@@ -5,9 +5,9 @@ namespace Huobi.Client.Websocket.Messages.MarketData.MarketTradeDetail
     public class MarketTradeDetailSubscribeRequest : SubscribeRequest
     {
         public MarketTradeDetailSubscribeRequest(
-            string symbol,
-            string? reqId = null)
-            : base(symbol, SubscriptionType.MarketTradeDetail, null, reqId)
+            string reqId,
+            string symbol)
+            : base(reqId, symbol, SubscriptionType.MarketTradeDetail)
         {
         }
     }

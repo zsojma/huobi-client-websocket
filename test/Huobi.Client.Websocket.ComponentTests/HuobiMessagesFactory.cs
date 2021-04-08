@@ -1,45 +1,47 @@
-﻿namespace Huobi.Client.Websocket.ComponentTests
+﻿using System;
+
+namespace Huobi.Client.Websocket.ComponentTests
 {
     public static class HuobiMessagesFactory
     {
-        public static string CreateSubscribeResponseMessage()
+        public static string CreateSubscribeResponseMessage(DateTimeOffset timestamp)
         {
             var message = @"{
   ""id"": ""id1"",
   ""status"": ""ok"",
   ""subbed"": ""market.ethbtc.kline.1min"",
-  ""ts"": 1489474081631
+  ""ts"": " + timestamp.ToUnixTimeMilliseconds() + @"
 }";
             return message;
         }
 
-        public static string CreateUnsubscribeResponseMessage()
+        public static string CreateUnsubscribeResponseMessage(DateTimeOffset timestamp)
         {
             var message = @"{
   ""id"": ""id1"",
   ""status"": ""ok"",
   ""unsubbed"": ""market.ethbtc.kline.1min"",
-  ""ts"": 1489474081631
+  ""ts"": " + timestamp.ToUnixTimeMilliseconds() + @"
 }";
             return message;
         }
 
-        public static string CreateErrorMessage()
+        public static string CreateErrorMessage(DateTimeOffset timestamp)
         {
             var message = @"{
   ""status"": ""error"",
-  ""ts"": ""123456"",
+  ""ts"": """ + timestamp.ToUnixTimeMilliseconds() + @""",
   ""err-code"": ""error code 123"",
   ""err-msg"": ""error message 456""
 }";
             return message;
         }
 
-        public static string CreateMarketCandlestickUpdateMessage()
+        public static string CreateMarketCandlestickUpdateMessage(DateTimeOffset timestamp)
         {
             var message = @"{
   ""ch"": ""market.ethbtc.kline.1min"",
-  ""ts"": 1489474082831,
+  ""ts"": " + timestamp.ToUnixTimeMilliseconds() + @",
   ""tick"": {
     ""id"": 1489464480,
     ""amount"": 10.11,
@@ -54,12 +56,13 @@
             return message;
         }
 
-        public static string CreateMarketCandlestickPullResponseMessage()
+        public static string CreateMarketCandlestickPullResponseMessage(DateTimeOffset timestamp)
         {
             var message = @"{
+  ""id"": ""id1"",
   ""status"": ""ok"",
   ""rep"": ""market.ethbtc.kline.1min"",
-  ""ts"": 1489474082831,
+  ""ts"": " + timestamp.ToUnixTimeMilliseconds() + @",
   ""data"": [
     {
       ""id"": 1489464480,
@@ -86,11 +89,11 @@
             return message;
         }
 
-        public static string CreateMarketDepthUpdateMessage()
+        public static string CreateMarketDepthUpdateMessage(DateTimeOffset timestamp)
         {
             var message = @"{
   ""ch"": ""market.btcusdt.depth.step0"",
-  ""ts"": 1572362902027,
+  ""ts"": " + timestamp.ToUnixTimeMilliseconds() + @",
   ""tick"": {
     ""bids"": [
       [3.7721, 344.86],
@@ -101,18 +104,19 @@
       [3.7746, 70.52]
     ],
     ""version"": 100434317651,
-    ""ts"": 1572362902012
+    ""ts"": " + timestamp.ToUnixTimeMilliseconds() + @"
   }
 }";
             return message;
         }
 
-        public static string CreateMarketDepthPullResponseMessage()
+        public static string CreateMarketDepthPullResponseMessage(DateTimeOffset timestamp)
         {
             var message = @"{
+  ""id"": ""id1"",
   ""status"": ""ok"",
   ""rep"": ""market.btcusdt.depth.step0"",
-  ""ts"": 1572362902027,
+  ""ts"": " + timestamp.ToUnixTimeMilliseconds() + @",
   ""data"": {
     ""bids"": [
       [3.7721, 344.86],
@@ -123,17 +127,17 @@
       [3.7746, 70.52]
     ],
     ""version"": 100434317651,
-    ""ts"": 1572362902012
+    ""ts"": " + timestamp.ToUnixTimeMilliseconds() + @"
   }
 }";
             return message;
         }
 
-        public static string CreateMarketByPriceUpdateMessage_Asks()
+        public static string CreateMarketByPriceUpdateMessage_Asks(DateTimeOffset timestamp)
         {
             var message = @"{
   ""ch"": ""market.btcusdt.mbp.5"",
-  ""ts"": 1573199608679,
+  ""ts"": " + timestamp.ToUnixTimeMilliseconds() + @",
   ""tick"": {
     ""seqNum"": 100020146795,
     ""prevSeqNum"": 100020146794,
@@ -145,11 +149,11 @@
             return message;
         }
         
-        public static string CreateMarketByPriceUpdateMessage_Bids()
+        public static string CreateMarketByPriceUpdateMessage_Bids(DateTimeOffset timestamp)
         {
             var message = @"{
   ""ch"": ""market.btcusdt.mbp.5"",
-  ""ts"": 1573199608679,
+  ""ts"": " + timestamp.ToUnixTimeMilliseconds() + @",
   ""tick"": {
     ""seqNum"": 100020146795,
     ""prevSeqNum"": 100020146794,
@@ -161,11 +165,11 @@
             return message;
         }
         
-        public static string CreateMarketByPriceRefreshUpdateMessage()
+        public static string CreateMarketByPriceRefreshUpdateMessage(DateTimeOffset timestamp)
         {
             var message = @"{
   ""ch"": ""market.btcusdt.mbp.refresh.20"",
-  ""ts"": 1573199608679,
+  ""ts"": " + timestamp.ToUnixTimeMilliseconds() + @",
   ""tick"": {
     ""seqNum"": 100020142010,
     ""bids"": [
@@ -214,11 +218,11 @@
             return message;
         }
 
-        public static string CreateMarketBestBidOfferUpdateMessage()
+        public static string CreateMarketBestBidOfferUpdateMessage(DateTimeOffset timestamp)
         {
             var message = @"{
   ""ch"": ""market.btcusdt.bbo"",
-  ""ts"": 1489474082831,
+  ""ts"": " + timestamp.ToUnixTimeMilliseconds() + @",
   ""tick"": {
     ""symbol"": ""btcusdt"",
     ""quoteTime"": 1489474082811,
@@ -232,18 +236,18 @@
             return message;
         }
 
-        public static string CreateMarketTradeDetailUpdateMessage()
+        public static string CreateMarketTradeDetailUpdateMessage(DateTimeOffset timestamp)
         {
             var message = @"{
   ""ch"": ""market.btcusdt.trade.detail"",
-  ""ts"": 1489474082831,
+  ""ts"": " + timestamp.ToUnixTimeMilliseconds() + @",
   ""tick"": {
     ""id"": 14650745135,
-    ""ts"": 1533265950234, //trade time
+    ""ts"": " + timestamp.ToUnixTimeMilliseconds() + @",
     ""data"": [
       {
         ""amount"": 0.0099,
-        ""ts"": 1533265950234,
+        ""ts"": " + timestamp.ToUnixTimeMilliseconds() + @",
         ""id"": 146507451359183894799,
         ""tradeId"": 102043495674,
         ""price"": 401.74,
@@ -251,7 +255,7 @@
       },
       {
         ""amount"": 0.0098,
-        ""ts"": 1533265950235,
+        ""ts"": " + timestamp.ToUnixTimeMilliseconds() + @",
         ""id"": 146507451359183894794,
         ""tradeId"": 102043495675,
         ""price"": 402.74,
@@ -263,16 +267,17 @@
             return message;
         }
 
-        public static string CreateMarketTradeDetailPullResponseMessage()
+        public static string CreateMarketTradeDetailPullResponseMessage(DateTimeOffset timestamp)
         {
             var message = @"{
+  ""id"": ""id1"",
   ""status"": ""ok"",
   ""rep"": ""market.btcusdt.trade.detail"",
-  ""ts"": 1489474082831,
+  ""ts"": " + timestamp.ToUnixTimeMilliseconds() + @",
   ""data"": [
     {
       ""amount"": 0.0099,
-      ""ts"": 1533265950234,
+      ""ts"": " + timestamp.ToUnixTimeMilliseconds() + @",
       ""id"": 146507451359183894799,
       ""tradeId"": 102043495674,
       ""price"": 401.74,
@@ -280,7 +285,7 @@
     },
     {
       ""amount"": 0.0098,
-      ""ts"": 1533265950235,
+      ""ts"": " + timestamp.ToUnixTimeMilliseconds() + @",
       ""id"": 146507451359183894794,
       ""tradeId"": 102043495675,
       ""price"": 402.74,
@@ -291,11 +296,11 @@
             return message;
         }
 
-        public static string CreateMarketDetailsUpdateMessage()
+        public static string CreateMarketDetailsUpdateMessage(DateTimeOffset timestamp)
         {
             var message = @"{
   ""ch"": ""market.btcusdt.detail"",
-  ""ts"": 1494497082831,
+  ""ts"": " + timestamp.ToUnixTimeMilliseconds() + @",
   ""tick"": {
     ""amount"": 12224.2922,
     ""open"":   9790.52,
@@ -310,12 +315,13 @@
             return message;
         }
 
-        public static string CreateMarketDetailsPullResponseMessage()
+        public static string CreateMarketDetailsPullResponseMessage(DateTimeOffset timestamp)
         {
             var message = @"{
+  ""id"": ""id1"",
   ""status"": ""ok"",
   ""rep"": ""market.btcusdt.detail"",
-  ""ts"": 1494497082831,
+  ""ts"": " + timestamp.ToUnixTimeMilliseconds() + @",
   ""data"": {
     ""amount"": 12224.2922,
     ""open"":   9790.52,

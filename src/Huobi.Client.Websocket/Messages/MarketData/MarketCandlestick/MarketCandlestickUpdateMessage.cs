@@ -6,8 +6,8 @@ namespace Huobi.Client.Websocket.Messages.MarketData.MarketCandlestick
 {
     public class MarketCandlestickUpdateMessage : UpdateMessage<MarketCandlestickTick>
     {
-        public MarketCandlestickUpdateMessage(string topic, long timestamp, MarketCandlestickTick tick)
-            : base(topic, timestamp, tick)
+        public MarketCandlestickUpdateMessage(string topic, long timestampMs, MarketCandlestickTick tick)
+            : base(topic, timestampMs, tick)
         {
         }
 

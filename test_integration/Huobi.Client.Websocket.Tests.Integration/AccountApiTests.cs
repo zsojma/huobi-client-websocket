@@ -14,7 +14,7 @@ namespace Huobi.Client.Websocket.Tests.Integration
         {
             // Arrange
             using var client = HuobiWebsocketClientsFactory.CreateAccountClient(
-                HuobiConstants.ApiAuthWebsocketUrl,
+                HuobiConstants.ApiAccountWebsocketUrl,
                 "not_required_for_ping",
                 "not_required_for_ping");
 
@@ -37,12 +37,12 @@ namespace Huobi.Client.Websocket.Tests.Integration
         }
 
         [Theory(Skip = "Requires setup of API keys")]
-        [InlineData("", "")]
+        [InlineData("your_access_key", "your_secret_key")]
         public async Task AuthenticationRequest_ResponseMessageReceived(string accessKey, string secretKey)
         {
             // Arrange
             using var client = HuobiWebsocketClientsFactory.CreateAccountClient(
-                HuobiConstants.ApiAuthWebsocketUrl,
+                HuobiConstants.ApiAccountWebsocketUrl,
                 accessKey,
                 secretKey);
 

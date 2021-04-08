@@ -5,18 +5,10 @@ namespace Huobi.Client.Websocket.Messages.MarketData.MarketByPrice
     public class MarketByPriceRefreshUnsubscribeRequest : UnsubscribeRequest
     {
         public MarketByPriceRefreshUnsubscribeRequest(
+            string reqId,
             string symbol,
-            MarketByPriceRefreshLevelType levelType,
-            string? reqId = null)
-            : base(symbol, SubscriptionType.MarketByPriceRefresh, levelType.ToStep(), reqId)
-        {
-        }
-
-        public MarketByPriceRefreshUnsubscribeRequest(
-            string symbol,
-            string levelType,
-            string? reqId = null)
-            : base(symbol, SubscriptionType.MarketByPriceRefresh, levelType, reqId)
+            MarketByPriceRefreshLevelType levelType)
+            : base(reqId, symbol, SubscriptionType.MarketByPriceRefresh, levelType.ToStep())
         {
         }
     }

@@ -1,4 +1,5 @@
-﻿using Huobi.Client.Websocket.Messages.Account.Values;
+﻿using System;
+using Huobi.Client.Websocket.Messages.Account.Values;
 using Newtonsoft.Json;
 
 namespace Huobi.Client.Websocket.Messages.Account.TradeDetails
@@ -11,31 +12,33 @@ namespace Huobi.Client.Websocket.Messages.Account.TradeDetails
             string orderSideStr,
             string orderTypeStr,
             string orderStatusStr,
+            long tradeTimeMs,
+            long orderCreateTimeMs,
             string symbol,
             long orderId,
-            string tradePrice,
-            string tradeVolume,
+            decimal tradePrice,
+            decimal tradeVolume,
             bool aggressor,
             long tradeId,
-            long tradeTime,
-            string transactionFee,
+            decimal transactionFee,
             string feeCurrency,
-            string feeDeduct,
+            decimal feeDeduct,
             string feeDeductType,
             long accountId,
             string source,
-            string orderPrice,
-            string orderSize,
-            string orderValue,
+            decimal orderPrice,
+            decimal orderSize,
+            decimal orderValue,
             string clientOrderId,
-            string stopPrice,
-            string @operator,
-            long orderCreateTime)
+            decimal stopPrice,
+            string @operator)
         {
             EventTypeStr = eventTypeStr;
             OrderSideStr = orderSideStr;
             OrderTypeStr = orderTypeStr;
             OrderStatusStr = orderStatusStr;
+            TradeTimeMs = tradeTimeMs;
+            OrderCreateTimeMs = orderCreateTimeMs;
 
             Symbol = symbol;
             OrderId = orderId;
@@ -43,7 +46,6 @@ namespace Huobi.Client.Websocket.Messages.Account.TradeDetails
             TradeVolume = tradeVolume;
             Aggressor = aggressor;
             TradeId = tradeId;
-            TradeTime = tradeTime;
             TransactionFee = transactionFee;
             FeeCurrency = feeCurrency;
             FeeDeduct = feeDeduct;
@@ -56,7 +58,6 @@ namespace Huobi.Client.Websocket.Messages.Account.TradeDetails
             ClientOrderId = clientOrderId;
             StopPrice = stopPrice;
             Operator = @operator;
-            OrderCreateTime = orderCreateTime;
         }
 
         [JsonIgnore]
@@ -71,29 +72,34 @@ namespace Huobi.Client.Websocket.Messages.Account.TradeDetails
         [JsonIgnore]
         public OrderStatus OrderStatus => OrderStatusHelper.FromMessageValue(OrderStatusStr);
 
+        [JsonIgnore]
+        public DateTimeOffset TradeTime => DateTimeOffset.FromUnixTimeMilliseconds(TradeTimeMs);
+
+        [JsonIgnore]
+        public DateTimeOffset OrderCreateTime => DateTimeOffset.FromUnixTimeMilliseconds(OrderCreateTimeMs);
+
         public string Symbol { get; }
         public long OrderId { get; }
-        public string TradePrice { get; }
-        public string TradeVolume { get; }
+        public decimal TradePrice { get; }
+        public decimal TradeVolume { get; }
         public bool Aggressor { get; }
         public long TradeId { get; }
-        public long TradeTime { get; }
 
-        [JsonProperty("transacFee")]
-        public string TransactionFee { get; }
+        [JsonProperty("transactFee")]
+        public decimal TransactionFee { get; }
 
         public string FeeCurrency { get; }
-        public string FeeDeduct { get; }
+        public decimal FeeDeduct { get; }
         public string FeeDeductType { get; }
         public long AccountId { get; }
         public string Source { get; }
-        public string OrderPrice { get; }
-        public string OrderSize { get; }
-        public string OrderValue { get; }
+        public decimal OrderPrice { get; }
+        public decimal OrderSize { get; }
+        public decimal OrderValue { get; }
         public string ClientOrderId { get; }
-        public string StopPrice { get; }
+        public decimal StopPrice { get; }
         public string Operator { get; }
-        public long OrderCreateTime { get; }
+
 
         [JsonProperty("eventType")]
         internal string EventTypeStr { get; }
@@ -106,5 +112,11 @@ namespace Huobi.Client.Websocket.Messages.Account.TradeDetails
 
         [JsonProperty("orderStatus")]
         internal string OrderStatusStr { get; }
+
+        [JsonProperty("tradeTime")]
+        internal long TradeTimeMs { get; }
+
+        [JsonProperty("orderCreateTime")]
+        internal long OrderCreateTimeMs { get; }
     }
 }

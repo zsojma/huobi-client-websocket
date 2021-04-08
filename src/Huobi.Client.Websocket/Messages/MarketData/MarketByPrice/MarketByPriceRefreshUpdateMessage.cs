@@ -6,8 +6,8 @@ namespace Huobi.Client.Websocket.Messages.MarketData.MarketByPrice
 {
     public class MarketByPriceRefreshUpdateMessage : UpdateMessage<MarketByPriceTick>
     {
-        public MarketByPriceRefreshUpdateMessage(string topic, long timestamp, MarketByPriceTick tick)
-            : base(topic, timestamp, tick)
+        public MarketByPriceRefreshUpdateMessage(string topic, long timestampMs, MarketByPriceTick tick)
+            : base(topic, timestampMs, tick)
         {
         }
 

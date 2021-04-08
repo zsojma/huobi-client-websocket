@@ -10,7 +10,6 @@ using Huobi.Client.Websocket.Messages.MarketData.MarketDetails;
 using Huobi.Client.Websocket.Messages.MarketData.MarketTradeDetail;
 using Huobi.Client.Websocket.Messages.MarketData.Values;
 using Microsoft.Extensions.Logging;
-using NodaTime;
 
 namespace Huobi.Client.Websocket.Sample.Examples
 {
@@ -91,106 +90,106 @@ namespace Huobi.Client.Websocket.Sample.Examples
 
         private async Task StartCandlestickExample(string symbol)
         {
-            var marketCandlestickSubscribeRequest = new MarketCandlestickSubscribeRequest(
+            var subscribeRequest = new MarketCandlestickSubscribeRequest(
+                GetNextId(),
                 symbol,
-                MarketCandlestickPeriodType.OneMinute,
-                GetNextId());
-            _client.Send(marketCandlestickSubscribeRequest);
+                MarketCandlestickPeriodType.OneMinute);
+            _client.Send(subscribeRequest);
 
             await Task.Delay(1000);
 
-            var now = new ZonedDateTime(Instant.FromDateTimeOffset(DateTimeOffset.UtcNow), DateTimeZone.Utc);
-            var marketCandlestickPullRequest = new MarketCandlestickPullRequest(
+            var now = DateTimeOffset.UtcNow;
+            var pullRequest = new MarketCandlestickPullRequest(
+                GetNextId(),
                 symbol,
                 MarketCandlestickPeriodType.SixtyMinutes,
-                GetNextId(),
-                now.PlusHours(-5),
-                now.PlusHours(-2));
-            _client.Send(marketCandlestickPullRequest);
+                now.AddHours(-5),
+                now.AddHours(-2));
+            _client.Send(pullRequest);
         }
 
         private Task StopCandlestickExample(string symbol)
         {
-            var candlestickUnsubscribeRequest = new MarketCandlestickUnsubscribeRequest(
+            var unsubscribeRequest = new MarketCandlestickUnsubscribeRequest(
+                GetNextId(),
                 symbol,
-                MarketCandlestickPeriodType.OneMinute,
-                GetNextId());
-            _client.Send(candlestickUnsubscribeRequest);
+                MarketCandlestickPeriodType.OneMinute);
+            _client.Send(unsubscribeRequest);
 
             return Task.CompletedTask;
         }
 
         private async Task StartDepthExample(string symbol)
         {
-            var marketDepthSubscribeRequest =
-                new MarketDepthSubscribeRequest(symbol, MarketDepthStepType.NoAggregation, GetNextId());
-            _client.Send(marketDepthSubscribeRequest);
+            var subscribeRequest =
+                new MarketDepthSubscribeRequest(GetNextId(), symbol, MarketDepthStepType.NoAggregation);
+            _client.Send(subscribeRequest);
 
             await Task.Delay(1000);
 
-            var marketDepthPullRequest = new MarketDepthPullRequest(
+            var pullRequest = new MarketDepthPullRequest(
+                GetNextId(),
                 symbol,
-                MarketDepthStepType.NoAggregation,
-                GetNextId());
-            _client.Send(marketDepthPullRequest);
+                MarketDepthStepType.NoAggregation);
+            _client.Send(pullRequest);
         }
 
         private Task StopDepthExample(string symbol)
         {
-            var depthUnsubscribeRequest =
-                new MarketDepthUnsubscribeRequest(symbol, MarketDepthStepType.NoAggregation, GetNextId());
-            _client.Send(depthUnsubscribeRequest);
+            var unsubscribeRequest =
+                new MarketDepthUnsubscribeRequest(GetNextId(), symbol, MarketDepthStepType.NoAggregation);
+            _client.Send(unsubscribeRequest);
 
             return Task.CompletedTask;
         }
 
         private Task StartMarketBestBidOfferExample(string symbol)
         {
-            var marketBestBidOfferSubscribeRequest = new MarketBestBidOfferSubscribeRequest(symbol, GetNextId());
-            _client.Send(marketBestBidOfferSubscribeRequest);
+            var subscribeRequest = new MarketBestBidOfferSubscribeRequest(GetNextId(), symbol);
+            _client.Send(subscribeRequest);
 
             return Task.CompletedTask;
         }
 
         private Task StopMarketBestBidOfferExample(string symbol)
         {
-            var marketBestBidOfferUnsubscribeRequest = new MarketBestBidOfferUnsubscribeRequest(symbol, GetNextId());
-            _client.Send(marketBestBidOfferUnsubscribeRequest);
+            var unsubscribeRequest = new MarketBestBidOfferUnsubscribeRequest(GetNextId(), symbol);
+            _client.Send(unsubscribeRequest);
 
             return Task.CompletedTask;
         }
 
         private async Task StartMarketByPriceExample(string symbol)
         {
-            var marketByPriceSubscribeRequest =
-                new MarketByPriceSubscribeRequest(symbol, MarketByPriceLevelType.Five, GetNextId());
-            _client.Send(marketByPriceSubscribeRequest);
+            var subscribeRequest =
+                new MarketByPriceSubscribeRequest(GetNextId(), symbol, MarketByPriceLevelType.Five);
+            _client.Send(subscribeRequest);
 
             var marketByPriceRefreshSubscribeRequest = new MarketByPriceRefreshSubscribeRequest(
+                GetNextId(),
                 symbol,
-                MarketByPriceRefreshLevelType.Five,
-                GetNextId());
+                MarketByPriceRefreshLevelType.Five);
             _client.Send(marketByPriceRefreshSubscribeRequest);
 
             await Task.Delay(1000);
 
-            var marketByPricePullRequest = new MarketByPricePullRequest(
+            var pullRequest = new MarketByPricePullRequest(
+                GetNextId(),
                 symbol,
-                MarketByPriceLevelType.Five,
-                GetNextId());
-            _client.Send(marketByPricePullRequest);
+                MarketByPriceLevelType.Five);
+            _client.Send(pullRequest);
         }
 
         private Task StopMarketByPriceExample(string symbol)
         {
-            var marketByPriceUnsubscribeRequest =
-                new MarketByPriceUnsubscribeRequest(symbol, MarketByPriceLevelType.Five, GetNextId());
-            _client.Send(marketByPriceUnsubscribeRequest);
+            var unsubscribeRequest =
+                new MarketByPriceUnsubscribeRequest(GetNextId(), symbol, MarketByPriceLevelType.Five);
+            _client.Send(unsubscribeRequest);
 
             var marketByPriceRefreshUnsubscribeRequest = new MarketByPriceRefreshUnsubscribeRequest(
+                GetNextId(),
                 symbol,
-                MarketByPriceRefreshLevelType.Five,
-                GetNextId());
+                MarketByPriceRefreshLevelType.Five);
             _client.Send(marketByPriceRefreshUnsubscribeRequest);
 
             return Task.CompletedTask;
@@ -198,42 +197,42 @@ namespace Huobi.Client.Websocket.Sample.Examples
 
         private async Task StartMarketTradeDetailExample(string symbol)
         {
-            var marketTradeDetailSubscribeRequest = new MarketTradeDetailSubscribeRequest(symbol, GetNextId());
-            _client.Send(marketTradeDetailSubscribeRequest);
+            var subscribeRequest = new MarketTradeDetailSubscribeRequest(GetNextId(), symbol);
+            _client.Send(subscribeRequest);
 
             await Task.Delay(1000);
 
-            var marketTradeDetailPullRequest = new MarketTradeDetailPullRequest(
-                symbol,
-                GetNextId());
-            _client.Send(marketTradeDetailPullRequest);
+            var pullRequest = new MarketTradeDetailPullRequest(
+                GetNextId(),
+                symbol);
+            _client.Send(pullRequest);
         }
 
         private Task StopMarketTradeDetailExample(string symbol)
         {
-            var marketTradeDetailUnsubscribeRequest = new MarketTradeDetailUnsubscribeRequest(symbol, GetNextId());
-            _client.Send(marketTradeDetailUnsubscribeRequest);
+            var unsubscribeRequest = new MarketTradeDetailUnsubscribeRequest(GetNextId(), symbol);
+            _client.Send(unsubscribeRequest);
 
             return Task.CompletedTask;
         }
 
         private async Task StartMarketDetailsExample(string symbol)
         {
-            var marketDetailsSubscribeRequest = new MarketDetailsSubscribeRequest(symbol, GetNextId());
-            _client.Send(marketDetailsSubscribeRequest);
+            var subscribeRequest = new MarketDetailsSubscribeRequest(GetNextId(), symbol);
+            _client.Send(subscribeRequest);
 
             await Task.Delay(1000);
 
-            var marketDetailsPullRequest = new MarketDetailsPullRequest(
-                symbol,
-                GetNextId());
-            _client.Send(marketDetailsPullRequest);
+            var pullRequest = new MarketDetailsPullRequest(
+                GetNextId(),
+                symbol);
+            _client.Send(pullRequest);
         }
 
         private Task StopMarketDetailsExample(string symbol)
         {
-            var marketDetailsUnsubscribeRequest = new MarketDetailsUnsubscribeRequest(symbol, GetNextId());
-            _client.Send(marketDetailsUnsubscribeRequest);
+            var unsubscribeRequest = new MarketDetailsUnsubscribeRequest(GetNextId(), symbol);
+            _client.Send(unsubscribeRequest);
 
             return Task.CompletedTask;
         }

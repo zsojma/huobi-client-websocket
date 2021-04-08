@@ -10,6 +10,7 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.MarketData
         public void UpdateMessage_StreamUpdated()
         {
             // Arrange
+            var timestamp = DateTimeOffset.UtcNow;
             var triggered = false;
             var client = InitializeMarketClient();
             client.Streams.BestBidOfferUpdateStream.Subscribe(
@@ -24,9 +25,10 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.MarketData
                     Assert.True(msg.Tick.SeqId > 0);
                     Assert.True(msg.Tick.Bid > 0);
                     Assert.True(msg.Tick.Ask > 0);
+                    Assert.True(TestUtils.UnixTimesEqual(timestamp, msg.Timestamp));
                 });
 
-            var message = HuobiMessagesFactory.CreateMarketBestBidOfferUpdateMessage();
+            var message = HuobiMessagesFactory.CreateMarketBestBidOfferUpdateMessage(timestamp);
 
             // Act
             TriggerMessageReceive(message);

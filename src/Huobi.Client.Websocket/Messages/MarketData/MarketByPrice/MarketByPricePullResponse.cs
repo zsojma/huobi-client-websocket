@@ -12,9 +12,9 @@ namespace Huobi.Client.Websocket.Messages.MarketData.MarketByPrice
             string reqId,
             string status,
             string topic,
-            long timestamp,
+            long timestampMs,
             MarketByPricePullTick data)
-            : base(reqId, status, topic, timestamp, data)
+            : base(reqId, status, topic, timestampMs, data)
         {
         }
 

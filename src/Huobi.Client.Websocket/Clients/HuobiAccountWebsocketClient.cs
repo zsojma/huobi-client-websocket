@@ -4,6 +4,7 @@ using Huobi.Client.Websocket.Clients.Streams;
 using Huobi.Client.Websocket.Communicator;
 using Huobi.Client.Websocket.Config;
 using Huobi.Client.Websocket.Messages.Account;
+using Huobi.Client.Websocket.Messages.Account.AccountUpdates;
 using Huobi.Client.Websocket.Messages.Account.OrderUpdates;
 using Huobi.Client.Websocket.Messages.Account.TradeDetails;
 using Huobi.Client.Websocket.Serializer;
@@ -45,6 +46,7 @@ namespace Huobi.Client.Websocket.Clients
         {
             return TryHandleTradeDetailsMessages(message)
                 || TryHandleOrderUpdateMessages(message)
+                || TryHandleAccountUpdateMessages(message)
                 || TryHandleSubscribeResponses(message)
                 || TryHandleAuthenticationResponses(message);
         }
@@ -98,6 +100,17 @@ namespace Huobi.Client.Websocket.Clients
             if (OrderCanceledMessage.TryParse(Serializer, message, out var orderCanceledMessage))
             {
                 Streams.OrderCanceledMessageSubject.OnNext(orderCanceledMessage);
+                return true;
+            }
+
+            return false;
+        }
+        
+        private bool TryHandleAccountUpdateMessages(string message)
+        {
+            if (AccountUpdateMessage.TryParse(Serializer, message, out var accountUpdateMessage))
+            {
+                Streams.AccountUpdateMessageSubject.OnNext(accountUpdateMessage);
                 return true;
             }
 

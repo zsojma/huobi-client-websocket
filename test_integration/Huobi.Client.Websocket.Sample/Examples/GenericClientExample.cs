@@ -24,16 +24,16 @@ namespace Huobi.Client.Websocket.Sample.Examples
 
             await _client.Start();
 
-            var subscribeRequest = new MarketCandlestickSubscribeRequest(symbol, MarketCandlestickPeriodType.FiveMinutes, "id1");
+            var subscribeRequest = new MarketCandlestickSubscribeRequest("id1", symbol, MarketCandlestickPeriodType.FiveMinutes);
             _client.Send(subscribeRequest);
         }
 
         public Task Stop(string symbol)
         {
             var unsubscribeRequest = new MarketCandlestickUnsubscribeRequest(
+                "id1",
                 symbol,
-                MarketCandlestickPeriodType.FiveMinutes,
-                "id1");
+                MarketCandlestickPeriodType.FiveMinutes);
             _client.Send(unsubscribeRequest);
 
             return Task.CompletedTask;

@@ -13,9 +13,9 @@ namespace Huobi.Client.Websocket.Messages.MarketData.MarketTradeDetail
             string reqId,
             string status,
             string topic,
-            long timestamp,
+            long timestampMs,
             MarketTradeDetailTickDataItem[] data)
-            : base(reqId, status, topic, timestamp, data)
+            : base(reqId, status, topic, timestampMs, data)
         {
         }
 
@@ -33,7 +33,7 @@ namespace Huobi.Client.Websocket.Messages.MarketData.MarketTradeDetail
                 },
                 out response);
 
-            return result && response?.Data.FirstOrDefault()?.Timestamp > 0;
+            return result && response?.Data.FirstOrDefault()?.TimestampMs > 0;
         }
     }
 }

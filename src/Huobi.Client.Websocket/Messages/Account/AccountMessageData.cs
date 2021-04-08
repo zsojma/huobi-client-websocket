@@ -1,15 +1,19 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 
 namespace Huobi.Client.Websocket.Messages.Account
 {
     public class AccountMessageData
     {
-        public AccountMessageData(long timestamp)
+        public AccountMessageData(long timestampMs)
         {
-            Timestamp = timestamp;
+            TimestampMs = timestampMs;
         }
         
+        [JsonIgnore]
+        public DateTimeOffset Timestamp => DateTimeOffset.FromUnixTimeMilliseconds(TimestampMs);
+        
         [JsonProperty("ts")]
-        public long Timestamp { get; }
+        internal long TimestampMs { get; }
     }
 }

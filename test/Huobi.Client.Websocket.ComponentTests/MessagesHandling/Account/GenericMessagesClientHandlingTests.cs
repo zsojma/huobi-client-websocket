@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using Huobi.Client.Websocket.Messages.Account;
+using Huobi.Client.Websocket.Messages.Account.Values;
 using Moq;
 using Xunit;
 
@@ -18,12 +22,14 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.Account
             TriggerMessageReceive(message);
 
             // Assert
-            AccountCommunicatorMock.Verify(m => m.Send(It.Is<string>(x => x.Contains("pong") && x.Contains("12345"))), Times.Once);
+            AccountCommunicatorMock.Verify(
+                m => m.Send(It.Is<string>(x => x.Contains("pong") && x.Contains("12345"))),
+                Times.Once);
             VerifyMessageNotUnhandled();
         }
 
         [Fact]
-        public void HandleResponse_AuthErrorMessage_StreamUpdated()
+        public void HandleResponse_ErrorMessage_StreamUpdated()
         {
             var triggered = false;
             var client = InitializeAccountClient();
@@ -37,6 +43,31 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.Account
                 });
 
             var message = HuobiAccountMessagesFactory.CreateErrorMessage();
+
+            // Act
+            TriggerMessageReceive(message);
+
+            // Assert
+            VerifyMessageNotUnhandled();
+            Assert.True(triggered);
+        }
+
+        [Theory]
+        [ClassData(typeof(AccountSubscriptionTypeTestData))]
+        public void HandleResponse_SubscribeErrorMessage_StreamUpdated(AccountSubscriptionType subscriptionType)
+        {
+            var triggered = false;
+            var client = InitializeAccountClient();
+            client.Streams.AccountErrorMessageStream.Subscribe(
+                msg =>
+                {
+                    triggered = true;
+
+                    // Assert
+                    Assert.NotNull(msg);
+                });
+
+            var message = HuobiAccountMessagesFactory.CreateSubscribeErrorMessage(subscriptionType);
 
             // Act
             TriggerMessageReceive(message);
@@ -95,6 +126,25 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.Account
             // Assert
             VerifyMessageNotUnhandled();
             Assert.True(triggered);
+        }
+    }
+
+    public class AccountSubscriptionTypeTestData : IEnumerable<object[]>
+    {
+        public IEnumerator<object[]> GetEnumerator()
+        {
+            var query =
+                from AccountSubscriptionType value in Enum.GetValues(typeof(AccountSubscriptionType))
+                select new[]
+                {
+                    (object)value
+                };
+            return query.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }

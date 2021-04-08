@@ -1,4 +1,5 @@
-﻿using Huobi.Client.Websocket.Messages.Account.Values;
+﻿using System;
+using Huobi.Client.Websocket.Messages.Account.Values;
 using Newtonsoft.Json;
 
 namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
@@ -10,21 +11,21 @@ namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
             string eventTypeStr,
             string orderSideStr,
             string orderStatusStr,
+            long orderTriggeringFailureTimeMs,
             string symbol,
             string clientOrderId,
             int errorCode,
-            string errorMessage,
-            long orderTriggeringFailureTime)
+            string errorMessage)
         {
             EventTypeStr = eventTypeStr;
             OrderSideStr = orderSideStr;
             OrderStatusStr = orderStatusStr;
+            OrderTriggeringFailureTimeMs = orderTriggeringFailureTimeMs;
             
             Symbol = symbol;
             ClientOrderId = clientOrderId;
             ErrorCode = errorCode;
             ErrorMessage = errorMessage;
-            OrderTriggeringFailureTime = orderTriggeringFailureTime;
         }
 
         [JsonIgnore]
@@ -36,6 +37,9 @@ namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
         [JsonIgnore]
         public OrderStatus OrderStatus => OrderStatusHelper.FromMessageValue(OrderStatusStr);
 
+        [JsonIgnore]
+        public DateTimeOffset OrderTriggeringFailureTime => DateTimeOffset.FromUnixTimeMilliseconds(OrderTriggeringFailureTimeMs);
+
         public string Symbol { get; }
         public string ClientOrderId { get; }
 
@@ -45,10 +49,6 @@ namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
         [JsonProperty("errMessage")]
         public string ErrorMessage { get; }
 
-        [JsonProperty("lastActTime")]
-        public long OrderTriggeringFailureTime { get; }
-
-
         [JsonProperty("eventType")]
         internal string EventTypeStr { get; }
 
@@ -57,5 +57,8 @@ namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
 
         [JsonProperty("orderStatus")]
         internal string OrderStatusStr { get; }
+
+        [JsonProperty("lastActTime")]
+        internal long OrderTriggeringFailureTimeMs { get; }
     }
 }

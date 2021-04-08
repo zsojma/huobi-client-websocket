@@ -20,14 +20,20 @@ namespace Huobi.Client.Websocket.Messages.Account
             string input,
             [MaybeNullWhen(false)] out AccountSubscribeResponse response)
         {
-            return serializer.TryDeserializeIfContains(
+            var result = serializer.TryDeserializeIfContains(
                 input,
                 new[]
                 {
                     "\"sub\"",
                     "\"code\""
                 },
+                new[]
+                {
+                    "\"message\""
+                },
                 out response);
+
+            return result;
         }
     }
 }

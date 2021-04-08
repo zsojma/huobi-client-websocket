@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Huobi.Client.Websocket.Utils;
+using Newtonsoft.Json;
 
 namespace Huobi.Client.Websocket.Messages.MarketData
 {
@@ -6,18 +8,24 @@ namespace Huobi.Client.Websocket.Messages.MarketData
         where TTick : class
     {
         [JsonConstructor]
-        public UpdateMessage(string topic, long timestamp, TTick tick)
+        public UpdateMessage(string topic, long timestampMs, TTick tick)
         {
+            Validations.ValidateInput(topic, nameof(topic));
+            Validations.ValidateInput(tick, nameof(tick));
+
             Topic = topic;
-            Timestamp = timestamp;
+            TimestampMs = timestampMs;
             Tick = tick;
         }
+
+        [JsonIgnore]
+        public DateTimeOffset Timestamp => DateTimeOffset.FromUnixTimeMilliseconds(TimestampMs);
 
         [JsonProperty("ch")]
         public string Topic { get; }
 
         [JsonProperty("ts")]
-        public long Timestamp { get; }
+        internal long TimestampMs { get; }
 
         public TTick Tick { get; }
     }

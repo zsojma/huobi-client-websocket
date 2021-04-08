@@ -4,7 +4,6 @@ using System.Security.Cryptography;
 using System.Text;
 using Huobi.Client.Websocket.Utils;
 using Microsoft.AspNetCore.Http;
-using NodaTime;
 
 namespace Huobi.Client.Websocket.Authentication
 {
@@ -21,7 +20,7 @@ namespace Huobi.Client.Websocket.Authentication
         private const string SIGNATURE_VERSION_NAME = "signatureVersion";
         internal const string SIGNATURE_VERSION_VERSION = "2.1";
 
-        public string Create(string accessKey, string secretKey, string host, string uri, ZonedDateTime timestamp)
+        public string Create(string accessKey, string secretKey, string host, string uri, DateTimeOffset timestamp)
         {
             var secretKeyBytes = Encoding.UTF8.GetBytes(secretKey);
             using var hmacSha256 = new HMACSHA256(secretKeyBytes);
@@ -34,7 +33,7 @@ namespace Huobi.Client.Websocket.Authentication
             return signature;
         }
 
-        private static string CreateRequestString(string accessKey, string host, string uri, ZonedDateTime timestamp)
+        private static string CreateRequestString(string accessKey, string host, string uri, DateTimeOffset timestamp)
         {
             var requestStringBuilder = new StringBuilder(METHOD);
             requestStringBuilder.Append(NEW_LINE_CHAR);
@@ -50,7 +49,7 @@ namespace Huobi.Client.Websocket.Authentication
             return requestString;
         }
 
-        private static string CreateQueryString(string accessKey, ZonedDateTime timestamp)
+        private static string CreateQueryString(string accessKey, DateTimeOffset timestamp)
         {
             var urlParamsDict = new Dictionary<string, string>
             {

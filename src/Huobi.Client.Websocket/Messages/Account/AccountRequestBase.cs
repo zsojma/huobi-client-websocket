@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Huobi.Client.Websocket.Utils;
+using Newtonsoft.Json;
 
 namespace Huobi.Client.Websocket.Messages.Account
 {
@@ -6,6 +7,9 @@ namespace Huobi.Client.Websocket.Messages.Account
     {
         protected AccountRequestBase(string action, string channel)
         {
+            Validations.ValidateInput(action, nameof(action));
+            Validations.ValidateInput(channel, nameof(channel));
+
             Action = action;
             Channel = channel;
         }

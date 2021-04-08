@@ -19,15 +19,16 @@ namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
             string input,
             [MaybeNullWhen(false)] out ConditionalOrderCanceledMessage response)
         {
-            return serializer.TryDeserializeIfContains(
+            var result = serializer.TryDeserializeIfContains(
                 input,
                 new[]
                 {
-                    "\"push\"",
                     AccountSubscriptionType.Orders.ToTopicId(),
                     OrderEventType.Deletion.ToMessageValue()
                 },
                 out response);
+
+            return result && response?.Data.OrderTriggerTimeMs > 0;
         }
     }
 }

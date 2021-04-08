@@ -5,7 +5,7 @@ namespace Huobi.Client.Websocket.Messages.MarketData
 {
     public class SubscribeRequest : RequestBase
     {
-        public SubscribeRequest(string symbol, SubscriptionType subscriptionType, string? step, string? reqId = null)
+        public SubscribeRequest(string reqId, string symbol, SubscriptionType subscriptionType, string? step = null)
             : base(reqId)
         {
             if (!string.IsNullOrEmpty(step))

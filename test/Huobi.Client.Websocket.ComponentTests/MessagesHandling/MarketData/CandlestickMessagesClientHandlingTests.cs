@@ -10,6 +10,7 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.MarketData
         public void UpdateMessage_StreamUpdated()
         {
             // Arrange
+            var timestamp = DateTimeOffset.UtcNow;
             var triggered = false;
             var client = InitializeMarketClient();
             client.Streams.CandlestickUpdateStream.Subscribe(
@@ -20,11 +21,11 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.MarketData
                     // Assert
                     Assert.NotNull(msg);
                     Assert.Contains(SubscriptionType.MarketCandlestick.ToTopicId(), msg.Topic);
-                    Assert.True(!string.IsNullOrEmpty(msg.Topic));
+                    Assert.True(TestUtils.UnixTimesEqual(timestamp, msg.Timestamp));
                     Assert.True(msg.Tick.Id > 0);
                 });
 
-            var message = HuobiMessagesFactory.CreateMarketCandlestickUpdateMessage();
+            var message = HuobiMessagesFactory.CreateMarketCandlestickUpdateMessage(timestamp);
 
             // Act
             TriggerMessageReceive(message);
@@ -38,6 +39,7 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.MarketData
         public void PullMessage_StreamUpdated()
         {
             // Arrange
+            var timestamp = DateTimeOffset.UtcNow;
             var triggered = false;
             var client = InitializeMarketClient();
             client.Streams.CandlestickPullStream.Subscribe(
@@ -48,13 +50,13 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.MarketData
                     // Assert
                     Assert.NotNull(msg);
                     Assert.Contains(SubscriptionType.MarketCandlestick.ToTopicId(), msg.Topic);
-                    Assert.True(!string.IsNullOrEmpty(msg.Topic));
+                    Assert.True(TestUtils.UnixTimesEqual(timestamp, msg.Timestamp));
                     Assert.Equal(2, msg.Data.Length);
                     Assert.True(msg.Data[0].Id > 0);
                     Assert.True(msg.Data[1].Id > 0);
                 });
 
-            var message = HuobiMessagesFactory.CreateMarketCandlestickPullResponseMessage();
+            var message = HuobiMessagesFactory.CreateMarketCandlestickPullResponseMessage(timestamp);
 
             // Act
             TriggerMessageReceive(message);

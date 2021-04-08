@@ -41,7 +41,7 @@ namespace Huobi.Client.Websocket.Tests.Integration
             // Arrange
             using var client = HuobiWebsocketClientsFactory.CreateMarketClient(HuobiConstants.ApiWebsocketUrl);
 
-            var request = new MarketCandlestickPullRequest("btcusdt", MarketCandlestickPeriodType.SixtyMinutes, "req1");
+            var request = new MarketCandlestickPullRequest("req1", "btcusdt", MarketCandlestickPeriodType.SixtyMinutes);
 
             MarketCandlestickPullResponse? response = null;
             var receivedEvent = new ManualResetEvent(false);

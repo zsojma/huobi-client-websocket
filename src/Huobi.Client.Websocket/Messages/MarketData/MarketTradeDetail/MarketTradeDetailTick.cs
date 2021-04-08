@@ -1,22 +1,25 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 
 namespace Huobi.Client.Websocket.Messages.MarketData.MarketTradeDetail
 {
     public class MarketTradeDetailTick
     {
         [JsonConstructor]
-        public MarketTradeDetailTick(long id, long timestamp, MarketTradeDetailTickDataItem[] data)
+        public MarketTradeDetailTick(long id, long timestampMs, MarketTradeDetailTickDataItem[] data)
         {
             Id = id;
-            Timestamp = timestamp;
+            TimestampMs = timestampMs;
             Data = data;
         }
 
+        [JsonIgnore]
+        public DateTimeOffset Timestamp => DateTimeOffset.FromUnixTimeMilliseconds(TimestampMs);
+
         public long Id { get; }
+        public MarketTradeDetailTickDataItem[] Data { get; }
 
         [JsonProperty("ts")]
-        public long Timestamp { get; }
-
-        public MarketTradeDetailTickDataItem[] Data { get; }
+        internal long TimestampMs { get; }
     }
 }

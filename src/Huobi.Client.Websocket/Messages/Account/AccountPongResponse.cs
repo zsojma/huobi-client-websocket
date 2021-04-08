@@ -4,10 +4,10 @@ namespace Huobi.Client.Websocket.Messages.Account
 {
     public class AccountPongResponse
     {
-        public AccountPongResponse(long timestamp)
+        public AccountPongResponse(long timestampMs)
         {
             Action = "pong";
-            Data = new AccountMessageData(timestamp);
+            Data = new AccountMessageData(timestampMs);
         }
 
         [JsonProperty("action")]

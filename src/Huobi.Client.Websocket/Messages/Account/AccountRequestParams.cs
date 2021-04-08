@@ -1,14 +1,17 @@
-﻿using Huobi.Client.Websocket.Authentication;
+﻿using System;
+using Huobi.Client.Websocket.Authentication;
 using Huobi.Client.Websocket.Utils;
 using Newtonsoft.Json;
-using NodaTime;
 
 namespace Huobi.Client.Websocket.Messages.Account
 {
     public class AccountRequestParams
     {
-        public AccountRequestParams(string accessKey, string signature, ZonedDateTime timestamp)
+        public AccountRequestParams(string accessKey, string signature, DateTimeOffset timestamp)
         {
+            Validations.ValidateInput(accessKey, nameof(accessKey));
+            Validations.ValidateInput(signature, nameof(signature));
+
             AuthType = "api";
             AccessKey = accessKey;
             SignatureMethod = HuobiSignature.SIGNATURE_METHOD_VALUE;

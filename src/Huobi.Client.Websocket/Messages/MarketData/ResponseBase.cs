@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Huobi.Client.Websocket.Utils;
+using Newtonsoft.Json;
 
 namespace Huobi.Client.Websocket.Messages.MarketData
 {
@@ -6,6 +7,8 @@ namespace Huobi.Client.Websocket.Messages.MarketData
     {
         protected ResponseBase(string reqId)
         {
+            Validations.ValidateInput(reqId, nameof(reqId));
+            
             ReqId = reqId;
         }
 

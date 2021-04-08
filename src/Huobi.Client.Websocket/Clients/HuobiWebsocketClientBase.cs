@@ -138,7 +138,7 @@ namespace Huobi.Client.Websocket.Clients
 
         private void RespondWithPong(AccountPingRequest accountPingRequest)
         {
-            var clientResponse = new AccountPongResponse(accountPingRequest.Data.Timestamp);
+            var clientResponse = new AccountPongResponse(accountPingRequest.Data.TimestampMs);
             var serialized = Serializer.Serialize(clientResponse);
             Send(serialized);
         }

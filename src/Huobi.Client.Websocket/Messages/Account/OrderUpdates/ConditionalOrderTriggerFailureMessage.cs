@@ -19,15 +19,16 @@ namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
             string input,
             [MaybeNullWhen(false)] out ConditionalOrderTriggerFailureMessage response)
         {
-            return serializer.TryDeserializeIfContains(
+            var result = serializer.TryDeserializeIfContains(
                 input,
                 new[]
                 {
-                    "\"push\"",
                     AccountSubscriptionType.Orders.ToTopicId(),
                     OrderEventType.Trigger.ToMessageValue()
                 },
                 out response);
+
+            return result && response?.Data.ErrorCode > 0;
         }
     }
 }

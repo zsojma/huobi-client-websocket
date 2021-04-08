@@ -10,6 +10,7 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.MarketData
         public void UpdateMessage_Asks_StreamUpdated()
         {
             // Arrange
+            var timestamp = DateTimeOffset.UtcNow;
             var triggered = false;
             var client = InitializeMarketClient();
             client.Streams.MarketByPriceUpdateStream.Subscribe(
@@ -24,10 +25,11 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.MarketData
                     Assert.NotNull(msg.Tick.Asks);
                     Assert.Single(msg.Tick.Asks!);
                     Assert.True(msg.Tick.Asks![0][0] > 0);
+                    Assert.True(TestUtils.UnixTimesEqual(timestamp, msg.Timestamp));
                 });
 
-            var message = HuobiMessagesFactory.CreateMarketByPriceUpdateMessage_Asks();
-            
+            var message = HuobiMessagesFactory.CreateMarketByPriceUpdateMessage_Asks(timestamp);
+
             // Act
             TriggerMessageReceive(message);
 
@@ -40,6 +42,7 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.MarketData
         public void UpdateMessage_Bids_StreamUpdated()
         {
             // Arrange
+            var timestamp = DateTimeOffset.UtcNow;
             var triggered = false;
             var client = InitializeMarketClient();
             client.Streams.MarketByPriceUpdateStream.Subscribe(
@@ -54,10 +57,11 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.MarketData
                     Assert.NotNull(msg.Tick.Bids);
                     Assert.Single(msg.Tick.Bids!);
                     Assert.True(msg.Tick.Bids![0][0] > 0);
+                    Assert.True(TestUtils.UnixTimesEqual(timestamp, msg.Timestamp));
                 });
 
-            var message = HuobiMessagesFactory.CreateMarketByPriceUpdateMessage_Bids();
-            
+            var message = HuobiMessagesFactory.CreateMarketByPriceUpdateMessage_Bids(timestamp);
+
             // Act
             TriggerMessageReceive(message);
 
@@ -70,6 +74,7 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.MarketData
         public void UpdateMessage_Refresh_StreamUpdated()
         {
             // Arrange
+            var timestamp = DateTimeOffset.UtcNow;
             var triggered = false;
             var client = InitializeMarketClient();
             client.Streams.MarketByPriceRefreshUpdateStream.Subscribe(
@@ -87,10 +92,11 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.MarketData
                     Assert.NotNull(msg.Tick.Asks);
                     Assert.Equal(5, msg.Tick.Asks!.Length);
                     Assert.True(msg.Tick.Asks[0][0] > 0);
+                    Assert.True(TestUtils.UnixTimesEqual(timestamp, msg.Timestamp));
                 });
 
-            var message = HuobiMessagesFactory.CreateMarketByPriceRefreshUpdateMessage();
-            
+            var message = HuobiMessagesFactory.CreateMarketByPriceRefreshUpdateMessage(timestamp);
+
             // Act
             TriggerMessageReceive(message);
 

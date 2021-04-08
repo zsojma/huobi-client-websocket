@@ -20,7 +20,7 @@ namespace Huobi.Client.Websocket.Messages.Account
             string input,
             [MaybeNullWhen(false)] out AuthenticationResponse response)
         {
-            return serializer.TryDeserializeIfContains(
+            var result = serializer.TryDeserializeIfContains(
                 input,
                 new[]
                 {
@@ -28,6 +28,8 @@ namespace Huobi.Client.Websocket.Messages.Account
                     "\"auth\""
                 },
                 out response);
+
+            return result;
         }
     }
 }

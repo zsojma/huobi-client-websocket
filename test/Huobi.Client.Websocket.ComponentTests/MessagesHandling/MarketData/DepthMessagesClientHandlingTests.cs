@@ -10,6 +10,7 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.MarketData
         public void UpdateMessage_StreamUpdated()
         {
             // Arrange
+            var timestamp = DateTimeOffset.UtcNow;
             var triggered = false;
             var client = InitializeMarketClient();
             client.Streams.DepthUpdateStream.Subscribe(
@@ -20,15 +21,14 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.MarketData
                     // Assert
                     Assert.NotNull(msg);
                     Assert.Contains(SubscriptionType.MarketDepth.ToTopicId(), msg.Topic);
-                    Assert.True(!string.IsNullOrEmpty(msg.Topic));
-                    Assert.True(msg.Tick.Timestamp > 0);
+                    Assert.True(TestUtils.UnixTimesEqual(timestamp, msg.Timestamp));
                     Assert.Equal(2, msg.Tick.Bids.Length);
                     Assert.True(msg.Tick.Bids[0][0] > 0);
                     Assert.Equal(2, msg.Tick.Asks.Length);
                     Assert.True(msg.Tick.Asks[0][0] > 0);
                 });
 
-            var message = HuobiMessagesFactory.CreateMarketDepthUpdateMessage();
+            var message = HuobiMessagesFactory.CreateMarketDepthUpdateMessage(timestamp);
 
             // Act
             TriggerMessageReceive(message);
@@ -42,6 +42,7 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.MarketData
         public void PullMessage_StreamUpdated()
         {
             // Arrange
+            var timestamp = DateTimeOffset.UtcNow;
             var triggered = false;
             var client = InitializeMarketClient();
             client.Streams.DepthPullStream.Subscribe(
@@ -52,15 +53,14 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.MarketData
                     // Assert
                     Assert.NotNull(msg);
                     Assert.Contains(SubscriptionType.MarketDepth.ToTopicId(), msg.Topic);
-                    Assert.True(!string.IsNullOrEmpty(msg.Topic));
-                    Assert.True(msg.Data.Timestamp > 0);
+                    Assert.True(TestUtils.UnixTimesEqual(timestamp, msg.Timestamp));
                     Assert.Equal(2, msg.Data.Bids.Length);
                     Assert.True(msg.Data.Bids[0][0] > 0);
                     Assert.Equal(2, msg.Data.Asks.Length);
                     Assert.True(msg.Data.Asks[0][0] > 0);
                 });
 
-            var message = HuobiMessagesFactory.CreateMarketDepthPullResponseMessage();
+            var message = HuobiMessagesFactory.CreateMarketDepthPullResponseMessage(timestamp);
 
             // Act
             TriggerMessageReceive(message);

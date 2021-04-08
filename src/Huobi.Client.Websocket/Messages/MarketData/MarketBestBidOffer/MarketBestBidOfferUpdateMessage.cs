@@ -6,8 +6,8 @@ namespace Huobi.Client.Websocket.Messages.MarketData.MarketBestBidOffer
 {
     public class MarketBestBidOfferUpdateMessage : UpdateMessage<MarketBestBidOfferTick>
     {
-        public MarketBestBidOfferUpdateMessage(string topic, long timestamp, MarketBestBidOfferTick tick)
-            : base(topic, timestamp, tick)
+        public MarketBestBidOfferUpdateMessage(string topic, long timestampMs, MarketBestBidOfferTick tick)
+            : base(topic, timestampMs, tick)
         {
         }
 

@@ -36,8 +36,8 @@ TODO
 | Market details         |  ✔            |
 | Errors                 |  ✔            |
 
-|------------------------|:--------------:|
 | AUTHENTICATED          |    Covered     |
+|------------------------|:--------------:|
 | Ping-Pong              |  ✔            |
 | Authentication         |  ✔            |
 | Order updates          |  ✔            |

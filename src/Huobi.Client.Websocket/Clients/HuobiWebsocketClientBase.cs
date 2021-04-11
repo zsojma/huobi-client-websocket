@@ -18,7 +18,6 @@ namespace Huobi.Client.Websocket.Clients
     public abstract class HuobiWebsocketClientBase<TStreams> : IDisposable
         where TStreams : HuobiClientStreamsBase, new()
     {
-        private readonly IHuobiWebsocketCommunicator _communicator;
         private readonly ILogger<HuobiWebsocketClientBase<TStreams>> _logger;
 
         private readonly IDisposable _messageReceivedSubscription;
@@ -28,14 +27,16 @@ namespace Huobi.Client.Websocket.Clients
             IHuobiSerializer serializer,
             ILogger<HuobiWebsocketClientBase<TStreams>> logger)
         {
-            _communicator = communicator;
+            Communicator = communicator;
             Serializer = serializer;
             _logger = logger;
 
-            _messageReceivedSubscription = _communicator.MessageReceived.Subscribe(HandleMessage);
+            _messageReceivedSubscription = Communicator.MessageReceived.Subscribe(HandleMessage);
         }
 
         protected IHuobiSerializer Serializer { get; }
+
+        public IHuobiWebsocketCommunicator Communicator { get; }
 
         [NotNull]
         public TStreams Streams { get; } = new();
@@ -43,11 +44,12 @@ namespace Huobi.Client.Websocket.Clients
         public void Dispose()
         {
             _messageReceivedSubscription.Dispose();
+            GC.SuppressFinalize(this);
         }
 
         public virtual Task Start()
         {
-            return _communicator.Start();
+            return Communicator.Start();
         }
 
         public void Send(string request)
@@ -55,7 +57,7 @@ namespace Huobi.Client.Websocket.Clients
             try
             {
                 _logger.LogDebug($"Sending client request: {request}");
-                _communicator.Send(request);
+                Communicator.Send(request);
             }
             catch (Exception ex)
             {

@@ -18,7 +18,6 @@ namespace Huobi.Client.Websocket.Clients.Streams
 
         internal readonly Subject<MarketCandlestickUpdateMessage> CandlestickUpdateSubject = new();
         internal readonly Subject<MarketDepthUpdateMessage> DepthUpdateSubject = new();
-        internal readonly Subject<MarketByPriceUpdateMessage> MarketByPriceUpdateSubject = new();
         internal readonly Subject<MarketByPriceRefreshUpdateMessage> MarketByPriceRefreshUpdateSubject = new();
         internal readonly Subject<MarketBestBidOfferUpdateMessage> BestBidOfferUpdateSubject = new();
         internal readonly Subject<MarketTradeDetailUpdateMessage> TradeDetailUpdateSubject = new();
@@ -26,7 +25,6 @@ namespace Huobi.Client.Websocket.Clients.Streams
 
         internal readonly Subject<MarketCandlestickPullResponse> CandlestickPullSubject = new();
         internal readonly Subject<MarketDepthPullResponse> DepthPullSubject = new();
-        internal readonly Subject<MarketByPricePullResponse> MarketByPricePullSubject = new();
         internal readonly Subject<MarketTradeDetailPullResponse> TradeDetailPullSubject = new();
         internal readonly Subject<MarketDetailsPullResponse> MarketDetailsPullSubject = new();
 
@@ -35,15 +33,13 @@ namespace Huobi.Client.Websocket.Clients.Streams
 
         public IObservable<MarketCandlestickUpdateMessage> CandlestickUpdateStream => CandlestickUpdateSubject.AsObservable();
         public IObservable<MarketDepthUpdateMessage> DepthUpdateStream => DepthUpdateSubject.AsObservable();
-        public IObservable<MarketByPriceUpdateMessage> MarketByPriceUpdateStream => MarketByPriceUpdateSubject.AsObservable();
-        public IObservable<MarketByPriceRefreshUpdateMessage> MarketByPriceRefreshUpdateStream => MarketByPriceRefreshUpdateSubject.AsObservable();
         public IObservable<MarketBestBidOfferUpdateMessage> BestBidOfferUpdateStream => BestBidOfferUpdateSubject.AsObservable();
         public IObservable<MarketTradeDetailUpdateMessage> TradeDetailUpdateStream => TradeDetailUpdateSubject.AsObservable();
         public IObservable<MarketDetailsUpdateMessage> MarketDetailsUpdateStream => MarketDetailsUpdateSubject.AsObservable();
 
         public IObservable<MarketCandlestickPullResponse> CandlestickPullStream => CandlestickPullSubject.AsObservable();
         public IObservable<MarketDepthPullResponse> DepthPullStream => DepthPullSubject.AsObservable();
-        public IObservable<MarketByPricePullResponse> MarketByPricePullStream => MarketByPricePullSubject.AsObservable();
+        public IObservable<MarketByPriceRefreshUpdateMessage> MarketByPriceRefreshUpdateStream => MarketByPriceRefreshUpdateSubject.AsObservable();
         public IObservable<MarketTradeDetailPullResponse> TradeDetailPullStream => TradeDetailPullSubject.AsObservable();
         public IObservable<MarketDetailsPullResponse> MarketDetailsPullStream => MarketDetailsPullSubject.AsObservable();
     }

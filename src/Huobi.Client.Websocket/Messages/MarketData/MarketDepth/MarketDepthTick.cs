@@ -1,4 +1,5 @@
 ﻿using System;
+using Huobi.Client.Websocket.Utils;
 using Newtonsoft.Json;
 
 namespace Huobi.Client.Websocket.Messages.MarketData.MarketDepth
@@ -8,6 +9,9 @@ namespace Huobi.Client.Websocket.Messages.MarketData.MarketDepth
         [JsonConstructor]
         public MarketDepthTick(decimal[][] bids, decimal[][] asks, long version, long timestampMs)
         {
+            Validations.ValidateInput(bids, nameof(bids));
+            Validations.ValidateInput(asks, nameof(asks));
+
             Bids = bids;
             Asks = asks;
             Version = version;

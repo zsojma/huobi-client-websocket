@@ -13,7 +13,7 @@ namespace Huobi.Client.Websocket.Messages.MarketData
                 step = $".{step}";
             }
 
-            Topic = $"market.{symbol}.{subscriptionType.ToTopicId()}{step}";
+            Topic = $"{HuobiConstants.MARKET_PREFIX}.{symbol}.{subscriptionType.ToTopicId()}{step}";
         }
 
         [JsonProperty("sub")]

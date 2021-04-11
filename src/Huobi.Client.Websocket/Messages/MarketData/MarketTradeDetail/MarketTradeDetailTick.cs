@@ -1,4 +1,5 @@
 ﻿using System;
+using Huobi.Client.Websocket.Utils;
 using Newtonsoft.Json;
 
 namespace Huobi.Client.Websocket.Messages.MarketData.MarketTradeDetail
@@ -8,6 +9,8 @@ namespace Huobi.Client.Websocket.Messages.MarketData.MarketTradeDetail
         [JsonConstructor]
         public MarketTradeDetailTick(long id, long timestampMs, MarketTradeDetailTickDataItem[] data)
         {
+            Validations.ValidateInput(data, nameof(data));
+
             Id = id;
             TimestampMs = timestampMs;
             Data = data;

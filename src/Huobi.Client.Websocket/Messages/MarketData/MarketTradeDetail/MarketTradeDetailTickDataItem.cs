@@ -1,4 +1,5 @@
 ﻿using System;
+using Huobi.Client.Websocket.Messages.MarketData.Values;
 using Newtonsoft.Json;
 
 namespace Huobi.Client.Websocket.Messages.MarketData.MarketTradeDetail
@@ -12,7 +13,7 @@ namespace Huobi.Client.Websocket.Messages.MarketData.MarketTradeDetail
             decimal amount,
             long tradeId,
             decimal price,
-            string direction)
+            TradeSide direction)
         {
             Id = id;
             TimestampMs = timestampMs;
@@ -29,7 +30,7 @@ namespace Huobi.Client.Websocket.Messages.MarketData.MarketTradeDetail
         public decimal Amount { get; }
         public long TradeId { get; }
         public decimal Price { get; }
-        public string Direction { get; }
+        public TradeSide Direction { get; }
 
         [JsonProperty("ts")]
         internal long TimestampMs { get; }

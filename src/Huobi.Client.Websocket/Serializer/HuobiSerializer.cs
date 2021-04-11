@@ -93,7 +93,7 @@ namespace Huobi.Client.Websocket.Serializer
         }
 
         [return: MaybeNull]
-        private T Deserialize<T>(string input)
+        private static T Deserialize<T>(string input)
         {
             var deserialized = JsonConvert.DeserializeObject<T>(input);
             return deserialized;

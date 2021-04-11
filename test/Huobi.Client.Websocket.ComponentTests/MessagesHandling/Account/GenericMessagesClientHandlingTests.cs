@@ -22,7 +22,7 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.Account
             TriggerMessageReceive(message);
 
             // Assert
-            AccountCommunicatorMock.Verify(
+            CommunicatorMock.Verify(
                 m => m.Send(It.Is<string>(x => x.Contains("pong") && x.Contains("12345"))),
                 Times.Once);
             VerifyMessageNotUnhandled();

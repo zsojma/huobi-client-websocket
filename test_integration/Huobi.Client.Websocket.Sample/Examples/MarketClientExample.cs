@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Huobi.Client.Websocket.Clients;
-using Huobi.Client.Websocket.Messages.MarketData;
 using Huobi.Client.Websocket.Messages.MarketData.MarketBestBidOffer;
 using Huobi.Client.Websocket.Messages.MarketData.MarketByPrice;
 using Huobi.Client.Websocket.Messages.MarketData.MarketCandlestick;
@@ -36,8 +35,8 @@ namespace Huobi.Client.Websocket.Sample.Examples
             {
                 StartCandlestickExample(symbol),
                 StartDepthExample(symbol),
-                StartMarketBestBidOfferExample(symbol),
                 StartMarketByPriceExample(symbol),
+                StartMarketBestBidOfferExample(symbol),
                 StartMarketTradeDetailExample(symbol),
                 StartMarketDetailsExample(symbol)
             };
@@ -51,8 +50,8 @@ namespace Huobi.Client.Websocket.Sample.Examples
             {
                 StopCandlestickExample(symbol),
                 StopDepthExample(symbol),
-                StopMarketBestBidOfferExample(symbol),
                 StopMarketByPriceExample(symbol),
+                StopMarketBestBidOfferExample(symbol),
                 StopMarketTradeDetailExample(symbol),
                 StopMarketDetailsExample(symbol)
             };
@@ -74,10 +73,8 @@ namespace Huobi.Client.Websocket.Sample.Examples
 
             _client.Streams.DepthUpdateStream.Subscribe(Handle);
             _client.Streams.DepthPullStream.Subscribe(Handle);
-
-            _client.Streams.MarketByPriceUpdateStream.Subscribe(Handle);
+            
             _client.Streams.MarketByPriceRefreshUpdateStream.Subscribe(Handle);
-            _client.Streams.MarketByPricePullStream.Subscribe(Handle);
 
             _client.Streams.BestBidOfferUpdateStream.Subscribe(Handle);
 
@@ -143,6 +140,28 @@ namespace Huobi.Client.Websocket.Sample.Examples
             return Task.CompletedTask;
         }
 
+        private Task StartMarketByPriceExample(string symbol)
+        {
+            var marketByPriceRefreshSubscribeRequest = new MarketByPriceRefreshSubscribeRequest(
+                GetNextId(),
+                symbol,
+                MarketByPriceRefreshLevelType.Five);
+            _client.Send(marketByPriceRefreshSubscribeRequest);
+
+            return Task.CompletedTask;
+        }
+
+        private Task StopMarketByPriceExample(string symbol)
+        {
+            var marketByPriceRefreshUnsubscribeRequest = new MarketByPriceRefreshUnsubscribeRequest(
+                GetNextId(),
+                symbol,
+                MarketByPriceRefreshLevelType.Five);
+            _client.Send(marketByPriceRefreshUnsubscribeRequest);
+
+            return Task.CompletedTask;
+        }
+
         private Task StartMarketBestBidOfferExample(string symbol)
         {
             var subscribeRequest = new MarketBestBidOfferSubscribeRequest(GetNextId(), symbol);
@@ -155,42 +174,6 @@ namespace Huobi.Client.Websocket.Sample.Examples
         {
             var unsubscribeRequest = new MarketBestBidOfferUnsubscribeRequest(GetNextId(), symbol);
             _client.Send(unsubscribeRequest);
-
-            return Task.CompletedTask;
-        }
-
-        private async Task StartMarketByPriceExample(string symbol)
-        {
-            var subscribeRequest =
-                new MarketByPriceSubscribeRequest(GetNextId(), symbol, MarketByPriceLevelType.Five);
-            _client.Send(subscribeRequest);
-
-            var marketByPriceRefreshSubscribeRequest = new MarketByPriceRefreshSubscribeRequest(
-                GetNextId(),
-                symbol,
-                MarketByPriceRefreshLevelType.Five);
-            _client.Send(marketByPriceRefreshSubscribeRequest);
-
-            await Task.Delay(1000);
-
-            var pullRequest = new MarketByPricePullRequest(
-                GetNextId(),
-                symbol,
-                MarketByPriceLevelType.Five);
-            _client.Send(pullRequest);
-        }
-
-        private Task StopMarketByPriceExample(string symbol)
-        {
-            var unsubscribeRequest =
-                new MarketByPriceUnsubscribeRequest(GetNextId(), symbol, MarketByPriceLevelType.Five);
-            _client.Send(unsubscribeRequest);
-
-            var marketByPriceRefreshUnsubscribeRequest = new MarketByPriceRefreshUnsubscribeRequest(
-                GetNextId(),
-                symbol,
-                MarketByPriceRefreshLevelType.Five);
-            _client.Send(marketByPriceRefreshUnsubscribeRequest);
 
             return Task.CompletedTask;
         }
@@ -281,7 +264,7 @@ namespace Huobi.Client.Websocket.Sample.Examples
             }
         }
 
-        private void Handle(UpdateMessage<MarketByPriceTick> msg)
+        private void Handle(MarketByPriceRefreshUpdateMessage msg)
         {
             if (msg.Tick.Bids != null)
             {
@@ -301,23 +284,6 @@ namespace Huobi.Client.Websocket.Sample.Examples
 
                     _logger.LogInformation($"Market by price update {msg.Topic} | [ask {i}: price={bid[0]} size={bid[1]}]");
                 }
-            }
-        }
-
-        private void Handle(MarketByPricePullResponse msg)
-        {
-            for (var i = 0; i < msg.Data.Bids.Length; ++i)
-            {
-                var bid = msg.Data.Bids[i];
-
-                _logger.LogInformation($"Market by price pull {msg.Topic} | [bid {i}: price={bid[0]} size={bid[1]}]");
-            }
-
-            for (var i = 0; i < msg.Data.Asks.Length; ++i)
-            {
-                var bid = msg.Data.Asks[i];
-
-                _logger.LogInformation($"Market by price pull {msg.Topic} | [ask {i}: price={bid[0]} size={bid[1]}]");
             }
         }
 

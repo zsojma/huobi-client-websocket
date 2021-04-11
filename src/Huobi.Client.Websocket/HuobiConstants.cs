@@ -8,5 +8,7 @@
         public const string AwsApiMpbWebsocketUrl = "wss://api-aws.huobi.pro/feed";
         public const string ApiAccountWebsocketUrl = "wss://api.huobi.pro/ws/v2";
         public const string AwsApiAccountWebsocketUrl = "wss://api-aws.huobi.pro/ws/v2";
+        
+        internal static readonly string MARKET_PREFIX = "market";
     }
 }

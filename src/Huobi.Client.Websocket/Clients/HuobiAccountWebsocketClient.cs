@@ -20,7 +20,7 @@ namespace Huobi.Client.Websocket.Clients
 
         public HuobiAccountWebsocketClient(
             IOptions<HuobiAccountWebsocketClientConfig> config,
-            IHuobiAccountWebsocketCommunicator communicator,
+            IHuobiWebsocketCommunicator communicator,
             IHuobiSerializer serializer,
             IHuobiAuthenticationRequestFactory authenticationRequestFactory,
             ILogger<HuobiAccountWebsocketClient> logger)
@@ -105,7 +105,7 @@ namespace Huobi.Client.Websocket.Clients
 
             return false;
         }
-        
+
         private bool TryHandleAccountUpdateMessages(string message)
         {
             if (AccountUpdateMessage.TryParse(Serializer, message, out var accountUpdateMessage))

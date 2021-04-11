@@ -49,12 +49,6 @@ namespace Huobi.Client.Websocket.Clients
                 return true;
             }
 
-            if (MarketByPricePullResponse.TryParse(Serializer, message, out var marketByPrice))
-            {
-                Streams.MarketByPricePullSubject.OnNext(marketByPrice);
-                return true;
-            }
-
             if (MarketTradeDetailPullResponse.TryParse(Serializer, message, out var marketTradeDetail))
             {
                 Streams.TradeDetailPullSubject.OnNext(marketTradeDetail);
@@ -81,12 +75,6 @@ namespace Huobi.Client.Websocket.Clients
             if (MarketDepthUpdateMessage.TryParse(Serializer, message, out var marketDepth))
             {
                 Streams.DepthUpdateSubject.OnNext(marketDepth);
-                return true;
-            }
-
-            if (MarketByPriceUpdateMessage.TryParse(Serializer, message, out var marketByPrice))
-            {
-                Streams.MarketByPriceUpdateSubject.OnNext(marketByPrice);
                 return true;
             }
 

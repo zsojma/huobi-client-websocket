@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using Huobi.Client.Websocket.Messages.MarketData.Values;
 using Huobi.Client.Websocket.Serializer;
 using Newtonsoft.Json;
@@ -12,9 +13,9 @@ namespace Huobi.Client.Websocket.Messages.MarketData.MarketByPrice
             string reqId,
             string status,
             string topic,
-            long timestampMs,
+            DateTimeOffset timestamp,
             MarketByPricePullTick data)
-            : base(reqId, status, topic, timestampMs, data)
+            : base(reqId, status, topic, timestamp, data)
         {
         }
 
@@ -32,7 +33,7 @@ namespace Huobi.Client.Websocket.Messages.MarketData.MarketByPrice
                 },
                 out response);
 
-            return result && !string.IsNullOrEmpty(response?.Data.SeqNum);
+            return result && response?.Data.SeqNum > 0;
         }
     }
 }

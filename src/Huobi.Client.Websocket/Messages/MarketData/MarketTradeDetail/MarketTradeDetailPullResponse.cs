@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Huobi.Client.Websocket.Messages.MarketData.Values;
 using Huobi.Client.Websocket.Serializer;
@@ -13,9 +14,9 @@ namespace Huobi.Client.Websocket.Messages.MarketData.MarketTradeDetail
             string reqId,
             string status,
             string topic,
-            long timestampMs,
+            DateTimeOffset timestamp,
             MarketTradeDetailTickDataItem[] data)
-            : base(reqId, status, topic, timestampMs, data)
+            : base(reqId, status, topic, timestamp, data)
         {
         }
 
@@ -33,7 +34,7 @@ namespace Huobi.Client.Websocket.Messages.MarketData.MarketTradeDetail
                 },
                 out response);
 
-            return result && response?.Data.FirstOrDefault()?.TimestampMs > 0;
+            return result && response?.Data.FirstOrDefault()?.Timestamp.Ticks > 0;
         }
     }
 }

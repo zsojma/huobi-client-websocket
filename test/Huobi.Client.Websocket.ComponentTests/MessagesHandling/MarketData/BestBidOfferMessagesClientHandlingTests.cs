@@ -22,10 +22,11 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.MarketData
                     Assert.NotNull(msg);
                     Assert.Contains(SubscriptionType.MarketBestBidOffer.ToTopicId(), msg.Topic);
                     Assert.True(!string.IsNullOrEmpty(msg.Topic));
+                    Assert.True(TestUtils.UnixTimesEqual(timestamp, msg.Timestamp));
+                    Assert.True(TestUtils.UnixTimesEqual(timestamp, msg.Tick.QuoteTime));
                     Assert.True(msg.Tick.SeqId > 0);
                     Assert.True(msg.Tick.Bid > 0);
                     Assert.True(msg.Tick.Ask > 0);
-                    Assert.True(TestUtils.UnixTimesEqual(timestamp, msg.Timestamp));
                 });
 
             var message = HuobiMessagesFactory.CreateMarketBestBidOfferUpdateMessage(timestamp);

@@ -29,7 +29,7 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.Account
                     Assert.NotNull(msg.Data);
                     Assert.Equal(changeType, msg.Data.ChangeType);
                     Assert.Equal(accountType, msg.Data.AccountType);
-                    Assert.True(TestUtils.UnixTimesEqual(changeTime, msg.Data.ChangeTime!.Value));
+                    Assert.True(TestUtils.UnixTimesEqual(changeTime, msg.Data.ChangeTime));
                 });
 
             var message = HuobiAccountMessagesFactory.CreateAccountUpdateAccountBalanceChangedMessage(
@@ -65,7 +65,7 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.Account
                     Assert.NotNull(msg.Data);
                     Assert.Equal(changeType, msg.Data.ChangeType);
                     Assert.Equal(accountType, msg.Data.AccountType);
-                    Assert.True(TestUtils.UnixTimesEqual(changeTime, msg.Data.ChangeTime!.Value));
+                    Assert.True(TestUtils.UnixTimesEqual(changeTime, msg.Data.ChangeTime));
                 });
 
             var message = HuobiAccountMessagesFactory.CreateAccountUpdateAvailableBalanceChangedMessage(

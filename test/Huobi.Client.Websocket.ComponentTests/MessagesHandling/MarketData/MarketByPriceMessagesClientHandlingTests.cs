@@ -24,7 +24,7 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.MarketData
                     Assert.True(!string.IsNullOrEmpty(msg.Topic));
                     Assert.NotNull(msg.Tick.Asks);
                     Assert.Single(msg.Tick.Asks!);
-                    Assert.True(msg.Tick.Asks![0][0] > 0);
+                    Assert.True(msg.Tick.Asks![0].Price > 0);
                     Assert.True(TestUtils.UnixTimesEqual(timestamp, msg.Timestamp));
                 });
 
@@ -56,7 +56,7 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.MarketData
                     Assert.True(!string.IsNullOrEmpty(msg.Topic));
                     Assert.NotNull(msg.Tick.Bids);
                     Assert.Single(msg.Tick.Bids!);
-                    Assert.True(msg.Tick.Bids![0][0] > 0);
+                    Assert.True(msg.Tick.Bids![0].Price > 0);
                     Assert.True(TestUtils.UnixTimesEqual(timestamp, msg.Timestamp));
                 });
 
@@ -88,10 +88,10 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.MarketData
                     Assert.True(!string.IsNullOrEmpty(msg.Topic));
                     Assert.NotNull(msg.Tick.Bids);
                     Assert.Equal(5, msg.Tick.Bids!.Length);
-                    Assert.True(msg.Tick.Bids[0][0] > 0);
+                    Assert.True(msg.Tick.Bids[0].Price > 0);
                     Assert.NotNull(msg.Tick.Asks);
                     Assert.Equal(5, msg.Tick.Asks!.Length);
-                    Assert.True(msg.Tick.Asks[0][0] > 0);
+                    Assert.True(msg.Tick.Asks[0].Price > 0);
                     Assert.True(TestUtils.UnixTimesEqual(timestamp, msg.Timestamp));
                 });
 
@@ -121,9 +121,9 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.MarketData
                     Assert.Contains(SubscriptionType.MarketByPrice.ToTopicId(), msg.Topic);
                     Assert.True(!string.IsNullOrEmpty(msg.Topic));
                     Assert.Equal(5, msg.Data.Bids.Length);
-                    Assert.True(msg.Data.Bids[0][0] > 0);
+                    Assert.True(msg.Data.Bids[0].Price > 0);
                     Assert.Equal(5, msg.Data.Asks.Length);
-                    Assert.True(msg.Data.Asks[0][0] > 0);
+                    Assert.True(msg.Data.Asks[0].Price > 0);
                 });
 
             var message = HuobiMessagesFactory.CreateMarketByPricePullResponseMessage();

@@ -1,5 +1,6 @@
 ﻿using System;
 using Huobi.Client.Websocket.Messages.Account.Values;
+using Huobi.Client.Websocket.Messages.MarketData.Values;
 using Newtonsoft.Json;
 
 namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
@@ -11,17 +12,17 @@ namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
             string eventTypeStr,
             string orderSideStr,
             string orderStatusStr,
-            long orderTriggerTimeMs,
             string symbol,
-            string clientOrderId)
+            string clientOrderId,
+            DateTimeOffset orderTriggerTime)
         {
             EventTypeStr = eventTypeStr;
             OrderSideStr = orderSideStr;
             OrderStatusStr = orderStatusStr;
-            OrderTriggerTimeMs = orderTriggerTimeMs;
 
             Symbol = symbol;
             ClientOrderId = clientOrderId;
+            OrderTriggerTime = orderTriggerTime;
         }
 
         [JsonIgnore]
@@ -33,11 +34,12 @@ namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
         [JsonIgnore]
         public OrderStatus OrderStatus => OrderStatusHelper.FromMessageValue(OrderStatusStr);
 
-        [JsonIgnore]
-        public DateTimeOffset OrderTriggerTime => DateTimeOffset.FromUnixTimeMilliseconds(OrderTriggerTimeMs);
-
         public string Symbol { get; }
         public string ClientOrderId { get; }
+
+        [JsonProperty("lastActTime")]
+        [JsonConverter(typeof(UnitMillisecondsToDateTimeOffsetConverter))]
+        public DateTimeOffset OrderTriggerTime { get; }
 
         [JsonProperty("eventType")]
         internal string EventTypeStr { get; }
@@ -47,8 +49,5 @@ namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
 
         [JsonProperty("orderStatus")]
         internal string OrderStatusStr { get; }
-
-        [JsonProperty("lastActTime")]
-        internal long OrderTriggerTimeMs { get; }
     }
 }

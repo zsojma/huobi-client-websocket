@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using Huobi.Client.Websocket.Messages.MarketData.Values;
 using Huobi.Client.Websocket.Serializer;
 
@@ -6,8 +7,8 @@ namespace Huobi.Client.Websocket.Messages.MarketData.MarketDepth
 {
     public class MarketDepthUpdateMessage : UpdateMessage<MarketDepthTick>
     {
-        public MarketDepthUpdateMessage(string topic, long timestampMs, MarketDepthTick tick)
-            : base(topic, timestampMs, tick)
+        public MarketDepthUpdateMessage(string topic, DateTimeOffset timestamp, MarketDepthTick tick)
+            : base(topic, timestamp, tick)
         {
         }
 
@@ -25,7 +26,7 @@ namespace Huobi.Client.Websocket.Messages.MarketData.MarketDepth
                 },
                 out response);
 
-            return result && response?.Tick.TimestampMs > 0;
+            return result && response?.Tick.Timestamp.Ticks > 0;
         }
     }
 }

@@ -83,7 +83,7 @@ namespace Huobi.Client.Websocket.Sample.Examples
                 {
                     var bid = msg.Tick.Bids[i];
 
-                    _logger.LogInformation($"Market by price update {msg.Topic} | [bid {i}: price={bid[0]} size={bid[1]}]");
+                    _logger.LogInformation($"Market by price update {msg.Topic} | [bid {i}: price={bid.Price} size={bid.Size}]");
                 }
             }
 
@@ -93,7 +93,7 @@ namespace Huobi.Client.Websocket.Sample.Examples
                 {
                     var bid = msg.Tick.Asks[i];
 
-                    _logger.LogInformation($"Market by price update {msg.Topic} | [ask {i}: price={bid[0]} size={bid[1]}]");
+                    _logger.LogInformation($"Market by price update {msg.Topic} | [ask {i}: price={bid.Price} size={bid.Size}]");
                 }
             }
         }
@@ -104,14 +104,14 @@ namespace Huobi.Client.Websocket.Sample.Examples
             {
                 var bid = msg.Data.Bids[i];
 
-                _logger.LogInformation($"Market by price pull {msg.Topic} | [bid {i}: price={bid[0]} size={bid[1]}]");
+                _logger.LogInformation($"Market by price pull {msg.Topic} | [bid {i}: price={bid.Price} size={bid.Size}]");
             }
 
             for (var i = 0; i < msg.Data.Asks.Length; ++i)
             {
                 var bid = msg.Data.Asks[i];
 
-                _logger.LogInformation($"Market by price pull {msg.Topic} | [ask {i}: price={bid[0]} size={bid[1]}]");
+                _logger.LogInformation($"Market by price pull {msg.Topic} | [ask {i}: price={bid.Price} size={bid.Size}]");
             }
         }
     }

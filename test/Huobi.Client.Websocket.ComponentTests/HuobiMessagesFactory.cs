@@ -225,7 +225,7 @@ namespace Huobi.Client.Websocket.ComponentTests
   ""ts"": " + timestamp.ToUnixTimeMilliseconds() + @",
   ""tick"": {
     ""symbol"": ""btcusdt"",
-    ""quoteTime"": 1489474082811,
+    ""quoteTime"": " + timestamp.ToUnixTimeMilliseconds() + @",
     ""bid"": 10008.31,
     ""bidSize"": 0.01,
     ""ask"": 10009.54,

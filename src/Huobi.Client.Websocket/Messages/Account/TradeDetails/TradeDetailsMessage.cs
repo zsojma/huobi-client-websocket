@@ -34,7 +34,7 @@ namespace Huobi.Client.Websocket.Messages.Account.TradeDetails
                 "\"message\"",
                 out response);
 
-            return result && response?.Data.TradeTimeMs > 0;
+            return result && response?.Data.TradeTime.Ticks > 0;
         }
     }
 }

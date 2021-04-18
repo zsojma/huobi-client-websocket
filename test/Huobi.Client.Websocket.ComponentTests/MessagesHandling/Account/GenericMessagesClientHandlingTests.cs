@@ -16,14 +16,16 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.Account
         {
             // Arrange
             InitializeAccountClient();
-            var message = new AccountPingRequest(12345);
+            var message = new AccountPingRequest(DateTimeOffset.UtcNow);
 
             // Act
             TriggerMessageReceive(message);
 
             // Assert
             CommunicatorMock.Verify(
-                m => m.Send(It.Is<string>(x => x.Contains("pong") && x.Contains("12345"))),
+                m => m.Send(
+                    It.Is<string>(
+                        x => x.Contains("pong") && x.Contains(message.Data.Timestamp.ToUnixTimeMilliseconds().ToString()))),
                 Times.Once);
             VerifyMessageNotUnhandled();
         }

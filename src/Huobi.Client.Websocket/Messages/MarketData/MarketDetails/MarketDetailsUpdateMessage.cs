@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using Huobi.Client.Websocket.Messages.MarketData.Values;
 using Huobi.Client.Websocket.Serializer;
 
@@ -6,8 +7,8 @@ namespace Huobi.Client.Websocket.Messages.MarketData.MarketDetails
 {
     public class MarketDetailsUpdateMessage : UpdateMessage<MarketDetailsTick>
     {
-        public MarketDetailsUpdateMessage(string topic, long timestampMs, MarketDetailsTick tick)
-            : base(topic, timestampMs, tick)
+        public MarketDetailsUpdateMessage(string topic, DateTimeOffset timestamp, MarketDetailsTick tick)
+            : base(topic, timestamp, tick)
         {
         }
 

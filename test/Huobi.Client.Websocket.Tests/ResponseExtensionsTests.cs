@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Huobi.Client.Websocket.Tests
 {
-    public class MarketUpdateMessageTests
+    public class ResponseExtensionsTests
     {
         [Theory]
         [InlineData("market.btcusdt.trade.detail", "btcusdt")]
@@ -15,7 +15,7 @@ namespace Huobi.Client.Websocket.Tests
         public void ParseSymbolFromTopic_ValidTopic_ReturnsCorrectData(string topic, string expectedSymbol)
         {
             // Arrange
-            var updateMessage = new UpdateMessage<object>(topic, 1, new object());
+            var updateMessage = new UpdateMessage<object>(topic, DateTimeOffset.UtcNow, new object());
 
             // Act
             var updateSymbol = updateMessage.ParseSymbolFromTopic();
@@ -33,8 +33,8 @@ namespace Huobi.Client.Websocket.Tests
             // Arrange
             var updateMessage = new MarketTradeDetailUpdateMessage(
                 topic,
-                1,
-                new MarketTradeDetailTick(1, 1, Array.Empty<MarketTradeDetailTickDataItem>()));
+                DateTimeOffset.UtcNow,
+                new MarketTradeDetailTick(1, DateTimeOffset.UtcNow, Array.Empty<MarketTradeDetailTickDataItem>()));
 
             // Act & Assert
             Assert.Throws<HuobiWebsocketClientException>(() => updateMessage.ParseSymbolFromTopic());

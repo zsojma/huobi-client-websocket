@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using Huobi.Client.Websocket.Serializer;
 using Huobi.Client.Websocket.Utils;
 using Newtonsoft.Json;
@@ -7,8 +8,8 @@ namespace Huobi.Client.Websocket.Messages.Account
 {
     public class AccountPingRequest
     {
-        public AccountPingRequest(long timestampMs)
-            : this("ping", new AccountMessageData(timestampMs))
+        public AccountPingRequest(DateTimeOffset timestamp)
+            : this("ping", new AccountMessageData(timestamp))
         {
         }
         

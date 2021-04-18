@@ -1,27 +1,29 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using Huobi.Client.Websocket.Messages.MarketData.Values;
 using Huobi.Client.Websocket.Serializer;
 using Huobi.Client.Websocket.Utils;
 using Newtonsoft.Json;
 
 namespace Huobi.Client.Websocket.Messages.MarketData
 {
-    public class SubscribeResponse : ResponseBase
+    public class SubscribeResponse
     {
         [JsonConstructor]
-        public SubscribeResponse(string reqId, string status, string topic, long timestampMs)
-            : base(reqId)
+        public SubscribeResponse(string reqId, string status, string topic, DateTimeOffset timestamp)
         {
+            Validations.ValidateInput(reqId, nameof(reqId));
             Validations.ValidateInput(status, nameof(status));
             Validations.ValidateInput(topic, nameof(topic));
 
+            ReqId = reqId;
             Status = status;
             Topic = topic;
-            TimestampMs = timestampMs;
+            Timestamp = timestamp;
         }
 
-        [JsonIgnore]
-        public DateTimeOffset Timestamp => DateTimeOffset.FromUnixTimeMilliseconds(TimestampMs);
+        [JsonProperty("id")]
+        public string ReqId { get; }
 
         public string Status { get; }
 
@@ -29,7 +31,8 @@ namespace Huobi.Client.Websocket.Messages.MarketData
         public string Topic { get; }
 
         [JsonProperty("ts")]
-        internal long TimestampMs { get; }
+        [JsonConverter(typeof(UnitMillisecondsToDateTimeOffsetConverter))]
+        public DateTimeOffset Timestamp { get; }
 
         internal static bool TryParse(
             IHuobiSerializer serializer,
@@ -37,7 +40,7 @@ namespace Huobi.Client.Websocket.Messages.MarketData
             [MaybeNullWhen(false)] out SubscribeResponse response)
         {
             var result = serializer.TryDeserializeIfContains(input, "\"subbed\"", out response);
-            return result && response?.TimestampMs > 0;
+            return result && response?.Timestamp.Ticks > 0;
         }
     }
 }

@@ -1,13 +1,14 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 
 namespace Huobi.Client.Websocket.Messages.Account
 {
     public class AccountPongResponse
     {
-        public AccountPongResponse(long timestampMs)
+        public AccountPongResponse(DateTimeOffset timestamp)
         {
             Action = "pong";
-            Data = new AccountMessageData(timestampMs);
+            Data = new AccountMessageData(timestamp);
         }
 
         [JsonProperty("action")]

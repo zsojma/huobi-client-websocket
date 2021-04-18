@@ -1,4 +1,5 @@
 ﻿using System;
+using Huobi.Client.Websocket.Messages.MarketData.Values;
 using Huobi.Client.Websocket.Utils;
 using Newtonsoft.Json;
 
@@ -7,7 +8,7 @@ namespace Huobi.Client.Websocket.Messages.MarketData.MarketDepth
     public class MarketDepthTick
     {
         [JsonConstructor]
-        public MarketDepthTick(decimal[][] bids, decimal[][] asks, long version, long timestampMs)
+        public MarketDepthTick(BookLevel[] bids, BookLevel[] asks, long version, DateTimeOffset timestamp)
         {
             Validations.ValidateInput(bids, nameof(bids));
             Validations.ValidateInput(asks, nameof(asks));
@@ -15,18 +16,19 @@ namespace Huobi.Client.Websocket.Messages.MarketData.MarketDepth
             Bids = bids;
             Asks = asks;
             Version = version;
-
-            TimestampMs = timestampMs;
+            Timestamp = timestamp;
         }
+        
+        [JsonConverter(typeof(OrderBookLevelConverter), OrderBookSide.Bid)]
+        public BookLevel[] Bids { get; }
+        
+        [JsonConverter(typeof(OrderBookLevelConverter), OrderBookSide.Ask)]
+        public BookLevel[] Asks { get; }
 
-        [JsonIgnore]
-        public DateTimeOffset Timestamp => DateTimeOffset.FromUnixTimeMilliseconds(TimestampMs);
-
-        public decimal[][] Bids { get; }
-        public decimal[][] Asks { get; }
         public long Version { get; }
 
         [JsonProperty("ts")]
-        internal long TimestampMs { get; }
+        [JsonConverter(typeof(UnitMillisecondsToDateTimeOffsetConverter))]
+        public DateTimeOffset Timestamp { get; }
     }
 }

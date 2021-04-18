@@ -28,7 +28,7 @@ namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
                 },
                 out response);
 
-            return result && response?.Data.OrderTriggerTimeMs > 0;
+            return result && response?.Data.OrderTriggerTime.Ticks > 0;
         }
     }
 }

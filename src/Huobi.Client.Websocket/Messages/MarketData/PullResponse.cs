@@ -1,27 +1,29 @@
 ﻿using System;
+using Huobi.Client.Websocket.Messages.MarketData.Values;
 using Huobi.Client.Websocket.Utils;
 using Newtonsoft.Json;
 
 namespace Huobi.Client.Websocket.Messages.MarketData
 {
-    public class PullResponse<TTick> : ResponseBase
+    public class PullResponse<TTick> : IResponse
         where TTick : class
     {
-        public PullResponse(string reqId, string status, string topic, long timestampMs, TTick data)
-            : base(reqId)
+        public PullResponse(string reqId, string status, string topic, DateTimeOffset timestamp, TTick data)
         {
+            Validations.ValidateInput(reqId, nameof(reqId));
             Validations.ValidateInput(status, nameof(status));
             Validations.ValidateInput(topic, nameof(topic));
             Validations.ValidateInput(data, nameof(data));
 
+            ReqId = reqId;
             Status = status;
             Topic = topic;
-            TimestampMs = timestampMs;
+            Timestamp = timestamp;
             Data = data;
         }
 
-        [JsonIgnore]
-        public DateTimeOffset Timestamp => DateTimeOffset.FromUnixTimeMilliseconds(TimestampMs);
+        [JsonProperty("id")]
+        public string ReqId { get; }
 
         public string Status { get; }
 
@@ -31,6 +33,7 @@ namespace Huobi.Client.Websocket.Messages.MarketData
         public TTick Data { get; }
 
         [JsonProperty("ts")]
-        internal long TimestampMs { get; }
+        [JsonConverter(typeof(UnitMillisecondsToDateTimeOffsetConverter))]
+        public DateTimeOffset Timestamp { get; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using Huobi.Client.Websocket.Messages.Account.Values;
+using Huobi.Client.Websocket.Messages.MarketData.Values;
 using Newtonsoft.Json;
 
 namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
@@ -11,7 +12,6 @@ namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
             string eventTypeStr,
             string orderTypeStr,
             string orderStatusStr,
-            long lastActivityTimeMs,
             string symbol,
             long orderId,
             string clientOrderId,
@@ -20,12 +20,12 @@ namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
             decimal orderSize,
             decimal orderValue,
             string remainingAmount,
-            string accumulativeAmount)
+            string accumulativeAmount,
+            DateTimeOffset lastActivityTime)
         {
             EventTypeStr = eventTypeStr;
             OrderTypeStr = orderTypeStr;
             OrderStatusStr = orderStatusStr;
-            LastActivityTimeMs = lastActivityTimeMs;
 
             Symbol = symbol;
             OrderId = orderId;
@@ -36,6 +36,7 @@ namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
             OrderValue = orderValue;
             RemainingAmount = remainingAmount;
             AccumulativeAmount = accumulativeAmount;
+            LastActivityTime = lastActivityTime;
         }
 
         [JsonIgnore]
@@ -46,9 +47,6 @@ namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
 
         [JsonIgnore]
         public OrderStatus OrderStatus => OrderStatusHelper.FromMessageValue(OrderStatusStr);
-
-        [JsonIgnore]
-        public DateTimeOffset LastActivityTime => DateTimeOffset.FromUnixTimeMilliseconds(LastActivityTimeMs);
 
         public string Symbol { get; }
         public long OrderId { get; }
@@ -64,6 +62,10 @@ namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
         [JsonProperty("execAmt")]
         public string AccumulativeAmount { get; }
 
+        [JsonProperty("lastActTime")]
+        [JsonConverter(typeof(UnitMillisecondsToDateTimeOffsetConverter))]
+        public DateTimeOffset LastActivityTime { get; }
+
         [JsonProperty("eventType")]
         internal string EventTypeStr { get; }
 
@@ -72,8 +74,5 @@ namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
 
         [JsonProperty("orderStatus")]
         internal string OrderStatusStr { get; }
-
-        [JsonProperty("lastActTime")]
-        internal long LastActivityTimeMs { get; }
     }
 }

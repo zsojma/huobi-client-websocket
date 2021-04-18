@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using Huobi.Client.Websocket.Messages.MarketData.Values;
 using Huobi.Client.Websocket.Serializer;
 using Huobi.Client.Websocket.Utils;
 using Newtonsoft.Json;
@@ -9,22 +10,18 @@ namespace Huobi.Client.Websocket.Messages.MarketData
     public class ErrorMessage
     {
         [JsonConstructor]
-        public ErrorMessage(long timestampMs, string status, string errorCode, string message, string? reqId)
+        public ErrorMessage(string status, string errorCode, string message, DateTimeOffset timestamp, string? reqId)
         {
             Validations.ValidateInput(status, nameof(status));
             Validations.ValidateInput(errorCode, nameof(errorCode));
             Validations.ValidateInput(message, nameof(message));
             
-            TimestampMs = timestampMs;
-
             Status = status;
             ErrorCode = errorCode;
             Message = message;
+            Timestamp = timestamp;
             ReqId = reqId;
         }
-
-        [JsonIgnore]
-        public DateTimeOffset Timestamp => DateTimeOffset.FromUnixTimeMilliseconds(TimestampMs);
 
         public string Status { get; }
 
@@ -38,7 +35,8 @@ namespace Huobi.Client.Websocket.Messages.MarketData
         public string? ReqId { get; }
 
         [JsonProperty("ts")]
-        internal long TimestampMs { get; }
+        [JsonConverter(typeof(UnitMillisecondsToDateTimeOffsetConverter))]
+        public DateTimeOffset Timestamp { get; }
 
         internal static bool TryParse(IHuobiSerializer serializer, string input, [MaybeNullWhen(false)] out ErrorMessage response)
         {

@@ -1,5 +1,6 @@
 ﻿using System;
 using Huobi.Client.Websocket.Messages.Account.Values;
+using Huobi.Client.Websocket.Messages.MarketData.Values;
 using Newtonsoft.Json;
 
 namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
@@ -11,7 +12,6 @@ namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
             string eventTypeStr,
             string orderTypeStr,
             string orderStatusStr,
-            long orderCreateTimeMs,
             string symbol,
             long accountId,
             long orderId,
@@ -19,12 +19,12 @@ namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
             string orderSource,
             decimal orderPrice,
             decimal orderSize,
-            decimal orderValue)
+            decimal orderValue,
+            DateTimeOffset orderCreateTime)
         {
             EventTypeStr = eventTypeStr;
             OrderTypeStr = orderTypeStr;
             OrderStatusStr = orderStatusStr;
-            OrderCreateTimeMs = orderCreateTimeMs;
 
             Symbol = symbol;
             AccountId = accountId;
@@ -34,6 +34,7 @@ namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
             OrderPrice = orderPrice;
             OrderSize = orderSize;
             OrderValue = orderValue;
+            OrderCreateTime = orderCreateTime;
         }
 
         [JsonIgnore]
@@ -45,9 +46,6 @@ namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
         [JsonIgnore]
         public OrderStatus OrderStatus => OrderStatusHelper.FromMessageValue(OrderStatusStr);
 
-        [JsonIgnore]
-        public DateTimeOffset OrderCreateTime => DateTimeOffset.FromUnixTimeMilliseconds(OrderCreateTimeMs);
-
         public string Symbol { get; }
         public long AccountId { get; }
         public long OrderId { get; }
@@ -57,6 +55,9 @@ namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
         public decimal OrderSize { get; }
         public decimal OrderValue { get; }
 
+        [JsonConverter(typeof(UnitMillisecondsToDateTimeOffsetConverter))]
+        public DateTimeOffset OrderCreateTime { get; }
+
         [JsonProperty("eventType")]
         internal string EventTypeStr { get; }
 
@@ -65,8 +66,5 @@ namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
 
         [JsonProperty("orderStatus")]
         internal string OrderStatusStr { get; }
-
-        [JsonProperty("orderCreateTime")]
-        internal long OrderCreateTimeMs { get; }
     }
 }

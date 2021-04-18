@@ -242,25 +242,29 @@ namespace Huobi.Client.Websocket.Sample.Examples
 
         private void Handle(MarketDepthUpdateMessage msg)
         {
-            for (var i = 0; i < msg.Tick.Bids.Length && i < msg.Tick.Asks.Length; ++i)
+            var len = Math.Min(Math.Min(10, msg.Tick.Bids.Length), msg.Tick.Asks.Length);
+
+            for (var i = 0; i < len; ++i)
             {
                 var bid = msg.Tick.Bids[i];
                 var ask = msg.Tick.Asks[i];
 
                 _logger.LogInformation(
-                    $"Market depth update {msg.Topic} | [bid {i}: price={bid[0]} size={bid[1]}] [ask {i}: price={ask[0]} size={ask[1]}]");
+                    $"Market depth update {msg.Topic} | [bid {i}: price={bid.Price} size={bid.Size}] [ask {i}: price={ask.Price} size={ask.Size}]");
             }
         }
 
         private void Handle(MarketDepthPullResponse msg)
         {
-            for (var i = 0; i < msg.Data.Bids.Length && i < msg.Data.Asks.Length; ++i)
+            var len = Math.Min(Math.Min(10, msg.Data.Bids.Length), msg.Data.Asks.Length);
+
+            for (var i = 0; i < len; ++i)
             {
                 var bid = msg.Data.Bids[i];
                 var ask = msg.Data.Asks[i];
 
                 _logger.LogInformation(
-                    $"Market depth update {msg.Topic} | [bid {i}: price={bid[0]} size={bid[1]}] [ask {i}: price={ask[0]} size={ask[1]}]");
+                    $"Market depth update {msg.Topic} | [bid {i}: price={bid.Price} size={bid.Size}] [ask {i}: price={ask.Price} size={ask.Size}]");
             }
         }
 
@@ -272,7 +276,7 @@ namespace Huobi.Client.Websocket.Sample.Examples
                 {
                     var bid = msg.Tick.Bids[i];
 
-                    _logger.LogInformation($"Market by price update {msg.Topic} | [bid {i}: price={bid[0]} size={bid[1]}]");
+                    _logger.LogInformation($"Market by price update {msg.Topic} | [bid {i}: price={bid.Price} size={bid.Size}]");
                 }
             }
 
@@ -282,7 +286,7 @@ namespace Huobi.Client.Websocket.Sample.Examples
                 {
                     var bid = msg.Tick.Asks[i];
 
-                    _logger.LogInformation($"Market by price update {msg.Topic} | [ask {i}: price={bid[0]} size={bid[1]}]");
+                    _logger.LogInformation($"Market by price update {msg.Topic} | [ask {i}: price={bid.Price} size={bid.Size}]");
                 }
             }
         }

@@ -1,19 +1,18 @@
 ﻿using System;
+using Huobi.Client.Websocket.Messages.MarketData.Values;
 using Newtonsoft.Json;
 
 namespace Huobi.Client.Websocket.Messages.Account
 {
     public class AccountMessageData
     {
-        public AccountMessageData(long timestampMs)
+        public AccountMessageData(DateTimeOffset timestamp)
         {
-            TimestampMs = timestampMs;
+            Timestamp = timestamp;
         }
         
-        [JsonIgnore]
-        public DateTimeOffset Timestamp => DateTimeOffset.FromUnixTimeMilliseconds(TimestampMs);
-        
         [JsonProperty("ts")]
-        internal long TimestampMs { get; }
+        [JsonConverter(typeof(UnitMillisecondsToDateTimeOffsetConverter))]
+        public DateTimeOffset Timestamp { get; }
     }
 }

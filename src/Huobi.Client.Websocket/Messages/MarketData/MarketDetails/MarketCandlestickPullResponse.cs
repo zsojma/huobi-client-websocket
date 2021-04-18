@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using Huobi.Client.Websocket.Messages.MarketData.Values;
 using Huobi.Client.Websocket.Serializer;
 using Newtonsoft.Json;
@@ -12,9 +13,9 @@ namespace Huobi.Client.Websocket.Messages.MarketData.MarketDetails
             string reqId,
             string status,
             string topic,
-            long timestampMs,
+            DateTimeOffset timestamp,
             MarketDetailsTick data)
-            : base(reqId, status, topic, timestampMs, data)
+            : base(reqId, status, topic, timestamp, data)
         {
         }
 

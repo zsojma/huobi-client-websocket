@@ -1,5 +1,6 @@
 ﻿using System;
 using Huobi.Client.Websocket.Messages.Account.Values;
+using Huobi.Client.Websocket.Messages.MarketData.Values;
 using Newtonsoft.Json;
 
 namespace Huobi.Client.Websocket.Messages.Account.AccountUpdates
@@ -8,22 +9,22 @@ namespace Huobi.Client.Websocket.Messages.Account.AccountUpdates
     {
         [JsonConstructor]
         public AccountUpdateMessageData(
-            string? changeTypeStr,
+            string changeTypeStr,
             string accountTypeStr,
-            long? changeTimeMs,
             string currency,
             long accountId,
             decimal balance,
-            decimal available)
+            decimal available,
+            DateTimeOffset changeTime)
         {
             ChangeTypeStr = changeTypeStr;
             AccountTypeStr = accountTypeStr;
-            ChangeTimeMs = changeTimeMs;
 
             Currency = currency;
             AccountId = accountId;
             Balance = balance;
             Available = available;
+            ChangeTime = changeTime;
         }
 
         [JsonIgnore]
@@ -31,25 +32,19 @@ namespace Huobi.Client.Websocket.Messages.Account.AccountUpdates
 
         [JsonIgnore]
         public AccountType AccountType => AccountTypeHelper.FromMessageValue(AccountTypeStr);
-
-        [JsonIgnore]
-        public DateTimeOffset? ChangeTime =>
-            ChangeTimeMs.HasValue
-                ? DateTimeOffset.FromUnixTimeMilliseconds(ChangeTimeMs.Value)
-                : null;
-
+        
         public string Currency { get; }
         public long AccountId { get; }
         public decimal Balance { get; }
         public decimal Available { get; }
+        
+        [JsonConverter(typeof(UnitMillisecondsToDateTimeOffsetConverter))]
+        public DateTimeOffset ChangeTime { get; }
 
         [JsonProperty("changeType")]
-        internal string? ChangeTypeStr { get; }
+        internal string ChangeTypeStr { get; }
 
         [JsonProperty("accountType")]
         internal string AccountTypeStr { get; }
-
-        [JsonProperty("changeTime")]
-        public long? ChangeTimeMs { get; }
     }
 }

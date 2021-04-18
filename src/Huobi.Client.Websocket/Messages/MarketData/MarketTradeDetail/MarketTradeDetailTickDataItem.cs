@@ -9,30 +9,29 @@ namespace Huobi.Client.Websocket.Messages.MarketData.MarketTradeDetail
         [JsonConstructor]
         public MarketTradeDetailTickDataItem(
             string id,
-            long timestampMs,
             decimal amount,
             long tradeId,
             decimal price,
+            DateTimeOffset timestamp,
             TradeSide direction)
         {
             Id = id;
-            TimestampMs = timestampMs;
             Amount = amount;
             TradeId = tradeId;
             Price = price;
+            Timestamp = timestamp;
             Direction = direction;
         }
-
-        [JsonIgnore]
-        public DateTimeOffset Timestamp => DateTimeOffset.FromUnixTimeMilliseconds(TimestampMs);
 
         public string Id { get; }
         public decimal Amount { get; }
         public long TradeId { get; }
         public decimal Price { get; }
-        public TradeSide Direction { get; }
 
         [JsonProperty("ts")]
-        internal long TimestampMs { get; }
+        [JsonConverter(typeof(UnitMillisecondsToDateTimeOffsetConverter))]
+        public DateTimeOffset Timestamp { get; }
+
+        public TradeSide Direction { get; }
     }
 }

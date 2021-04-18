@@ -1,4 +1,5 @@
 ﻿using System;
+using Huobi.Client.Websocket.Messages.MarketData.Values;
 using Newtonsoft.Json;
 
 namespace Huobi.Client.Websocket.Messages.MarketData.MarketBestBidOffer
@@ -7,35 +8,31 @@ namespace Huobi.Client.Websocket.Messages.MarketData.MarketBestBidOffer
     {
         [JsonConstructor]
         public MarketBestBidOfferTick(
-            long quoteTimeMs,
             string symbol,
+            DateTimeOffset quoteTime,
             decimal bid,
             decimal bidSize,
             decimal ask,
             decimal askSize,
             long seqId)
         {
-            QuoteTimeMs = quoteTimeMs;
-
             Symbol = symbol;
+            QuoteTime = quoteTime;
             Bid = bid;
             BidSize = bidSize;
             Ask = ask;
             AskSize = askSize;
             SeqId = seqId;
         }
-
-        [JsonIgnore]
-        public DateTimeOffset QuoteTime => DateTimeOffset.FromUnixTimeMilliseconds(QuoteTimeMs);
-
         public string Symbol { get; }
+
+        [JsonConverter(typeof(UnitMillisecondsToDateTimeOffsetConverter))]
+        public DateTimeOffset QuoteTime { get; }
+
         public decimal Bid { get; }
         public decimal BidSize { get; }
         public decimal Ask { get; }
         public decimal AskSize { get; }
         public long SeqId { get; }
-
-        [JsonProperty("quoteTime")]
-        internal long QuoteTimeMs { get; }
     }
 }

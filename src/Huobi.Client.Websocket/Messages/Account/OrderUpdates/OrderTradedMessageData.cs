@@ -1,6 +1,5 @@
 ﻿using System;
 using Huobi.Client.Websocket.Messages.Account.Values;
-using Huobi.Client.Websocket.Messages.MarketData.Values;
 using Newtonsoft.Json;
 
 namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
@@ -9,13 +8,12 @@ namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
     {
         [JsonConstructor]
         public OrderTradedMessageData(
-            string eventTypeStr,
-            string orderTypeStr,
-            string orderStatusStr,
+            OrderEventType eventType,
             string symbol,
             decimal tradePrice,
             decimal tradeVolume,
             long orderId,
+            OrderType type,
             string clientOrderId,
             string orderSource,
             decimal orderPrice,
@@ -24,17 +22,16 @@ namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
             long tradeId,
             DateTimeOffset tradeTime,
             bool aggressor,
+            OrderStatus orderStatus,
             decimal remainingAmount,
             decimal accumulativeAmount)
         {
-            EventTypeStr = eventTypeStr;
-            OrderTypeStr = orderTypeStr;
-            OrderStatusStr = orderStatusStr;
-
+            EventType = eventType;
             Symbol = symbol;
             TradePrice = tradePrice;
             TradeVolume = tradeVolume;
             OrderId = orderId;
+            Type = type;
             ClientOrderId = clientOrderId;
             OrderSource = orderSource;
             OrderPrice = orderPrice;
@@ -43,49 +40,31 @@ namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
             TradeId = tradeId;
             TradeTime = tradeTime;
             Aggressor = aggressor;
+            OrderStatus = orderStatus;
             RemainingAmount = remainingAmount;
             AccumulativeAmount = accumulativeAmount;
         }
 
-        [JsonIgnore]
-        public OrderEventType EventType => OrderEventTypeHelper.FromMessageValue(EventTypeStr);
-
-        [JsonIgnore]
-        public OrderType OrderType => OrderTypeHelper.FromMessageValue(OrderTypeStr);
-
-        [JsonIgnore]
-        public OrderStatus OrderStatus => OrderStatusHelper.FromMessageValue(OrderStatusStr);
-
+        public OrderEventType EventType { get; }
         public string Symbol { get; }
         public decimal TradePrice { get; }
         public decimal TradeVolume { get; }
         public long OrderId { get; }
+        public OrderType Type { get; }
         public string ClientOrderId { get; }
         public string OrderSource { get; }
         public decimal OrderPrice { get; }
         public decimal OrderSize { get; }
         public decimal OrderValue { get; }
         public long TradeId { get; }
-
-        [JsonConverter(typeof(UnitMillisecondsToDateTimeOffsetConverter))]
         public DateTimeOffset TradeTime { get; }
-
         public bool Aggressor { get; }
+        public OrderStatus OrderStatus { get; }
 
         [JsonProperty("remainAmt")]
         public decimal RemainingAmount { get; }
 
         [JsonProperty("execAmt")]
         public decimal AccumulativeAmount { get; }
-
-
-        [JsonProperty("eventType")]
-        internal string EventTypeStr { get; }
-
-        [JsonProperty("type")]
-        internal string OrderTypeStr { get; }
-
-        [JsonProperty("orderStatus")]
-        internal string OrderStatusStr { get; }
     }
 }

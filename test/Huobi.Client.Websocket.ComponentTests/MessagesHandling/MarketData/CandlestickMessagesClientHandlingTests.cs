@@ -22,7 +22,7 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.MarketData
                     Assert.NotNull(msg);
                     Assert.Contains(SubscriptionType.MarketCandlestick.ToTopicId(), msg.Topic);
                     Assert.True(TestUtils.UnixTimesEqual(timestamp, msg.Timestamp));
-                    Assert.True(msg.Tick.Id > 0);
+                    Assert.True(msg.Tick!.Id > 0);
                 });
 
             var message = HuobiMessagesFactory.CreateMarketCandlestickUpdateMessage(timestamp);
@@ -49,9 +49,10 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.MarketData
 
                     // Assert
                     Assert.NotNull(msg);
+                    Assert.NotNull(msg.Data);
                     Assert.Contains(SubscriptionType.MarketCandlestick.ToTopicId(), msg.Topic);
                     Assert.True(TestUtils.UnixTimesEqual(timestamp, msg.Timestamp));
-                    Assert.Equal(2, msg.Data.Length);
+                    Assert.Equal(2, msg.Data!.Length);
                     Assert.True(msg.Data[0].Id > 0);
                     Assert.True(msg.Data[1].Id > 0);
                 });

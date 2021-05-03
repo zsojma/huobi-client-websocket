@@ -2,6 +2,7 @@
 {
     public enum OrderEventType
     {
+        Unknown,
         Trigger,
         Deletion,
         Creation,

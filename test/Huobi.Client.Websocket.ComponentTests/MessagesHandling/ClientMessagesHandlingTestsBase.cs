@@ -8,6 +8,7 @@ using Huobi.Client.Websocket.Clients;
 using Huobi.Client.Websocket.Communicator;
 using Huobi.Client.Websocket.Config;
 using Huobi.Client.Websocket.Serializer;
+using Huobi.Client.Websocket.Serializer.Converters;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -105,7 +106,10 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling
 
         private static byte[] Compress(object input)
         {
-            var serialized = JsonConvert.SerializeObject(input);
+            var serialized = JsonConvert.SerializeObject(
+                input,
+                new HuobiEnumJsonConverter(),
+                new UnixMillisecondsToDateTimeOffsetConverter());
             return Compress(serialized);
         }
 

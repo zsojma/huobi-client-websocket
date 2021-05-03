@@ -20,18 +20,19 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.MarketData
 
                     // Assert
                     Assert.NotNull(msg);
+                    Assert.NotNull(msg.Tick);
                     Assert.Contains(SubscriptionType.MarketTradeDetail.ToTopicId(), msg.Topic);
                     Assert.True(!string.IsNullOrEmpty(msg.Topic));
-                    Assert.True(msg.Tick.Id > 0);
-                    Assert.NotNull(msg.Tick.Data);
-                    Assert.Equal(2, msg.Tick.Data.Length);
-                    Assert.True(msg.Tick.Data[0].TradeId > 0);
-                    Assert.True(msg.Tick.Data[1].TradeId > 0);
+                    Assert.True(msg.Tick!.Id > 0);
+                    Assert.NotNull(msg.Tick!.Data);
+                    Assert.Equal(2, msg.Tick!.Data.Length);
+                    Assert.True(msg.Tick!.Data[0].TradeId > 0);
+                    Assert.True(msg.Tick!.Data[1].TradeId > 0);
 
                     Assert.True(TestUtils.UnixTimesEqual(timestamp, msg.Timestamp));
-                    Assert.True(TestUtils.UnixTimesEqual(timestamp, msg.Tick.Timestamp));
-                    Assert.True(TestUtils.UnixTimesEqual(timestamp, msg.Tick.Data[0].Timestamp));
-                    Assert.True(TestUtils.UnixTimesEqual(timestamp, msg.Tick.Data[1].Timestamp));
+                    Assert.True(TestUtils.UnixTimesEqual(timestamp, msg.Tick!.Timestamp));
+                    Assert.True(TestUtils.UnixTimesEqual(timestamp, msg.Tick!.Data[0].Timestamp));
+                    Assert.True(TestUtils.UnixTimesEqual(timestamp, msg.Tick!.Data[1].Timestamp));
                 });
 
             var message = HuobiMessagesFactory.CreateMarketTradeDetailUpdateMessage(timestamp);
@@ -58,15 +59,16 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.MarketData
 
                     // Assert
                     Assert.NotNull(msg);
+                    Assert.NotNull(msg.Data);
                     Assert.Contains(SubscriptionType.MarketTradeDetail.ToTopicId(), msg.Topic);
                     Assert.True(!string.IsNullOrEmpty(msg.Topic));
-                    Assert.Equal(2, msg.Data.Length);
-                    Assert.True(msg.Data[0].TradeId > 0);
-                    Assert.True(msg.Data[1].TradeId > 0);
+                    Assert.Equal(2, msg.Data!.Length);
+                    Assert.True(msg.Data![0].TradeId > 0);
+                    Assert.True(msg.Data![1].TradeId > 0);
 
                     Assert.True(TestUtils.UnixTimesEqual(timestamp, msg.Timestamp));
-                    Assert.True(TestUtils.UnixTimesEqual(timestamp, msg.Data[0].Timestamp));
-                    Assert.True(TestUtils.UnixTimesEqual(timestamp, msg.Data[1].Timestamp));
+                    Assert.True(TestUtils.UnixTimesEqual(timestamp, msg.Data![0].Timestamp));
+                    Assert.True(TestUtils.UnixTimesEqual(timestamp, msg.Data![1].Timestamp));
                 });
 
             var message = HuobiMessagesFactory.CreateMarketTradeDetailPullResponseMessage(timestamp);

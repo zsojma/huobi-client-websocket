@@ -227,12 +227,22 @@ namespace Huobi.Client.Websocket.Sample.Examples
 
         private void Handle(MarketCandlestickUpdateMessage msg)
         {
+            if (msg.Tick is null)
+            {
+                return;
+            }
+
             _logger.LogInformation(
                 $"Market candlestick update {msg.Topic} | [amount={msg.Tick.Amount}] [open={msg.Tick.Open}] [close={msg.Tick.Close}] [low={msg.Tick.Low}] [high={msg.Tick.High}] [vol={msg.Tick.Vol}] [count={msg.Tick.Count}]");
         }
 
         private void Handle(MarketCandlestickPullResponse msg)
         {
+            if (msg.Data is null)
+            {
+                return;
+            }
+
             foreach (var item in msg.Data)
             {
                 _logger.LogInformation(
@@ -242,12 +252,12 @@ namespace Huobi.Client.Websocket.Sample.Examples
 
         private void Handle(MarketDepthUpdateMessage msg)
         {
-            var len = Math.Min(Math.Min(10, msg.Tick.Bids.Length), msg.Tick.Asks.Length);
+            var len = Math.Min(Math.Min(10, msg.Tick?.Bids.Length ?? 0), msg.Tick?.Asks.Length ?? 0);
 
             for (var i = 0; i < len; ++i)
             {
-                var bid = msg.Tick.Bids[i];
-                var ask = msg.Tick.Asks[i];
+                var bid = msg.Tick!.Bids[i];
+                var ask = msg.Tick!.Asks[i];
 
                 _logger.LogInformation(
                     $"Market depth update {msg.Topic} | [bid {i}: price={bid.Price} size={bid.Size}] [ask {i}: price={ask.Price} size={ask.Size}]");
@@ -256,12 +266,12 @@ namespace Huobi.Client.Websocket.Sample.Examples
 
         private void Handle(MarketDepthPullResponse msg)
         {
-            var len = Math.Min(Math.Min(10, msg.Data.Bids.Length), msg.Data.Asks.Length);
+            var len = Math.Min(Math.Min(10, msg.Data?.Bids.Length ?? 0), msg.Data?.Asks.Length ?? 0);
 
             for (var i = 0; i < len; ++i)
             {
-                var bid = msg.Data.Bids[i];
-                var ask = msg.Data.Asks[i];
+                var bid = msg.Data!.Bids[i];
+                var ask = msg.Data!.Asks[i];
 
                 _logger.LogInformation(
                     $"Market depth update {msg.Topic} | [bid {i}: price={bid.Price} size={bid.Size}] [ask {i}: price={ask.Price} size={ask.Size}]");
@@ -270,7 +280,7 @@ namespace Huobi.Client.Websocket.Sample.Examples
 
         private void Handle(MarketByPriceRefreshUpdateMessage msg)
         {
-            if (msg.Tick.Bids != null)
+            if (msg.Tick?.Bids != null)
             {
                 for (var i = 0; i < msg.Tick.Bids.Length; ++i)
                 {
@@ -280,7 +290,7 @@ namespace Huobi.Client.Websocket.Sample.Examples
                 }
             }
 
-            if (msg.Tick.Asks != null)
+            if (msg.Tick?.Asks != null)
             {
                 for (var i = 0; i < msg.Tick.Asks.Length; ++i)
                 {
@@ -293,13 +303,18 @@ namespace Huobi.Client.Websocket.Sample.Examples
 
         private void Handle(MarketBestBidOfferUpdateMessage msg)
         {
+            if (msg.Tick is null)
+            {
+                return;
+            }
+
             _logger.LogInformation(
                 $"Market best bid/offer update {msg.Topic} | [symbol={msg.Tick.Symbol}] [quoteTime={msg.Tick.QuoteTime}] [bid={msg.Tick.Bid}] [bidSize={msg.Tick.BidSize}] [ask={msg.Tick.Ask}] [askSize={msg.Tick.AskSize}] [seqId={msg.Tick.SeqId}]");
         }
 
         private void Handle(MarketTradeDetailUpdateMessage msg)
         {
-            for (var i = 0; i < msg.Tick.Data.Length; ++i)
+            for (var i = 0; i < msg.Tick?.Data.Length; ++i)
             {
                 var item = msg.Tick.Data[i];
 
@@ -310,7 +325,7 @@ namespace Huobi.Client.Websocket.Sample.Examples
 
         private void Handle(MarketTradeDetailPullResponse msg)
         {
-            for (var i = 0; i < msg.Data.Length; ++i)
+            for (var i = 0; i < msg.Data?.Length; ++i)
             {
                 var item = msg.Data[i];
 
@@ -321,12 +336,22 @@ namespace Huobi.Client.Websocket.Sample.Examples
 
         private void Handle(MarketDetailsUpdateMessage msg)
         {
+            if (msg.Tick is null)
+            {
+                return;
+            }
+
             _logger.LogInformation(
                 $"Market details update {msg.Topic} | [amount={msg.Tick.Amount}] [open={msg.Tick.Open}] [close={msg.Tick.Close}] [low={msg.Tick.Low}] [high={msg.Tick.High}] [vol={msg.Tick.Vol}] [count={msg.Tick.Count}]");
         }
 
         private void Handle(MarketDetailsPullResponse msg)
         {
+            if (msg.Data is null)
+            {
+                return;
+            }
+
             _logger.LogInformation(
                 $"Market details pull {msg.Topic} | [amount={msg.Data.Amount}] [open={msg.Data.Open}] [close={msg.Data.Close}] [low={msg.Data.Low}] [high={msg.Data.High}] [vol={msg.Data.Vol}] [count={msg.Data.Count}]");
         }

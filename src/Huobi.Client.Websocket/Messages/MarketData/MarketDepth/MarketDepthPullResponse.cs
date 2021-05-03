@@ -33,7 +33,7 @@ namespace Huobi.Client.Websocket.Messages.MarketData.MarketDepth
                 },
                 out response);
 
-            return result && response?.Data.Timestamp.Ticks > 0;
+            return result && response?.Data?.Timestamp.Ticks > 0;
         }
     }
 }

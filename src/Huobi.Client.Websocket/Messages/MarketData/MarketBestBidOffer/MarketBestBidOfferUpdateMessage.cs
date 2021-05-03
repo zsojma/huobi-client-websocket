@@ -26,7 +26,7 @@ namespace Huobi.Client.Websocket.Messages.MarketData.MarketBestBidOffer
                 },
                 out response);
 
-            return result && !string.IsNullOrEmpty(response?.Tick.Symbol);
+            return result && !string.IsNullOrEmpty(response?.Tick?.Symbol);
         }
     }
 }

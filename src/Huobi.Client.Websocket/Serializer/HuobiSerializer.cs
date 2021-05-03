@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Huobi.Client.Websocket.Serializer.Converters;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
@@ -18,7 +19,10 @@ namespace Huobi.Client.Websocket.Serializer
         {
             try
             {
-                var serialized = JsonConvert.SerializeObject(input);
+                var serialized = JsonConvert.SerializeObject(
+                    input,
+                    new HuobiEnumJsonConverter(),
+                    new UnixMillisecondsToDateTimeOffsetConverter());
                 return serialized;
             }
             catch (JsonSerializationException ex)
@@ -93,10 +97,21 @@ namespace Huobi.Client.Websocket.Serializer
         }
 
         [return: MaybeNull]
-        private static T Deserialize<T>(string input)
+        private T Deserialize<T>(string input)
         {
-            var deserialized = JsonConvert.DeserializeObject<T>(input);
-            return deserialized;
+            try
+            {
+                var deserialized = JsonConvert.DeserializeObject<T>(
+                    input,
+                    new HuobiEnumJsonConverter(),
+                    new UnixMillisecondsToDateTimeOffsetConverter());
+                return deserialized;
+            }
+            catch (JsonSerializationException ex)
+            {
+                _logger.LogError(ex, $"Unable to deserialize object: {input}! Error: {ex.Message}");
+                throw;
+            }
         }
     }
 }

@@ -24,11 +24,11 @@ namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
                 new[]
                 {
                     AccountSubscriptionType.Orders.ToTopicId(),
-                    OrderEventType.Deletion.ToMessageValue()
+                    OrderEventType.Deletion.ToString().ToLower()
                 },
                 out response);
 
-            return result && response?.Data.OrderTriggerTime.Ticks > 0;
+            return result && response?.Data?.OrderTriggerTime.Ticks > 0;
         }
     }
 }

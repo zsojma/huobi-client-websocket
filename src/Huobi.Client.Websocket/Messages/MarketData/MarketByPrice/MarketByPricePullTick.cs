@@ -1,5 +1,6 @@
-﻿using Huobi.Client.Websocket.Messages.MarketData.Values;
-using Huobi.Client.Websocket.Utils;
+﻿using System;
+using Huobi.Client.Websocket.Messages.MarketData.Values;
+using Huobi.Client.Websocket.Serializer.Converters;
 using Newtonsoft.Json;
 
 namespace Huobi.Client.Websocket.Messages.MarketData.MarketByPrice
@@ -7,14 +8,11 @@ namespace Huobi.Client.Websocket.Messages.MarketData.MarketByPrice
     public class MarketByPricePullTick
     {
         [JsonConstructor]
-        public MarketByPricePullTick(long seqNum, BookLevel[] bids, BookLevel[] asks)
+        public MarketByPricePullTick(long seqNum, BookLevel[]? bids, BookLevel[]? asks)
         {
-            Validations.ValidateInput(bids, nameof(bids));
-            Validations.ValidateInput(asks, nameof(asks));
-
             SeqNum = seqNum;
-            Bids = bids;
-            Asks = asks;
+            Bids = bids ?? Array.Empty<BookLevel>();
+            Asks = asks ?? Array.Empty<BookLevel>();
         }
 
         public long SeqNum { get; }

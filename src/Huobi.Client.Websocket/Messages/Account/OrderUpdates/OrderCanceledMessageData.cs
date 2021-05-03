@@ -1,6 +1,5 @@
 ﻿using System;
 using Huobi.Client.Websocket.Messages.Account.Values;
-using Huobi.Client.Websocket.Messages.MarketData.Values;
 using Newtonsoft.Json;
 
 namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
@@ -9,52 +8,45 @@ namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
     {
         [JsonConstructor]
         public OrderCanceledMessageData(
-            string eventTypeStr,
-            string orderTypeStr,
-            string orderStatusStr,
+            OrderEventType eventType,
             string symbol,
             long orderId,
+            OrderType type,
             string clientOrderId,
             string orderSource,
             decimal orderPrice,
             decimal orderSize,
             decimal orderValue,
+            OrderStatus orderStatus,
             string remainingAmount,
             string accumulativeAmount,
             DateTimeOffset lastActivityTime)
         {
-            EventTypeStr = eventTypeStr;
-            OrderTypeStr = orderTypeStr;
-            OrderStatusStr = orderStatusStr;
-
+            EventType = eventType;
             Symbol = symbol;
             OrderId = orderId;
+            Type = type;
             ClientOrderId = clientOrderId;
             OrderSource = orderSource;
             OrderPrice = orderPrice;
             OrderSize = orderSize;
             OrderValue = orderValue;
+            OrderStatus = orderStatus;
             RemainingAmount = remainingAmount;
             AccumulativeAmount = accumulativeAmount;
             LastActivityTime = lastActivityTime;
         }
 
-        [JsonIgnore]
-        public OrderEventType EventType => OrderEventTypeHelper.FromMessageValue(EventTypeStr);
-
-        [JsonIgnore]
-        public OrderType OrderType => OrderTypeHelper.FromMessageValue(OrderTypeStr);
-
-        [JsonIgnore]
-        public OrderStatus OrderStatus => OrderStatusHelper.FromMessageValue(OrderStatusStr);
-
+        public OrderEventType EventType { get; }
         public string Symbol { get; }
         public long OrderId { get; }
+        public OrderType Type { get; }
         public string ClientOrderId { get; }
         public string OrderSource { get; }
         public decimal OrderPrice { get; }
         public decimal OrderSize { get; }
         public decimal OrderValue { get; }
+        public OrderStatus OrderStatus { get; }
 
         [JsonProperty("remainAmt")]
         public string RemainingAmount { get; }
@@ -63,16 +55,6 @@ namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
         public string AccumulativeAmount { get; }
 
         [JsonProperty("lastActTime")]
-        [JsonConverter(typeof(UnitMillisecondsToDateTimeOffsetConverter))]
         public DateTimeOffset LastActivityTime { get; }
-
-        [JsonProperty("eventType")]
-        internal string EventTypeStr { get; }
-
-        [JsonProperty("type")]
-        internal string OrderTypeStr { get; }
-
-        [JsonProperty("orderStatus")]
-        internal string OrderStatusStr { get; }
     }
 }

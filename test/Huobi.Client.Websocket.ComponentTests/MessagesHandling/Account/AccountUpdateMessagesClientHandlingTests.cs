@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Huobi.Client.Websocket.Messages.Account.Values;
+using Huobi.Client.Websocket.Tests;
 using Xunit;
 
 namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.Account
@@ -12,8 +12,8 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.Account
         [Theory]
         [ClassData(typeof(AccountUpdateEnumsTestData))]
         public void AccountUpdateMessage_AccountBalanceChanged_StreamUpdated(
-            AccountChangeType changeType,
-            AccountType accountType)
+            string changeType,
+            string accountType)
         {
             // Arrange
             var changeTime = DateTimeOffset.UtcNow;
@@ -27,9 +27,9 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.Account
                     // Assert
                     Assert.NotNull(msg);
                     Assert.NotNull(msg.Data);
-                    Assert.Equal(changeType, msg.Data.ChangeType);
-                    Assert.Equal(accountType, msg.Data.AccountType);
-                    Assert.True(TestUtils.UnixTimesEqual(changeTime, msg.Data.ChangeTime));
+                    Assert.True(EnumTestDataBase.EqualsWithString(changeType, msg.Data!.ChangeType));
+                    Assert.True(EnumTestDataBase.EqualsWithString(accountType, msg.Data!.AccountType));
+                    Assert.True(TestUtils.UnixTimesEqual(changeTime, msg.Data!.ChangeTime));
                 });
 
             var message = HuobiAccountMessagesFactory.CreateAccountUpdateAccountBalanceChangedMessage(
@@ -48,8 +48,8 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.Account
         [Theory]
         [ClassData(typeof(AccountUpdateEnumsTestData))]
         public void AccountUpdateMessage_AvailableBalanceChanged_StreamUpdated(
-            AccountChangeType changeType,
-            AccountType accountType)
+            string changeType,
+            string accountType)
         {
             // Arrange
             var changeTime = DateTimeOffset.UtcNow;
@@ -63,9 +63,9 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.Account
                     // Assert
                     Assert.NotNull(msg);
                     Assert.NotNull(msg.Data);
-                    Assert.Equal(changeType, msg.Data.ChangeType);
-                    Assert.Equal(accountType, msg.Data.AccountType);
-                    Assert.True(TestUtils.UnixTimesEqual(changeTime, msg.Data.ChangeTime));
+                    Assert.True(EnumTestDataBase.EqualsWithString(changeType, msg.Data!.ChangeType));
+                    Assert.True(EnumTestDataBase.EqualsWithString(accountType, msg.Data!.AccountType));
+                    Assert.True(TestUtils.UnixTimesEqual(changeTime, msg.Data!.ChangeTime));
                 });
 
             var message = HuobiAccountMessagesFactory.CreateAccountUpdateAvailableBalanceChangedMessage(
@@ -87,8 +87,8 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.Account
         public IEnumerator<object[]> GetEnumerator()
         {
             var query =
-                from AccountChangeType changeType in Enum.GetValues(typeof(AccountChangeType))
-                from AccountType accountType in Enum.GetValues(typeof(AccountType))
+                from string changeType in new AccountChangeTypeTestData().GetValues()
+                from string accountType in new AccountTypeTestData().GetValues()
                 select new[]
                 {
                     (object)changeType,

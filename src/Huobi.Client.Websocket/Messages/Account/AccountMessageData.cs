@@ -1,5 +1,4 @@
 ﻿using System;
-using Huobi.Client.Websocket.Messages.MarketData.Values;
 using Newtonsoft.Json;
 
 namespace Huobi.Client.Websocket.Messages.Account
@@ -12,7 +11,6 @@ namespace Huobi.Client.Websocket.Messages.Account
         }
         
         [JsonProperty("ts")]
-        [JsonConverter(typeof(UnitMillisecondsToDateTimeOffsetConverter))]
         public DateTimeOffset Timestamp { get; }
     }
 }

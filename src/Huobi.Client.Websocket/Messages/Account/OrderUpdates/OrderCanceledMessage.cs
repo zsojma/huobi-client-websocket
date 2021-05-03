@@ -21,12 +21,11 @@ namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
                 new[]
                 {
                     AccountSubscriptionType.Orders.ToTopicId(),
-                    OrderEventType.Cancellation.ToMessageValue(),
-                    OrderStatus.Canceled.ToMessageValue()
+                    OrderEventType.Cancellation.ToString().ToLower()
                 },
                 out response);
 
-            return result && response?.Data.OrderId > 0;
+            return result && response?.Data?.OrderId > 0;
         }
     }
 }

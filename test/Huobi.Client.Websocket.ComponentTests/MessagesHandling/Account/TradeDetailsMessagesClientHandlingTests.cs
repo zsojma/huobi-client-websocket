@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Huobi.Client.Websocket.Messages.Account.Values;
+using Huobi.Client.Websocket.Tests;
 using Xunit;
 
 namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.Account
@@ -12,10 +12,10 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.Account
         [Theory]
         [ClassData(typeof(TradeDetailsEnumsTestData))]
         public void TradeDetailsMessage_StreamUpdated(
-            TradeEventType eventType,
-            OrderSide orderSide,
-            OrderType orderType,
-            OrderStatus orderStatus)
+            string eventType,
+            string orderSide,
+            string orderType,
+            string orderStatus)
         {
             // Arrange
             var tradeAndCreateTime = DateTimeOffset.UtcNow;
@@ -29,12 +29,12 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.Account
                     // Assert
                     Assert.NotNull(msg);
                     Assert.NotNull(msg.Data);
-                    Assert.Equal(eventType, msg.Data.EventType);
-                    Assert.Equal(orderSide, msg.Data.OrderSide);
-                    Assert.Equal(orderType, msg.Data.OrderType);
-                    Assert.Equal(orderStatus, msg.Data.OrderStatus);
-                    Assert.True(TestUtils.UnixTimesEqual(tradeAndCreateTime, msg.Data.TradeTime));
-                    Assert.True(TestUtils.UnixTimesEqual(tradeAndCreateTime, msg.Data.OrderCreateTime));
+                    Assert.True(EnumTestDataBase.EqualsWithString(eventType, msg.Data!.EventType));
+                    Assert.True(EnumTestDataBase.EqualsWithString(orderSide, msg.Data!.OrderSide));
+                    Assert.True(EnumTestDataBase.EqualsWithString(orderType, msg.Data!.OrderType));
+                    Assert.True(EnumTestDataBase.EqualsWithString(orderStatus, msg.Data!.OrderStatus));
+                    Assert.True(TestUtils.UnixTimesEqual(tradeAndCreateTime, msg.Data!.TradeTime));
+                    Assert.True(TestUtils.UnixTimesEqual(tradeAndCreateTime, msg.Data!.OrderCreateTime));
                 });
 
             var message = HuobiAccountMessagesFactory.CreateTradeDetailsMessage(
@@ -58,10 +58,10 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.Account
         public IEnumerator<object[]> GetEnumerator()
         {
             var query =
-                from TradeEventType eventType in Enum.GetValues(typeof(TradeEventType))
-                from OrderSide orderSide in Enum.GetValues(typeof(OrderSide))
-                from OrderType orderType in Enum.GetValues(typeof(OrderType))
-                from OrderStatus orderStatus in Enum.GetValues(typeof(OrderStatus))
+                from string eventType in new TradeEventTypeTestData().GetValues()
+                from string orderSide in new OrderSideTestData().GetValues()
+                from string orderType in new OrderTypeTestData().GetValues()
+                from string orderStatus in new OrderStatusTestData().GetValues()
                 select new[]
                 {
                     (object)eventType,

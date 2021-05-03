@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
-using Huobi.Client.Websocket.Messages.MarketData.Values;
 using Huobi.Client.Websocket.Serializer;
-using Huobi.Client.Websocket.Utils;
 using Newtonsoft.Json;
 
 namespace Huobi.Client.Websocket.Messages.MarketData
@@ -10,15 +8,11 @@ namespace Huobi.Client.Websocket.Messages.MarketData
     public class SubscribeResponse
     {
         [JsonConstructor]
-        public SubscribeResponse(string reqId, string status, string topic, DateTimeOffset timestamp)
+        public SubscribeResponse(string? reqId, string? status, string? topic, DateTimeOffset timestamp)
         {
-            Validations.ValidateInput(reqId, nameof(reqId));
-            Validations.ValidateInput(status, nameof(status));
-            Validations.ValidateInput(topic, nameof(topic));
-
-            ReqId = reqId;
-            Status = status;
-            Topic = topic;
+            ReqId = reqId ?? string.Empty;
+            Status = status ?? string.Empty;
+            Topic = topic ?? string.Empty;
             Timestamp = timestamp;
         }
 
@@ -31,7 +25,6 @@ namespace Huobi.Client.Websocket.Messages.MarketData
         public string Topic { get; }
 
         [JsonProperty("ts")]
-        [JsonConverter(typeof(UnitMillisecondsToDateTimeOffsetConverter))]
         public DateTimeOffset Timestamp { get; }
 
         internal static bool TryParse(

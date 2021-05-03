@@ -1,4 +1,5 @@
 ﻿using Huobi.Client.Websocket.Messages.MarketData.Values;
+using Huobi.Client.Websocket.Serializer.Converters;
 using Newtonsoft.Json;
 
 namespace Huobi.Client.Websocket.Messages.MarketData.MarketByPrice

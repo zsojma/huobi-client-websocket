@@ -2,6 +2,7 @@
 {
     public enum AccountChangeType
     {
+        Unknown,
         OrderPlace,
         OrderMatch,
         OrderRefund,

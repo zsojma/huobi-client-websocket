@@ -88,36 +88,66 @@ namespace Huobi.Client.Websocket.Sample.Examples
 
         private void Handle(ConditionalOrderTriggerFailureMessage msg)
         {
+            if (msg.Data is null)
+            {
+                return;
+            }
+
             _logger.LogInformation(
                 $"Conditional order trigger failure on {msg.Data.Symbol} | [orderSide={msg.Data.OrderSide}] [failureTime={msg.Data.OrderTriggeringFailureTime}] [errorCode={msg.Data.ErrorCode}] [errorMessage={msg.Data.ErrorMessage}]");
         }
 
         private void Handle(ConditionalOrderCanceledMessage msg)
         {
+            if (msg.Data is null)
+            {
+                return;
+            }
+
             _logger.LogInformation(
                 $"Conditional order cancelled on {msg.Data.Symbol} | [orderSide={msg.Data.OrderSide}] [triggerTime={msg.Data.OrderTriggerTime}]");
         }
 
         private void Handle(OrderSubmittedMessage msg)
         {
+            if (msg.Data is null)
+            {
+                return;
+            }
+
             _logger.LogInformation(
-                $"Order submitted on {msg.Data.Symbol} | [orderType={msg.Data.OrderType}] [price={msg.Data.OrderPrice}] [size={msg.Data.OrderSize}] [orderId={msg.Data.OrderId}]");
+                $"Order submitted on {msg.Data.Symbol} | [orderType={msg.Data.Type}] [price={msg.Data.OrderPrice}] [size={msg.Data.OrderSize}] [orderId={msg.Data.OrderId}]");
         }
 
         private void Handle(OrderTradedMessage msg)
         {
+            if (msg.Data is null)
+            {
+                return;
+            }
+
             _logger.LogInformation(
-                $"Order traded on {msg.Data.Symbol} | [orderType={msg.Data.OrderType}] [price={msg.Data.OrderPrice}] [size={msg.Data.OrderSize}] [orderId={msg.Data.OrderId}]");
+                $"Order traded on {msg.Data.Symbol} | [orderType={msg.Data.Type}] [price={msg.Data.OrderPrice}] [size={msg.Data.OrderSize}] [orderId={msg.Data.OrderId}]");
         }
 
         private void Handle(OrderCanceledMessage msg)
         {
+            if (msg.Data is null)
+            {
+                return;
+            }
+
             _logger.LogInformation(
-                $"Order cancelled on {msg.Data.Symbol} | [orderType={msg.Data.OrderType}] [price={msg.Data.OrderPrice}] [size={msg.Data.OrderSize}] [orderId={msg.Data.OrderId}]");
+                $"Order cancelled on {msg.Data.Symbol} | [orderType={msg.Data.Type}] [price={msg.Data.OrderPrice}] [size={msg.Data.OrderSize}] [orderId={msg.Data.OrderId}]");
         }
 
         private void Handle(TradeDetailsMessage msg)
         {
+            if (msg.Data is null)
+            {
+                return;
+            }
+
             _logger.LogInformation(
                 msg.Data.EventType == TradeEventType.Trade
                     ? $"Trade matched on {msg.Data.Symbol} | [orderType={msg.Data.OrderType}] [price={msg.Data.OrderPrice}] [size={msg.Data.OrderSize}] [orderId={msg.Data.OrderId}]"
@@ -126,6 +156,11 @@ namespace Huobi.Client.Websocket.Sample.Examples
 
         private void Handle(AccountUpdateMessage msg)
         {
+            if (msg.Data is null)
+            {
+                return;
+            }
+
             _logger.LogInformation(
                 $"Account updated | [currency={msg.Data.Currency}] [balance={msg.Data.Balance}] [available={msg.Data.Available}] [changeType={msg.Data.ChangeType}] [accountType={msg.Data.AccountType}]");
         }

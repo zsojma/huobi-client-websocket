@@ -77,7 +77,7 @@ namespace Huobi.Client.Websocket.Sample.Examples
 
         private void Handle(MarketByPriceUpdateMessage msg)
         {
-            if (msg.Tick.Bids != null)
+            if (msg.Tick?.Bids != null)
             {
                 for (var i = 0; i < msg.Tick.Bids.Length; ++i)
                 {
@@ -87,7 +87,7 @@ namespace Huobi.Client.Websocket.Sample.Examples
                 }
             }
 
-            if (msg.Tick.Asks != null)
+            if (msg.Tick?.Asks != null)
             {
                 for (var i = 0; i < msg.Tick.Asks.Length; ++i)
                 {
@@ -100,14 +100,14 @@ namespace Huobi.Client.Websocket.Sample.Examples
 
         private void Handle(MarketByPricePullResponse msg)
         {
-            for (var i = 0; i < msg.Data.Bids.Length; ++i)
+            for (var i = 0; i < msg.Data?.Bids.Length; ++i)
             {
                 var bid = msg.Data.Bids[i];
 
                 _logger.LogInformation($"Market by price pull {msg.Topic} | [bid {i}: price={bid.Price} size={bid.Size}]");
             }
 
-            for (var i = 0; i < msg.Data.Asks.Length; ++i)
+            for (var i = 0; i < msg.Data?.Asks.Length; ++i)
             {
                 var bid = msg.Data.Asks[i];
 

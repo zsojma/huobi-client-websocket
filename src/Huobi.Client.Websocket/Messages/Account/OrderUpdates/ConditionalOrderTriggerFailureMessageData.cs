@@ -1,6 +1,5 @@
 ﻿using System;
 using Huobi.Client.Websocket.Messages.Account.Values;
-using Huobi.Client.Websocket.Messages.MarketData.Values;
 using Newtonsoft.Json;
 
 namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
@@ -9,37 +8,30 @@ namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
     {
         [JsonConstructor]
         public ConditionalOrderTriggerFailureMessageData(
-            string eventTypeStr,
-            string orderSideStr,
-            string orderStatusStr,
+            OrderEventType eventType,
             string symbol,
             string clientOrderId,
+            OrderSide orderSide,
+            OrderStatus orderStatus,
             int errorCode,
             string errorMessage,
             DateTimeOffset orderTriggeringFailureTime)
         {
-            EventTypeStr = eventTypeStr;
-            OrderSideStr = orderSideStr;
-            OrderStatusStr = orderStatusStr;
-            
+            EventType = eventType;
             Symbol = symbol;
             ClientOrderId = clientOrderId;
+            OrderSide = orderSide;
+            OrderStatus = orderStatus;
             ErrorCode = errorCode;
             ErrorMessage = errorMessage;
             OrderTriggeringFailureTime = orderTriggeringFailureTime;
         }
-
-        [JsonIgnore]
-        public OrderEventType EventType => OrderEventTypeHelper.FromMessageValue(EventTypeStr);
-
-        [JsonIgnore]
-        public OrderSide OrderSide => OrderSideHelper.FromMessageValue(OrderSideStr);
-
-        [JsonIgnore]
-        public OrderStatus OrderStatus => OrderStatusHelper.FromMessageValue(OrderStatusStr);
-
+        
+        public OrderEventType EventType { get; }
         public string Symbol { get; }
         public string ClientOrderId { get; }
+        public OrderSide OrderSide { get; }
+        public OrderStatus OrderStatus { get; }
 
         [JsonProperty("errCode")]
         public int ErrorCode { get; }
@@ -48,16 +40,6 @@ namespace Huobi.Client.Websocket.Messages.Account.OrderUpdates
         public string ErrorMessage { get; }
 
         [JsonProperty("lastActTime")]
-        [JsonConverter(typeof(UnitMillisecondsToDateTimeOffsetConverter))]
         public DateTimeOffset OrderTriggeringFailureTime { get; }
-
-        [JsonProperty("eventType")]
-        internal string EventTypeStr { get; }
-
-        [JsonProperty("orderSide")]
-        internal string OrderSideStr { get; }
-
-        [JsonProperty("orderStatus")]
-        internal string OrderStatusStr { get; }
     }
 }

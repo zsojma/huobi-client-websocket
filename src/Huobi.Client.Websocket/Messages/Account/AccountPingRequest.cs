@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using Huobi.Client.Websocket.Serializer;
-using Huobi.Client.Websocket.Utils;
 using Newtonsoft.Json;
 
 namespace Huobi.Client.Websocket.Messages.Account
@@ -12,22 +11,19 @@ namespace Huobi.Client.Websocket.Messages.Account
             : this("ping", new AccountMessageData(timestamp))
         {
         }
-        
-        [JsonConstructor]
-        internal AccountPingRequest(string action, AccountMessageData data)
-        {
-            Validations.ValidateInput(action, nameof(action));
-            Validations.ValidateInput(data, nameof(data));
 
-            Action = action;
+        [JsonConstructor]
+        internal AccountPingRequest(string? action, AccountMessageData? data)
+        {
+            Action = action ?? string.Empty;
             Data = data;
         }
 
         [JsonProperty("action")]
         public string Action { get; }
-        
+
         [JsonProperty("data")]
-        public AccountMessageData Data { get; }
+        public AccountMessageData? Data { get; }
 
         internal static bool TryParse(
             IHuobiSerializer serializer,

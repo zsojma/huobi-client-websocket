@@ -22,7 +22,7 @@ namespace Huobi.Client.Websocket.Messages.Account.AccountUpdates
                 "\"code\"",
                 out response);
 
-            return result && response?.Data.ChangeTime.Ticks > 0;
+            return result && response?.Data?.ChangeTime.Ticks > 0;
         }
     }
 }

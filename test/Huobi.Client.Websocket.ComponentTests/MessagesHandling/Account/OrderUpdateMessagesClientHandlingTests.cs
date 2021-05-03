@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Huobi.Client.Websocket.Messages.Account.Values;
+using Huobi.Client.Websocket.Tests;
 using Xunit;
 
 namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.Account
@@ -10,9 +11,8 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.Account
     public class OrderUpdateMessagesClientHandlingTests : ClientMessagesHandlingTestsBase
     {
         [Theory]
-        [InlineData(OrderSide.Buy)]
-        [InlineData(OrderSide.Sell)]
-        public void ConditionalOrderTriggeringFailureMessage_StreamUpdated(OrderSide orderSide)
+        [ClassData(typeof(OrderSideTestData))]
+        public void ConditionalOrderTriggeringFailureMessage_StreamUpdated(string orderSide)
         {
             // Arrange
             var lastActTime = DateTimeOffset.UtcNow;
@@ -26,10 +26,10 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.Account
                     // Assert
                     Assert.NotNull(msg);
                     Assert.NotNull(msg.Data);
-                    Assert.Equal(OrderEventType.Trigger, msg.Data.EventType);
-                    Assert.Equal(orderSide, msg.Data.OrderSide);
-                    Assert.Equal(OrderStatus.Rejected, msg.Data.OrderStatus);
-                    Assert.True(TestUtils.UnixTimesEqual(lastActTime, msg.Data.OrderTriggeringFailureTime));
+                    Assert.Equal(OrderEventType.Trigger, msg.Data!.EventType);
+                    Assert.True(EnumTestDataBase.EqualsWithString(orderSide, msg.Data!.OrderSide));
+                    Assert.Equal(OrderStatus.Rejected, msg.Data!.OrderStatus);
+                    Assert.True(TestUtils.UnixTimesEqual(lastActTime, msg.Data!.OrderTriggeringFailureTime));
                 });
 
             var message = HuobiAccountMessagesFactory.CreateConditionalOrderTriggeringFailureMessage(orderSide, lastActTime);
@@ -43,9 +43,8 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.Account
         }
 
         [Theory]
-        [InlineData(OrderSide.Buy)]
-        [InlineData(OrderSide.Sell)]
-        public void ConditionalOrderCanceledMessage_StreamUpdated(OrderSide orderSide)
+        [ClassData(typeof(OrderSideTestData))]
+        public void ConditionalOrderCanceledMessage_StreamUpdated(string orderSide)
         {
             // Arrange
             var lastActTime = DateTimeOffset.UtcNow;
@@ -59,10 +58,10 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.Account
                     // Assert
                     Assert.NotNull(msg);
                     Assert.NotNull(msg.Data);
-                    Assert.Equal(OrderEventType.Deletion, msg.Data.EventType);
-                    Assert.Equal(orderSide, msg.Data.OrderSide);
-                    Assert.Equal(OrderStatus.Canceled, msg.Data.OrderStatus);
-                    Assert.True(TestUtils.UnixTimesEqual(lastActTime, msg.Data.OrderTriggerTime));
+                    Assert.Equal(OrderEventType.Deletion, msg.Data!.EventType);
+                    Assert.True(EnumTestDataBase.EqualsWithString(orderSide, msg.Data!.OrderSide));
+                    Assert.Equal(OrderStatus.Canceled, msg.Data!.OrderStatus);
+                    Assert.True(TestUtils.UnixTimesEqual(lastActTime, msg.Data!.OrderTriggerTime));
                 });
 
             var message = HuobiAccountMessagesFactory.CreateConditionalOrderCanceledMessage(orderSide, lastActTime);
@@ -77,7 +76,7 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.Account
 
         [Theory]
         [ClassData(typeof(OrderTypeTestData))]
-        public void OrderSubmittedMessage_StreamUpdated(OrderType orderType)
+        public void OrderSubmittedMessage_StreamUpdated(string orderType)
         {
             // Arrange
             var lastActTime = DateTimeOffset.UtcNow;
@@ -91,10 +90,10 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.Account
                     // Assert
                     Assert.NotNull(msg);
                     Assert.NotNull(msg.Data);
-                    Assert.Equal(OrderEventType.Creation, msg.Data.EventType);
-                    Assert.Equal(OrderStatus.Submitted, msg.Data.OrderStatus);
-                    Assert.Equal(orderType, msg.Data.OrderType);
-                    Assert.True(TestUtils.UnixTimesEqual(lastActTime, msg.Data.OrderCreateTime));
+                    Assert.Equal(OrderEventType.Creation, msg.Data!.EventType);
+                    Assert.Equal(OrderStatus.Submitted, msg.Data!.OrderStatus);
+                    Assert.True(EnumTestDataBase.EqualsWithString(orderType, msg.Data!.Type));
+                    Assert.True(TestUtils.UnixTimesEqual(lastActTime, msg.Data!.OrderCreateTime));
                 });
 
             var message = HuobiAccountMessagesFactory.CreateOrderSubmittedMessage(orderType, lastActTime);
@@ -109,7 +108,7 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.Account
 
         [Theory]
         [ClassData(typeof(OrderTradedEnumsTestData))]
-        public void OrderTradedMessage_StreamUpdated(OrderStatus orderStatus, OrderType orderType)
+        public void OrderTradedMessage_StreamUpdated(string orderType, string orderStatus)
         {
             // Arrange
             var lastActTime = DateTimeOffset.UtcNow;
@@ -123,10 +122,10 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.Account
                     // Assert
                     Assert.NotNull(msg);
                     Assert.NotNull(msg.Data);
-                    Assert.Equal(OrderEventType.Trade, msg.Data.EventType);
-                    Assert.Equal(orderStatus, msg.Data.OrderStatus);
-                    Assert.Equal(orderType, msg.Data.OrderType);
-                    Assert.True(TestUtils.UnixTimesEqual(lastActTime, msg.Data.TradeTime));
+                    Assert.Equal(OrderEventType.Trade, msg.Data!.EventType);
+                    Assert.True(EnumTestDataBase.EqualsWithString(orderStatus, msg.Data!.OrderStatus));
+                    Assert.True(EnumTestDataBase.EqualsWithString(orderType, msg.Data!.Type));
+                    Assert.True(TestUtils.UnixTimesEqual(lastActTime, msg.Data!.TradeTime));
                 });
 
             var message = HuobiAccountMessagesFactory.CreateOrderTradedMessage(orderStatus, orderType, lastActTime);
@@ -141,7 +140,7 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.Account
 
         [Theory]
         [ClassData(typeof(OrderTypeTestData))]
-        public void OrderCanceledMessage_StreamUpdated(OrderType orderType)
+        public void OrderCanceledMessage_StreamUpdated(string orderType)
         {
             // Arrange
             var triggered = false;
@@ -154,10 +153,10 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.Account
                     // Assert
                     Assert.NotNull(msg);
                     Assert.NotNull(msg.Data);
-                    Assert.Equal(OrderEventType.Cancellation, msg.Data.EventType);
-                    Assert.Equal(OrderStatus.Canceled, msg.Data.OrderStatus);
-                    Assert.Equal(orderType, msg.Data.OrderType);
-                    Assert.True(msg.Data.OrderId > 0);
+                    Assert.Equal(OrderEventType.Cancellation, msg.Data!.EventType);
+                    Assert.Equal(OrderStatus.Canceled, msg.Data!.OrderStatus);
+                    Assert.True(EnumTestDataBase.EqualsWithString(orderType, msg.Data!.Type));
+                    Assert.True(msg.Data!.OrderId > 0);
                 });
 
             var message = HuobiAccountMessagesFactory.CreateOrderCanceledMessage(orderType);
@@ -170,33 +169,14 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.Account
             Assert.True(triggered);
         }
     }
-
-    public class OrderTypeTestData : IEnumerable<object[]>
-    {
-        public IEnumerator<object[]> GetEnumerator()
-        {
-            var query =
-                from OrderType value in Enum.GetValues(typeof(OrderType))
-                select new[]
-                {
-                    (object)value
-                };
-            return query.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-    }
-
+    
     public class OrderTradedEnumsTestData : IEnumerable<object[]>
     {
         public IEnumerator<object[]> GetEnumerator()
         {
             var query =
-                from OrderType orderType in Enum.GetValues(typeof(OrderType))
-                from OrderStatus orderStatus in Enum.GetValues(typeof(OrderStatus))
+                from string orderType in new OrderTypeTestData().GetValues()
+                from string orderStatus in new OrderStatusTestData().GetValues()
                 select new[]
                 {
                     (object)orderType,

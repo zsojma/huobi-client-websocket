@@ -2,6 +2,7 @@
 {
     public enum TradeEventType
     {
+        Unknown,
         Trade,
         Cancellation
     }

@@ -2,6 +2,7 @@
 {
     public enum OrderType
     {
+        Unknown,
         BuyMarket,
         SellMarket,
         BuyLimit,

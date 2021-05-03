@@ -25,7 +25,7 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.Account
             CommunicatorMock.Verify(
                 m => m.Send(
                     It.Is<string>(
-                        x => x.Contains("pong") && x.Contains(message.Data.Timestamp.ToUnixTimeMilliseconds().ToString()))),
+                        x => x.Contains("pong") && x.Contains(message.Data!.Timestamp.ToUnixTimeMilliseconds().ToString()))),
                 Times.Once);
             VerifyMessageNotUnhandled();
         }

@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Huobi.Client.Websocket\Huobi.Client.Websocket.csproj" />
+    <ProjectReference Include="..\Huobi.Client.Websocket.Tests\Huobi.Client.Websocket.Tests.csproj" />
   </ItemGroup>
 
 </Project>

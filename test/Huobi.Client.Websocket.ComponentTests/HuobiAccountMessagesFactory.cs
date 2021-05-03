@@ -48,14 +48,14 @@ namespace Huobi.Client.Websocket.ComponentTests
             return message;
         }
 
-        public static string CreateConditionalOrderTriggeringFailureMessage(OrderSide orderSide, DateTimeOffset lastActTime)
+        public static string CreateConditionalOrderTriggeringFailureMessage(string orderSide, DateTimeOffset lastActTime)
         {
             var message = @"{
     ""action"":""push"",
     ""ch"":""orders#btcusdt"",
     ""data"":
     {
-        ""orderSide"":""" + orderSide.ToMessageValue() + @""",
+        ""orderSide"":""" + orderSide + @""",
         ""lastActTime"":" + lastActTime.ToUnixTimeMilliseconds() + @",
         ""clientOrderId"":""abc123"",
         ""orderStatus"":""rejected"",
@@ -68,14 +68,14 @@ namespace Huobi.Client.Websocket.ComponentTests
             return message;
         }
 
-        public static string CreateConditionalOrderCanceledMessage(OrderSide orderSide, DateTimeOffset lastActTime)
+        public static string CreateConditionalOrderCanceledMessage(string orderSide, DateTimeOffset lastActTime)
         {
             var message = @"{
     ""action"":""push"",
     ""ch"":""orders#btcusdt"",
     ""data"":
     {
-        ""orderSide"":""" + orderSide.ToMessageValue() + @""",
+        ""orderSide"":""" + orderSide + @""",
         ""lastActTime"":" + lastActTime.ToUnixTimeMilliseconds() + @",
         ""clientOrderId"":""abc123"",
         ""orderStatus"":""canceled"",
@@ -86,7 +86,7 @@ namespace Huobi.Client.Websocket.ComponentTests
             return message;
         }
 
-        public static string CreateOrderSubmittedMessage(OrderType orderType, DateTimeOffset createTime)
+        public static string CreateOrderSubmittedMessage(string orderType, DateTimeOffset createTime)
         {
             var message = @"{
     ""action"":""push"",
@@ -97,7 +97,7 @@ namespace Huobi.Client.Websocket.ComponentTests
         ""orderCreateTime"":" + createTime.ToUnixTimeMilliseconds() + @",
         ""accountId"":992701,
         ""orderPrice"":""77.000000000000000000"",
-        ""type"":""" + orderType.ToMessageValue() + @""",
+        ""type"":""" + orderType + @""",
         ""orderId"":27163533,
         ""clientOrderId"":""abc123"",
         ""orderSource"":""spot-api"",
@@ -110,7 +110,7 @@ namespace Huobi.Client.Websocket.ComponentTests
             return message;
         }
 
-        public static string CreateOrderTradedMessage(OrderStatus orderStatus, OrderType orderType, DateTimeOffset tradeTime)
+        public static string CreateOrderTradedMessage(string orderStatus, string orderType, DateTimeOffset tradeTime)
         {
             var message = @"{
     ""action"":""push"",
@@ -125,12 +125,12 @@ namespace Huobi.Client.Websocket.ComponentTests
         ""remainAmt"":""0.000000000000000400000000000000000000"",
         ""execAmt"":""2"",
         ""orderId"":27163536,
-        ""type"":""" + orderType.ToMessageValue() + @""",
+        ""type"":""" + orderType + @""",
         ""clientOrderId"":""abc123"",
         ""orderSource"":""spot-api"",
         ""orderPrice"":""15000"",
         ""orderSize"":""0.01"",
-        ""orderStatus"":""" + orderStatus.ToMessageValue() + @""",
+        ""orderStatus"":""" + orderStatus + @""",
         ""symbol"":""btcusdt"",
         ""eventType"":""trade""
     }
@@ -138,7 +138,7 @@ namespace Huobi.Client.Websocket.ComponentTests
             return message;
         }
 
-        public static string CreateOrderCanceledMessage(OrderType orderType)
+        public static string CreateOrderCanceledMessage(string orderType)
         {
             var message = @"{
     ""action"":""push"",
@@ -149,7 +149,7 @@ namespace Huobi.Client.Websocket.ComponentTests
         ""remainAmt"":""2.000000000000000000"",
         ""execAmt"":""2"",
         ""orderId"":27163533,
-        ""type"":""" + orderType.ToMessageValue() + @""",
+        ""type"":""" + orderType + @""",
         ""clientOrderId"":""abc123"",
         ""orderSource"":""spot-api"",
         ""orderPrice"":""15000"",
@@ -163,22 +163,22 @@ namespace Huobi.Client.Websocket.ComponentTests
         }
 
         public static string CreateTradeDetailsMessage(
-            TradeEventType eventType,
-            OrderSide orderSide,
-            OrderType orderType,
-            OrderStatus orderStatus,
+            string eventType,
+            string orderSide,
+            string orderType,
+            string orderStatus,
             DateTimeOffset tradeAndCreateTime)
         {
             var message = @"{
     ""ch"": ""trade.clearing#btcusdt#0"",
     ""data"": {
-         ""eventType"": """ + eventType.ToMessageValue() + @""",
+         ""eventType"": """ + eventType + @""",
          ""symbol"": ""btcusdt"",
          ""orderId"": 99998888,
          ""tradePrice"": ""9999.99"",
          ""tradeVolume"": ""0.96"",
-         ""orderSide"": """ + orderSide.ToMessageValue() + @""",
-         ""orderType"": """ + orderType.ToMessageValue() + @""",
+         ""orderSide"": """ + orderSide + @""",
+         ""orderType"": """ + orderType + @""",
          ""aggressor"": true,
          ""tradeId"": 919219323232,
          ""tradeTime"": " + tradeAndCreateTime.ToUnixTimeMilliseconds() + @",
@@ -192,15 +192,15 @@ namespace Huobi.Client.Websocket.ComponentTests
          ""orderSize"": ""1"",
          ""clientOrderId"": ""a001"",
          ""orderCreateTime"": " + tradeAndCreateTime.ToUnixTimeMilliseconds() + @",
-         ""orderStatus"": """ + orderStatus.ToMessageValue() + @"""
+         ""orderStatus"": """ + orderStatus + @"""
     }
 }";
             return message;
         }
 
         public static string CreateAccountUpdateAccountBalanceChangedMessage(
-            AccountChangeType changeType,
-            AccountType accountType,
+            string changeType,
+            string accountType,
             DateTimeOffset changeTime)
         {
             var message = @"{
@@ -210,8 +210,8 @@ namespace Huobi.Client.Websocket.ComponentTests
         ""currency"": ""btc"",
         ""accountId"": 123456,
         ""balance"": ""23.111"",
-        ""changeType"": """ + changeType.ToMessageValue() + @""",
-        ""accountType"":""" + accountType.ToMessageValue() + @""",
+        ""changeType"": """ + changeType + @""",
+        ""accountType"":""" + accountType + @""",
         ""changeTime"": " + changeTime.ToUnixTimeMilliseconds() + @"
     }
 }";
@@ -219,8 +219,8 @@ namespace Huobi.Client.Websocket.ComponentTests
         }
 
         public static string CreateAccountUpdateAvailableBalanceChangedMessage(
-            AccountChangeType changeType,
-            AccountType accountType,
+            string changeType,
+            string accountType,
             DateTimeOffset changeTime)
         {
             var message = @"{
@@ -230,8 +230,8 @@ namespace Huobi.Client.Websocket.ComponentTests
         ""currency"": ""btc"",
         ""accountId"": 123456,
         ""available"": ""23.111"",
-        ""changeType"": """ + changeType.ToMessageValue() + @""",
-        ""accountType"":""" + accountType.ToMessageValue() + @""",
+        ""changeType"": """ + changeType + @""",
+        ""accountType"":""" + accountType + @""",
         ""changeTime"": " + changeTime.ToUnixTimeMilliseconds() + @"
     }
 }";

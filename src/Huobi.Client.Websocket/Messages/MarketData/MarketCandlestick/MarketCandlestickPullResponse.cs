@@ -34,7 +34,7 @@ namespace Huobi.Client.Websocket.Messages.MarketData.MarketCandlestick
                 },
                 out response);
 
-            return result && response?.Data.FirstOrDefault()?.Id > 0;
+            return result && response?.Data?.FirstOrDefault()?.Id > 0;
         }
     }
 }

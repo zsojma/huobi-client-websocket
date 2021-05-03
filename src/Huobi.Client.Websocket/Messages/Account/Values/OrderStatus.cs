@@ -2,7 +2,9 @@
 {
     public enum OrderStatus
     {
+        Unknown,
         Rejected,
+        PartialCanceled,
         Canceled,
         Submitted,
         PartialFilled,

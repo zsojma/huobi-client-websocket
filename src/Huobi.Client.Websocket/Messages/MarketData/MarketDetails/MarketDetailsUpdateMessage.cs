@@ -30,7 +30,7 @@ namespace Huobi.Client.Websocket.Messages.MarketData.MarketDetails
                 },
                 out response);
 
-            return result && response?.Tick.Id > 0;
+            return result && response?.Tick?.Id > 0;
         }
     }
 }

@@ -29,7 +29,6 @@ namespace Huobi.Client.Websocket.Messages.MarketData.MarketTradeDetail
         public decimal Price { get; }
 
         [JsonProperty("ts")]
-        [JsonConverter(typeof(UnitMillisecondsToDateTimeOffsetConverter))]
         public DateTimeOffset Timestamp { get; }
 
         public TradeSide Direction { get; }

@@ -2,6 +2,7 @@
 {
     public enum AccountType
     {
+        Unknown,
         Trade,
         Loan,
         Interest

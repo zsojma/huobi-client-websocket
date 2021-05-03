@@ -20,9 +20,10 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.MarketData
 
                     // Assert
                     Assert.NotNull(msg);
+                    Assert.NotNull(msg.Tick);
                     Assert.Contains(SubscriptionType.MarketDetails.ToTopicId(), msg.Topic);
                     Assert.True(!string.IsNullOrEmpty(msg.Topic));
-                    Assert.True(msg.Tick.Id > 0);
+                    Assert.True(msg.Tick!.Id > 0);
                     Assert.True(TestUtils.UnixTimesEqual(timestamp, msg.Timestamp));
                 });
 
@@ -50,9 +51,10 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.MarketData
 
                     // Assert
                     Assert.NotNull(msg);
+                    Assert.NotNull(msg.Data);
                     Assert.Contains(SubscriptionType.MarketDetails.ToTopicId(), msg.Topic);
                     Assert.True(!string.IsNullOrEmpty(msg.Topic));
-                    Assert.True(msg.Data.Id > 0);
+                    Assert.True(msg.Data!.Id > 0);
                     Assert.True(TestUtils.UnixTimesEqual(timestamp, msg.Timestamp));
                 });
 

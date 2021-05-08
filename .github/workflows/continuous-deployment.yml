@@ -3,8 +3,7 @@ name: Continuous integration
 on:
   push:
     branches:
-      - *
-      - !master
+      - master
 
 jobs:
   build:
@@ -21,3 +20,7 @@ jobs:
       run: dotnet build --no-restore --configuration Release
     - name: Test
       run: dotnet test --no-restore --no-build --configuration Release --verbosity normal
+    - name: Publish
+      run: dotnet nuget push "src/**/Release/*.nupkg" --source https://api.nuget.org/v3/index.json --api-key "$NUGET_PUBLISH"
+      env:
+        NUGET_PUBLISH: ${{ secrets.NUGET_PUBLISH }}

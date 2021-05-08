@@ -1,0 +1,18 @@
+name: Continuous deployment
+
+on:
+  push:
+    branches: [ develop ]
+  workflow_run:
+    workflows: [ "Continuous integration" ]
+    types:
+      - completed
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Pack
+      run: dotnet pack --no-restore --no-build --configuration Release

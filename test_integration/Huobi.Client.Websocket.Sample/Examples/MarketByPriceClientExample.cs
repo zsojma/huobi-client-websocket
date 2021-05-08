@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Huobi.Client.Websocket.Clients;
 using Huobi.Client.Websocket.Messages.MarketData.MarketByPrice;
-using Huobi.Client.Websocket.Messages.MarketData.Values;
 using Microsoft.Extensions.Logging;
 
 namespace Huobi.Client.Websocket.Sample.Examples
@@ -49,7 +48,7 @@ namespace Huobi.Client.Websocket.Sample.Examples
         private async Task StartMarketByPriceExample(string symbol)
         {
             var subscribeRequest =
-                new MarketByPriceSubscribeRequest(GetNextId(), symbol, MarketByPriceLevelType.Five);
+                new MarketByPriceSubscribeRequest(GetNextId(), symbol, 5);
             _client.Send(subscribeRequest);
 
             await Task.Delay(1000);
@@ -57,14 +56,14 @@ namespace Huobi.Client.Websocket.Sample.Examples
             var pullRequest = new MarketByPricePullRequest(
                 GetNextId(),
                 symbol,
-                MarketByPriceLevelType.Five);
+                5);
             _client.Send(pullRequest);
         }
 
         private Task StopMarketByPriceExample(string symbol)
         {
             var unsubscribeRequest =
-                new MarketByPriceUnsubscribeRequest(GetNextId(), symbol, MarketByPriceLevelType.Five);
+                new MarketByPriceUnsubscribeRequest(GetNextId(), symbol, 20);
             _client.Send(unsubscribeRequest);
 
             return Task.CompletedTask;

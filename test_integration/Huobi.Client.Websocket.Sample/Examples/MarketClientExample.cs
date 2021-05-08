@@ -119,7 +119,7 @@ namespace Huobi.Client.Websocket.Sample.Examples
         private async Task StartDepthExample(string symbol)
         {
             var subscribeRequest =
-                new MarketDepthSubscribeRequest(GetNextId(), symbol, MarketDepthStepType.NoAggregation);
+                new MarketDepthSubscribeRequest(GetNextId(), symbol, 0);
             _client.Send(subscribeRequest);
 
             await Task.Delay(1000);
@@ -127,14 +127,14 @@ namespace Huobi.Client.Websocket.Sample.Examples
             var pullRequest = new MarketDepthPullRequest(
                 GetNextId(),
                 symbol,
-                MarketDepthStepType.NoAggregation);
+                1);
             _client.Send(pullRequest);
         }
 
         private Task StopDepthExample(string symbol)
         {
             var unsubscribeRequest =
-                new MarketDepthUnsubscribeRequest(GetNextId(), symbol, MarketDepthStepType.NoAggregation);
+                new MarketDepthUnsubscribeRequest(GetNextId(), symbol, 0);
             _client.Send(unsubscribeRequest);
 
             return Task.CompletedTask;
@@ -145,7 +145,7 @@ namespace Huobi.Client.Websocket.Sample.Examples
             var marketByPriceRefreshSubscribeRequest = new MarketByPriceRefreshSubscribeRequest(
                 GetNextId(),
                 symbol,
-                MarketByPriceRefreshLevelType.Five);
+                5);
             _client.Send(marketByPriceRefreshSubscribeRequest);
 
             return Task.CompletedTask;
@@ -156,7 +156,7 @@ namespace Huobi.Client.Websocket.Sample.Examples
             var marketByPriceRefreshUnsubscribeRequest = new MarketByPriceRefreshUnsubscribeRequest(
                 GetNextId(),
                 symbol,
-                MarketByPriceRefreshLevelType.Five);
+                5);
             _client.Send(marketByPriceRefreshUnsubscribeRequest);
 
             return Task.CompletedTask;

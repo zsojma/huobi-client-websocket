@@ -7,8 +7,8 @@ namespace Huobi.Client.Websocket.Messages.MarketData.MarketByPrice
         public MarketByPricePullRequest(
             string reqId,
             string symbol,
-            MarketByPriceLevelType levelType)
-            : base(reqId, symbol, SubscriptionType.MarketByPrice, levelType.ToStep())
+            int levels)
+            : base(reqId, symbol, SubscriptionType.MarketByPrice, levels.ToString())
         {
         }
     }

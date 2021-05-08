@@ -4,11 +4,8 @@ namespace Huobi.Client.Websocket.Messages.MarketData.MarketDepth
 {
     public class MarketDepthSubscribeRequest : SubscribeRequest
     {
-        public MarketDepthSubscribeRequest(
-            string reqId,
-            string symbol,
-            MarketDepthStepType stepType)
-            : base(reqId, symbol, SubscriptionType.MarketDepth, stepType.ToStep())
+        public MarketDepthSubscribeRequest(string reqId, string symbol, int stepIndex)
+            : base(reqId, symbol, SubscriptionType.MarketDepth, $"step{stepIndex}")
         {
         }
     }

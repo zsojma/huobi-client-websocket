@@ -1,0 +1,27 @@
+<Project>
+  <PropertyGroup>
+    <Product>CustomerLoans - Konzole 2.0</Product>
+    <Version>0.0.1</Version>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <Description>Client for Huobi websocket API</Description>
+    <Authors>Zdenek Sojma</Authors>
+    <Copyright>Copyright 2021 Zdenek Sojma. All rights reserved.</Copyright>
+    <NeutralLanguage>en</NeutralLanguage>
+    <RepositoryType>Git</RepositoryType>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <PackageLicenseUrl>https://github.com/zsojma/huobi-client-websocket/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/zsojma/huobi-client-websocket</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/zsojma/huobi-client-websocket</RepositoryUrl>
+    <PackageTags>Huobi websockets websocket client cryptocurrency exchange bitcoin</PackageTags>
+    <PackageReleaseNotes></PackageReleaseNotes>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+</Project>

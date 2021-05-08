@@ -23,5 +23,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     if: github.ref == 'refs/heads/develop'
+    steps:
     - name: Test
       run: dotnet test --no-restore --no-build --configuration Release --verbosity normal

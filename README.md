@@ -1,5 +1,5 @@
 ﻿![Logo](huobi-logo-alt.png)
-# Huobi websocket API client
+# Huobi websocket API client [![Build status](https://github.com/zsojma/huobi-client-websocket/actions/workflows/continuous-deployment.yml/badge.svg?branch=master)](https://github.com/zsojma/huobi-client-websocket/actions/workflows/continuous-deployment.yml) [![NuGet version](https://badge.fury.io/nu/Huobi.Client.Websocket.svg)](https://badge.fury.io/nu/Huobi.Client.Websocket) [![Nuget download](https://img.shields.io/nuget/dt/Huobi.Client.Websocket)](https://www.nuget.org/packages/Huobi.Client.Websocket)
 
 This is a C# implementation of the Huobi websocket API found here:
 
@@ -19,7 +19,40 @@ https://huobiapi.github.io/docs/spot/v1/en/
 
 ### Usage
 
-TODO
+```csharp
+var exitEvent = new ManualResetEvent(false);
+var url = HuobiConstants.ApiWebsocketUrl;
+
+using var client = HuobiWebsocketClientsFactory.CreateMarketClient(url);
+client.Streams.TradeDetailUpdateStream.Subscribe(
+    msg =>
+    {
+        for (var i = 0; i < msg.Tick?.Data.Length; ++i)
+        {
+            var item = msg.Tick.Data[i];
+
+            Console.WriteLine(
+                $"Market trade detail update {msg.Topic}"
+              + $" | [item {i}: amount={item.Amount} price={item.Price} direction={item.Direction}]");
+        }
+    });
+
+var subscribeRequest = new MarketTradeDetailSubscribeRequest("id1", "btcusdt");
+client.Send(subscribeRequest);
+
+await client.Start();
+
+exitEvent.WaitOne(TimeSpan.FromSeconds(30));
+```
+
+There are three types of clients where each connects to different Huobi API to get related data:
+* **Market client** ([src](src/Huobi.Client.Websocket/Clients/HuobiMarketWebsocketClient.cs)) - Market data from *wss://api.huobi.pro/ws*
+* **MarketByPrice client** ([src](src/Huobi.Client.Websocket/Clients/HuobiMarketByPriceWebsocketClient.cs)) - MBP incremental data from *wss://api.huobi.pro/feed*
+* **Account client** ([src](src/Huobi.Client.Websocket/Clients/HuobiAccountWebsocketClient.cs)) - Assets and Order data from *wss://api.huobi.pro/ws/v2*
+
+More usage examples:
+* integration tests ([link](test_integration/Huobi.Client.Websocket.Sample))
+  * setup which client to run by registration to DI container [here](https://github.com/zsojma/huobi-client-websocket/blob/master/test_integration/Huobi.Client.Websocket.Sample/Program.cs#L60)
 
 ### API coverage
 

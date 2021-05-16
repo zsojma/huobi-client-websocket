@@ -20,7 +20,7 @@ namespace Huobi.Client.Websocket.Clients
 
         public HuobiAccountWebsocketClient(
             IOptions<HuobiAccountWebsocketClientConfig> config,
-            IHuobiWebsocketCommunicator communicator,
+            IHuobiAccountWebsocketCommunicator communicator,
             IHuobiSerializer serializer,
             IHuobiAuthenticationRequestFactory authenticationRequestFactory,
             ILogger<HuobiAccountWebsocketClient> logger)

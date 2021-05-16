@@ -8,7 +8,7 @@ namespace Huobi.Client.Websocket.Clients
     public class HuobiGenericWebsocketClient : HuobiWebsocketClientBase<HuobiGenericClientStreams>, IHuobiGenericWebsocketClient
     {
         public HuobiGenericWebsocketClient(
-            IHuobiWebsocketCommunicator communicator,
+            IHuobiGenericWebsocketCommunicator communicator,
             IHuobiSerializer serializer,
             ILogger<HuobiGenericWebsocketClient> logger)
             : base(communicator, serializer, logger)

@@ -1,6 +1,6 @@
 ﻿namespace Huobi.Client.Websocket.Config
 {
-    public class HuobiWebsocketClientConfig
+    public class HuobiGenericWebsocketClientConfig
     {
         public string? Url { get; set; }
         public string? CommunicatorName { get; set; }

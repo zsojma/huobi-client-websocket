@@ -56,14 +56,14 @@ namespace Huobi.Client.Websocket.Sample.Examples
             var pullRequest = new MarketByPricePullRequest(
                 GetNextId(),
                 symbol,
-                5);
+                20);
             _client.Send(pullRequest);
         }
 
         private Task StopMarketByPriceExample(string symbol)
         {
             var unsubscribeRequest =
-                new MarketByPriceUnsubscribeRequest(GetNextId(), symbol, 20);
+                new MarketByPriceUnsubscribeRequest(GetNextId(), symbol, 5);
             _client.Send(unsubscribeRequest);
 
             return Task.CompletedTask;

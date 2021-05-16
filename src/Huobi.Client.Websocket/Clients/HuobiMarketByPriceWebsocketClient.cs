@@ -11,7 +11,7 @@ namespace Huobi.Client.Websocket.Clients
         IHuobiMarketByPriceWebsocketClient
     {
         public HuobiMarketByPriceWebsocketClient(
-            IHuobiWebsocketCommunicator communicator,
+            IHuobiMarketByPriceWebsocketCommunicator communicator,
             IHuobiSerializer serializer,
             ILogger<HuobiMarketByPriceWebsocketClient> logger)
             : base(communicator, serializer, logger)

@@ -1,6 +1,6 @@
 ﻿namespace Huobi.Client.Websocket.Config
 {
-    public class HuobiMarketByPriceWebsocketClientConfig : HuobiWebsocketClientConfig
+    public class HuobiMarketByPriceWebsocketClientConfig : HuobiGenericWebsocketClientConfig
     {
     }
 }

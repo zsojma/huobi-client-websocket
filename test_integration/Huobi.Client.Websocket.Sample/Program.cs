@@ -79,6 +79,7 @@ namespace Huobi.Client.Websocket.Sample
                 .AddJsonFile("appsettings.dev.json", true);
 
             var configuration = configurationBuilder.Build();
+            var genericClientConfig = configuration.GetSection("HuobiGenericWebsocketClient");
             var marketClientConfig = configuration.GetSection("HuobiMarketWebsocketClient");
             var marketByPriceClientConfig = configuration.GetSection("HuobiMarketByPriceWebsocketClient");
             var accountClientConfig = configuration.GetSection("HuobiAccountWebsocketClient");
@@ -86,7 +87,7 @@ namespace Huobi.Client.Websocket.Sample
             var serviceCollection = new ServiceCollection()
                 .AddSingleton(configuration)
                 .AddHuobiLogging()
-                .Configure<HuobiWebsocketClientConfig>(marketClientConfig)
+                .Configure<HuobiGenericWebsocketClientConfig>(genericClientConfig)
                 .Configure<HuobiMarketWebsocketClientConfig>(marketClientConfig)
                 .Configure<HuobiMarketByPriceWebsocketClientConfig>(marketByPriceClientConfig)
                 .Configure<HuobiAccountWebsocketClientConfig>(accountClientConfig)

@@ -12,6 +12,7 @@ using Huobi.Client.Websocket.Messages.MarketData;
 using Huobi.Client.Websocket.Serializer;
 using Microsoft.Extensions.Logging;
 using Websocket.Client;
+using Websocket.Client.Models;
 
 namespace Huobi.Client.Websocket.Clients
 {
@@ -21,9 +22,11 @@ namespace Huobi.Client.Websocket.Clients
         private readonly ILogger<HuobiWebsocketClientBase<TStreams>> _logger;
 
         private readonly IDisposable _messageReceivedSubscription;
+        private readonly IDisposable _reconnectionHappenedSubscription;
+        private readonly IDisposable _disconnectionHappenedSubscription;
 
         protected HuobiWebsocketClientBase(
-            IHuobiWebsocketCommunicator communicator,
+            IHuobiGenericWebsocketCommunicator communicator,
             IHuobiSerializer serializer,
             ILogger<HuobiWebsocketClientBase<TStreams>> logger)
         {
@@ -32,11 +35,13 @@ namespace Huobi.Client.Websocket.Clients
             _logger = logger;
 
             _messageReceivedSubscription = Communicator.MessageReceived.Subscribe(HandleMessage);
+            _reconnectionHappenedSubscription = Communicator.ReconnectionHappened.Subscribe(HandleReconnectionInfoMessage);
+            _disconnectionHappenedSubscription = Communicator.DisconnectionHappened.Subscribe(HandleDisconnectionInfoMessage);
         }
 
         protected IHuobiSerializer Serializer { get; }
 
-        public IHuobiWebsocketCommunicator Communicator { get; }
+        public IHuobiGenericWebsocketCommunicator Communicator { get; }
 
         [NotNull]
         public TStreams Streams { get; } = new();
@@ -44,6 +49,8 @@ namespace Huobi.Client.Websocket.Clients
         public void Dispose()
         {
             _messageReceivedSubscription.Dispose();
+            _reconnectionHappenedSubscription.Dispose();
+            _disconnectionHappenedSubscription.Dispose();
             GC.SuppressFinalize(this);
         }
 
@@ -93,6 +100,16 @@ namespace Huobi.Client.Websocket.Clients
                 Streams.UnhandledMessageSubject.OnNext(message);
                 _logger.LogError(e, "Exception while processing of response message");
             }
+        }
+
+        private void HandleReconnectionInfoMessage(ReconnectionInfo info)
+        {
+            Streams.ReconnectionInfoSubject.OnNext(info);
+        }
+
+        private void HandleDisconnectionInfoMessage(DisconnectionInfo info)
+        {
+            Streams.DisconnectionInfoSubject.OnNext(info);
         }
 
         private bool TryHandleServerPingRequest(string message)

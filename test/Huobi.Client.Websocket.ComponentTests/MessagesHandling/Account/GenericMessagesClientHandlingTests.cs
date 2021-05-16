@@ -22,7 +22,7 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling.Account
             TriggerMessageReceive(message);
 
             // Assert
-            CommunicatorMock.Verify(
+            AccountCommunicatorMock.Verify(
                 m => m.Send(
                     It.Is<string>(
                         x => x.Contains("pong") && x.Contains(message.Data!.Timestamp.ToUnixTimeMilliseconds().ToString()))),

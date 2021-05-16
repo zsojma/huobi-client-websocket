@@ -1,5 +1,4 @@
-﻿using System;
-using Huobi.Client.Websocket.Authentication;
+﻿using Huobi.Client.Websocket.Authentication;
 using Huobi.Client.Websocket.Communicator;
 using Huobi.Client.Websocket.Config;
 using Huobi.Client.Websocket.Serializer;
@@ -7,7 +6,6 @@ using Huobi.Client.Websocket.Utils;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
-using Websocket.Client;
 
 namespace Huobi.Client.Websocket.Clients
 {
@@ -17,7 +15,7 @@ namespace Huobi.Client.Websocket.Clients
             string url,
             ILoggerFactory? loggerFactory = null)
         {
-            var config = new HuobiWebsocketClientConfig
+            var config = new HuobiGenericWebsocketClientConfig
             {
                 Url = url
             };
@@ -26,12 +24,20 @@ namespace Huobi.Client.Websocket.Clients
         }
 
         public static IHuobiGenericWebsocketClient CreateGenericClient(
-            HuobiWebsocketClientConfig config,
+            HuobiGenericWebsocketClientConfig config,
+            ILoggerFactory? loggerFactory = null)
+        {
+            var options = Options.Create(config);
+            var communicator = new HuobiGenericWebsocketCommunicator(options);
+            return CreateGenericClient(communicator, loggerFactory);
+        }
+
+        public static IHuobiGenericWebsocketClient CreateGenericClient(
+            IHuobiGenericWebsocketCommunicator communicator,
             ILoggerFactory? loggerFactory = null)
         {
             loggerFactory ??= NullLoggerFactory.Instance;
 
-            var communicator = new HuobiWebsocketCommunicator(GetUri(config), config.CommunicatorName, config.ReconnectTimeoutMin);
             var serializer = new HuobiSerializer(loggerFactory.CreateLogger<HuobiSerializer>());
 
             return new HuobiGenericWebsocketClient(
@@ -56,9 +62,17 @@ namespace Huobi.Client.Websocket.Clients
             HuobiMarketWebsocketClientConfig config,
             ILoggerFactory? loggerFactory = null)
         {
+            var options = Options.Create(config);
+            var communicator = new HuobiMarketWebsocketCommunicator(options);
+            return CreateMarketClient(communicator, loggerFactory);
+        }
+
+        public static IHuobiMarketWebsocketClient CreateMarketClient(
+            IHuobiMarketWebsocketCommunicator communicator,
+            ILoggerFactory? loggerFactory = null)
+        {
             loggerFactory ??= NullLoggerFactory.Instance;
 
-            var communicator = new HuobiWebsocketCommunicator(GetUri(config), config.CommunicatorName, config.ReconnectTimeoutMin);
             var serializer = new HuobiSerializer(loggerFactory.CreateLogger<HuobiSerializer>());
 
             return new HuobiMarketWebsocketClient(
@@ -83,9 +97,17 @@ namespace Huobi.Client.Websocket.Clients
             HuobiMarketByPriceWebsocketClientConfig config,
             ILoggerFactory? loggerFactory = null)
         {
+            var options = Options.Create(config);
+            var communicator = new HuobiMarketByPriceWebsocketCommunicator(options);
+            return CreateMarketByPriceClient(communicator, loggerFactory);
+        }
+
+        public static IHuobiMarketByPriceWebsocketClient CreateMarketByPriceClient(
+            IHuobiMarketByPriceWebsocketCommunicator communicator,
+            ILoggerFactory? loggerFactory = null)
+        {
             loggerFactory ??= NullLoggerFactory.Instance;
 
-            var communicator = new HuobiWebsocketCommunicator(GetUri(config), config.CommunicatorName, config.ReconnectTimeoutMin);
             var serializer = new HuobiSerializer(loggerFactory.CreateLogger<HuobiSerializer>());
 
             return new HuobiMarketByPriceWebsocketClient(
@@ -114,27 +136,45 @@ namespace Huobi.Client.Websocket.Clients
             HuobiAccountWebsocketClientConfig config,
             ILoggerFactory? loggerFactory = null)
         {
+            var options = Options.Create(config);
+            var communicator = new HuobiAccountWebsocketCommunicator(options);
+            return CreateAccountClient(options, communicator, loggerFactory);
+        }
+
+        public static IHuobiAccountWebsocketClient CreateAccountClient(
+            IHuobiAccountWebsocketCommunicator communicator,
+            string accessKey,
+            string secretKey,
+            ILoggerFactory? loggerFactory = null)
+        {
+            var options = Options.Create(
+                new HuobiAccountWebsocketClientConfig
+                {
+                    Url = communicator.Url.AbsoluteUri,
+                    AccessKey = accessKey,
+                    SecretKey = secretKey
+                });
+            return CreateAccountClient(options, communicator, loggerFactory);
+        }
+
+        private static IHuobiAccountWebsocketClient CreateAccountClient(
+            IOptions<HuobiAccountWebsocketClientConfig> config,
+            IHuobiAccountWebsocketCommunicator communicator,
+            ILoggerFactory? loggerFactory = null)
+        {
             loggerFactory ??= NullLoggerFactory.Instance;
 
-            var options = Options.Create(config);
-            var communicator = new HuobiWebsocketCommunicator(GetUri(config), config.CommunicatorName, config.ReconnectTimeoutMin);
             var serializer = new HuobiSerializer(loggerFactory.CreateLogger<HuobiSerializer>());
             var dateTimeProvider = new HuobiDateTimeProvider();
             var signature = new HuobiSignature();
             var authenticationRequestFactory = new HuobiAuthenticationRequestFactory(dateTimeProvider, signature);
 
             return new HuobiAccountWebsocketClient(
-                options,
+                config,
                 communicator,
                 serializer,
                 authenticationRequestFactory,
                 loggerFactory.CreateLogger<HuobiAccountWebsocketClient>());
-        }
-
-        private static Uri GetUri(HuobiWebsocketClientConfig config)
-        {
-            Validations.ValidateInput(config.Url, nameof(WebsocketClient.Url));
-            return new Uri(config.Url!);
         }
     }
 }

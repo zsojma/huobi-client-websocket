@@ -14,14 +14,32 @@ using Microsoft.Extensions.Options;
 using Moq;
 using Newtonsoft.Json;
 using Websocket.Client;
+using Websocket.Client.Models;
 
 namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling
 {
     public class ClientMessagesHandlingTestsBase
     {
         internal Subject<ResponseMessage> ResponseMessageSubject { get; private set; } = null!;
-        internal Mock<IHuobiWebsocketCommunicator> CommunicatorMock { get; private set; } = null!;
+        internal Mock<IHuobiGenericWebsocketCommunicator> GenericCommunicatorMock { get; private set; } = null!;
+        internal Mock<IHuobiMarketWebsocketCommunicator> MarketCommunicatorMock { get; private set; } = null!;
+        internal Mock<IHuobiMarketByPriceWebsocketCommunicator> MarketByPriceCommunicatorMock { get; private set; } = null!;
+        internal Mock<IHuobiAccountWebsocketCommunicator> AccountCommunicatorMock { get; private set; } = null!;
         internal Mock<IObserver<string>> UnhandledMessageObserverMock { get; private set; } = null!;
+
+        internal HuobiGenericWebsocketClient InitializeGenericClient()
+        {
+            InitializeBase();
+
+            var serializer = new HuobiSerializer(NullLogger<HuobiSerializer>.Instance);
+            var client = new HuobiGenericWebsocketClient(
+                GenericCommunicatorMock.Object,
+                serializer,
+                NullLogger<HuobiGenericWebsocketClient>.Instance);
+
+            client.Streams.UnhandledMessageStream.Subscribe(UnhandledMessageObserverMock.Object);
+            return client;
+        }
 
         internal HuobiMarketWebsocketClient InitializeMarketClient()
         {
@@ -29,7 +47,7 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling
 
             var serializer = new HuobiSerializer(NullLogger<HuobiSerializer>.Instance);
             var client = new HuobiMarketWebsocketClient(
-                CommunicatorMock.Object,
+                MarketCommunicatorMock.Object,
                 serializer,
                 NullLogger<HuobiMarketWebsocketClient>.Instance);
 
@@ -43,7 +61,7 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling
 
             var serializer = new HuobiSerializer(NullLogger<HuobiSerializer>.Instance);
             var client = new HuobiMarketByPriceWebsocketClient(
-                CommunicatorMock.Object,
+                MarketByPriceCommunicatorMock.Object,
                 serializer,
                 NullLogger<HuobiMarketByPriceWebsocketClient>.Instance);
 
@@ -60,7 +78,7 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling
             var authFactoryMock = new Mock<IHuobiAuthenticationRequestFactory>();
             var client = new HuobiAccountWebsocketClient(
                 config,
-                CommunicatorMock.Object,
+                AccountCommunicatorMock.Object,
                 serializer,
                 authFactoryMock.Object,
                 NullLogger<HuobiAccountWebsocketClient>.Instance);
@@ -115,10 +133,30 @@ namespace Huobi.Client.Websocket.ComponentTests.MessagesHandling
 
         private void InitializeBase()
         {
+            GenericCommunicatorMock = new Mock<IHuobiGenericWebsocketCommunicator>();
+            MarketCommunicatorMock = new Mock<IHuobiMarketWebsocketCommunicator>();
+            MarketByPriceCommunicatorMock = new Mock<IHuobiMarketByPriceWebsocketCommunicator>();
+            AccountCommunicatorMock = new Mock<IHuobiAccountWebsocketCommunicator>();
+            
             ResponseMessageSubject = new Subject<ResponseMessage>();
+            var reconnectionHappenedSubject = new Subject<ReconnectionInfo>();
+            var disconnectionHappenedSubject = new Subject<DisconnectionInfo>();
 
-            CommunicatorMock = new Mock<IHuobiWebsocketCommunicator>();
-            CommunicatorMock.Setup(m => m.MessageReceived).Returns(ResponseMessageSubject);
+            GenericCommunicatorMock.Setup(m => m.MessageReceived).Returns(ResponseMessageSubject);
+            GenericCommunicatorMock.Setup(m => m.ReconnectionHappened).Returns(reconnectionHappenedSubject);
+            GenericCommunicatorMock.Setup(m => m.DisconnectionHappened).Returns(disconnectionHappenedSubject);
+
+            MarketCommunicatorMock.Setup(m => m.MessageReceived).Returns(ResponseMessageSubject);
+            MarketCommunicatorMock.Setup(m => m.ReconnectionHappened).Returns(reconnectionHappenedSubject);
+            MarketCommunicatorMock.Setup(m => m.DisconnectionHappened).Returns(disconnectionHappenedSubject);
+
+            MarketByPriceCommunicatorMock.Setup(m => m.MessageReceived).Returns(ResponseMessageSubject);
+            MarketByPriceCommunicatorMock.Setup(m => m.ReconnectionHappened).Returns(reconnectionHappenedSubject);
+            MarketByPriceCommunicatorMock.Setup(m => m.DisconnectionHappened).Returns(disconnectionHappenedSubject);
+
+            AccountCommunicatorMock.Setup(m => m.MessageReceived).Returns(ResponseMessageSubject);
+            AccountCommunicatorMock.Setup(m => m.ReconnectionHappened).Returns(reconnectionHappenedSubject);
+            AccountCommunicatorMock.Setup(m => m.DisconnectionHappened).Returns(disconnectionHappenedSubject);
 
             UnhandledMessageObserverMock = new Mock<IObserver<string>>();
         }

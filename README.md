@@ -1,5 +1,5 @@
 ﻿![Logo](huobi-logo-alt.png)
-# Huobi websocket API client [![Build status](https://github.com/zsojma/huobi-client-websocket/actions/workflows/continuous-deployment.yml/badge.svg?branch=master)](https://github.com/zsojma/huobi-client-websocket/actions/workflows/continuous-deployment.yml) [![NuGet version](https://badge.fury.io/nu/Huobi.Client.Websocket.svg)](https://badge.fury.io/nu/Huobi.Client.Websocket) [![Nuget download](https://img.shields.io/nuget/dt/Huobi.Client.Websocket)](https://www.nuget.org/packages/Huobi.Client.Websocket)
+# Huobi websocket API client [![Build status](https://github.com/zsojma/huobi-client-websocket/actions/workflows/deployment.yml/badge.svg?branch=master)](https://github.com/zsojma/huobi-client-websocket/actions/workflows/continuous-deployment.yml) [![NuGet version](https://badge.fury.io/nu/Huobi.Client.Websocket.svg)](https://badge.fury.io/nu/Huobi.Client.Websocket) [![Nuget download](https://img.shields.io/nuget/dt/Huobi.Client.Websocket)](https://www.nuget.org/packages/Huobi.Client.Websocket)
 
 This is a C# implementation of the Huobi websocket API found here:
 

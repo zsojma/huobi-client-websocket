@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Huobi.Client.Websocket.Clients;
+using Huobi.Client.Websocket.Messages.MarketData;
 using Huobi.Client.Websocket.Messages.MarketData.MarketByPrice;
 using Microsoft.Extensions.Logging;
 
@@ -82,7 +83,7 @@ namespace Huobi.Client.Websocket.Sample.Examples
                 {
                     var bid = msg.Tick.Bids[i];
 
-                    _logger.LogInformation($"Market by price update {msg.Topic} | [bid {i}: price={bid.Price} size={bid.Size}]");
+                    _logger.LogInformation($"Market by price update {msg.ParseSymbolFromTopic()} | [bid {i}: price={bid.Price} size={bid.Size}]");
                 }
             }
 
@@ -92,7 +93,7 @@ namespace Huobi.Client.Websocket.Sample.Examples
                 {
                     var bid = msg.Tick.Asks[i];
 
-                    _logger.LogInformation($"Market by price update {msg.Topic} | [ask {i}: price={bid.Price} size={bid.Size}]");
+                    _logger.LogInformation($"Market by price update {msg.ParseSymbolFromTopic()} | [ask {i}: price={bid.Price} size={bid.Size}]");
                 }
             }
         }
@@ -103,14 +104,14 @@ namespace Huobi.Client.Websocket.Sample.Examples
             {
                 var bid = msg.Data.Bids[i];
 
-                _logger.LogInformation($"Market by price pull {msg.Topic} | [bid {i}: price={bid.Price} size={bid.Size}]");
+                _logger.LogInformation($"Market by price pull {msg.ParseSymbolFromTopic()} | [bid {i}: price={bid.Price} size={bid.Size}]");
             }
 
             for (var i = 0; i < msg.Data?.Asks.Length; ++i)
             {
                 var bid = msg.Data.Asks[i];
 
-                _logger.LogInformation($"Market by price pull {msg.Topic} | [ask {i}: price={bid.Price} size={bid.Size}]");
+                _logger.LogInformation($"Market by price pull {msg.ParseSymbolFromTopic()} | [ask {i}: price={bid.Price} size={bid.Size}]");
             }
         }
     }

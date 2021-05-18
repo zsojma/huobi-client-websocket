@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Huobi.Client.Websocket.Clients;
+using Huobi.Client.Websocket.Messages.MarketData;
 using Huobi.Client.Websocket.Messages.MarketData.MarketBestBidOffer;
 using Huobi.Client.Websocket.Messages.MarketData.MarketByPrice;
 using Huobi.Client.Websocket.Messages.MarketData.MarketCandlestick;
@@ -233,7 +234,7 @@ namespace Huobi.Client.Websocket.Sample.Examples
             }
 
             _logger.LogInformation(
-                $"Market candlestick update {msg.Topic} | [amount={msg.Tick.Amount}] [open={msg.Tick.Open}] [close={msg.Tick.Close}] [low={msg.Tick.Low}] [high={msg.Tick.High}] [vol={msg.Tick.Vol}] [count={msg.Tick.Count}]");
+                $"Market candlestick update {msg.ParseSymbolFromTopic()} | [amount={msg.Tick.Amount}] [open={msg.Tick.Open}] [close={msg.Tick.Close}] [low={msg.Tick.Low}] [high={msg.Tick.High}] [vol={msg.Tick.Vol}] [count={msg.Tick.Count}]");
         }
 
         private void Handle(MarketCandlestickPullResponse msg)
@@ -246,7 +247,7 @@ namespace Huobi.Client.Websocket.Sample.Examples
             foreach (var item in msg.Data)
             {
                 _logger.LogInformation(
-                    $"Market candlestick pull {msg.Topic} | [amount={item.Amount}] [open={item.Open}] [close={item.Close}] [low={item.Low}] [high={item.High}] [vol={item.Vol}] [count={item.Count}]");
+                    $"Market candlestick pull {msg.ParseSymbolFromTopic()} | [amount={item.Amount}] [open={item.Open}] [close={item.Close}] [low={item.Low}] [high={item.High}] [vol={item.Vol}] [count={item.Count}]");
             }
         }
 
@@ -260,7 +261,7 @@ namespace Huobi.Client.Websocket.Sample.Examples
                 var ask = msg.Tick!.Asks[i];
 
                 _logger.LogInformation(
-                    $"Market depth update {msg.Topic} | [bid {i}: price={bid.Price} size={bid.Size}] [ask {i}: price={ask.Price} size={ask.Size}]");
+                    $"Market depth update {msg.ParseSymbolFromTopic()} | [bid {i}: price={bid.Price} size={bid.Size}] [ask {i}: price={ask.Price} size={ask.Size}]");
             }
         }
 
@@ -274,7 +275,7 @@ namespace Huobi.Client.Websocket.Sample.Examples
                 var ask = msg.Data!.Asks[i];
 
                 _logger.LogInformation(
-                    $"Market depth update {msg.Topic} | [bid {i}: price={bid.Price} size={bid.Size}] [ask {i}: price={ask.Price} size={ask.Size}]");
+                    $"Market depth update {msg.ParseSymbolFromTopic()} | [bid {i}: price={bid.Price} size={bid.Size}] [ask {i}: price={ask.Price} size={ask.Size}]");
             }
         }
 
@@ -286,7 +287,7 @@ namespace Huobi.Client.Websocket.Sample.Examples
                 {
                     var bid = msg.Tick.Bids[i];
 
-                    _logger.LogInformation($"Market by price update {msg.Topic} | [bid {i}: price={bid.Price} size={bid.Size}]");
+                    _logger.LogInformation($"Market by price update {msg.ParseSymbolFromTopic()} | [bid {i}: price={bid.Price} size={bid.Size}]");
                 }
             }
 
@@ -296,7 +297,7 @@ namespace Huobi.Client.Websocket.Sample.Examples
                 {
                     var bid = msg.Tick.Asks[i];
 
-                    _logger.LogInformation($"Market by price update {msg.Topic} | [ask {i}: price={bid.Price} size={bid.Size}]");
+                    _logger.LogInformation($"Market by price update {msg.ParseSymbolFromTopic()} | [ask {i}: price={bid.Price} size={bid.Size}]");
                 }
             }
         }
@@ -309,7 +310,7 @@ namespace Huobi.Client.Websocket.Sample.Examples
             }
 
             _logger.LogInformation(
-                $"Market best bid/offer update {msg.Topic} | [symbol={msg.Tick.Symbol}] [quoteTime={msg.Tick.QuoteTime}] [bid={msg.Tick.Bid}] [bidSize={msg.Tick.BidSize}] [ask={msg.Tick.Ask}] [askSize={msg.Tick.AskSize}] [seqId={msg.Tick.SeqId}]");
+                $"Market best bid/offer update {msg.ParseSymbolFromTopic()} | [symbol={msg.Tick.Symbol}] [quoteTime={msg.Tick.QuoteTime}] [bid={msg.Tick.Bid}] [bidSize={msg.Tick.BidSize}] [ask={msg.Tick.Ask}] [askSize={msg.Tick.AskSize}] [seqId={msg.Tick.SeqId}]");
         }
 
         private void Handle(MarketTradeDetailUpdateMessage msg)
@@ -319,7 +320,7 @@ namespace Huobi.Client.Websocket.Sample.Examples
                 var item = msg.Tick.Data[i];
 
                 _logger.LogInformation(
-                    $"Market trade detail update {msg.Topic}, id={msg.Tick.Id}, ts={msg.Tick.Timestamp} | [item {i}: amount={item.Amount} ts={item.Timestamp} id={item.Id} tradeId={item.TradeId} price={item.Price} direction={item.Direction}]");
+                    $"Market trade detail update {msg.ParseSymbolFromTopic()}, id={msg.Tick.Id}, ts={msg.Tick.Timestamp} | [item {i}: amount={item.Amount} ts={item.Timestamp} id={item.Id} tradeId={item.TradeId} price={item.Price} direction={item.Direction}]");
             }
         }
 
@@ -330,7 +331,7 @@ namespace Huobi.Client.Websocket.Sample.Examples
                 var item = msg.Data[i];
 
                 _logger.LogInformation(
-                    $"Market trade detail pull {msg.Topic} | [item {i}: amount={item.Amount} ts={item.Timestamp} id={item.Id} tradeId={item.TradeId} price={item.Price} direction={item.Direction}]");
+                    $"Market trade detail pull {msg.ParseSymbolFromTopic()} | [item {i}: amount={item.Amount} ts={item.Timestamp} id={item.Id} tradeId={item.TradeId} price={item.Price} direction={item.Direction}]");
             }
         }
 
@@ -342,7 +343,7 @@ namespace Huobi.Client.Websocket.Sample.Examples
             }
 
             _logger.LogInformation(
-                $"Market details update {msg.Topic} | [amount={msg.Tick.Amount}] [open={msg.Tick.Open}] [close={msg.Tick.Close}] [low={msg.Tick.Low}] [high={msg.Tick.High}] [vol={msg.Tick.Vol}] [count={msg.Tick.Count}]");
+                $"Market details update {msg.ParseSymbolFromTopic()} | [amount={msg.Tick.Amount}] [open={msg.Tick.Open}] [close={msg.Tick.Close}] [low={msg.Tick.Low}] [high={msg.Tick.High}] [vol={msg.Tick.Vol}] [count={msg.Tick.Count}]");
         }
 
         private void Handle(MarketDetailsPullResponse msg)
@@ -353,7 +354,7 @@ namespace Huobi.Client.Websocket.Sample.Examples
             }
 
             _logger.LogInformation(
-                $"Market details pull {msg.Topic} | [amount={msg.Data.Amount}] [open={msg.Data.Open}] [close={msg.Data.Close}] [low={msg.Data.Low}] [high={msg.Data.High}] [vol={msg.Data.Vol}] [count={msg.Data.Count}]");
+                $"Market details pull {msg.ParseSymbolFromTopic()} | [amount={msg.Data.Amount}] [open={msg.Data.Open}] [close={msg.Data.Close}] [low={msg.Data.Low}] [high={msg.Data.High}] [vol={msg.Data.Vol}] [count={msg.Data.Count}]");
         }
     }
 }

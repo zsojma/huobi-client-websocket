@@ -34,10 +34,19 @@ namespace Huobi.Client.Websocket.Serializer.Converters
 
         private static object? TryConvertFromString(Type objectType, string input)
         {
-            var sanitized = input.Replace("-", "");
-            return Enum.TryParse(objectType, sanitized, true, out var type)
-                ? type
-                : null;
+            try
+            {
+                var sanitized = input.Replace("-", "");
+                var type = Enum.Parse(objectType, sanitized, true);
+                return type;
+            }
+            catch (ArgumentException)
+            {
+                // ignore exception when input is not valid, just return default
+                return objectType.IsEnum
+                    ? objectType.GetEnumValues().GetValue(0)
+                    : null;
+            }
         }
     }
 }

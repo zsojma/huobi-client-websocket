@@ -60,7 +60,7 @@ namespace Huobi.Client.Websocket.Authentication
             };
 
             var urlParams = QueryString.Create(urlParamsDict);
-            return urlParams.Value[1..]; // removes initial question mark
+            return urlParams.Value.Substring(1); // removes initial question mark
         }
     }
 }

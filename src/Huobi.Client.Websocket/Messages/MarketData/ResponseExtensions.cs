@@ -11,7 +11,7 @@ namespace Huobi.Client.Websocket.Messages.MarketData
             var prefixLength = HuobiConstants.MARKET_PREFIX.Length + 1;
             if (response.Topic.Length > prefixLength)
             {
-                var withoutPrefix = response.Topic[prefixLength..];
+                var withoutPrefix = response.Topic.Substring(prefixLength);
                 var length = withoutPrefix.IndexOf(".", StringComparison.Ordinal);
                 if (length > 0)
                 {

@@ -12,6 +12,21 @@ namespace Huobi.Client.Websocket.Tests
 {
     public class HuobiEnumJsonConverterTests
     {
+        [Fact]
+        public void OrderEventType_InvalidInput_ParsedWithDefaultValue()
+        {
+            // Arrange
+            var converter = new HuobiEnumJsonConverter();
+            var jsonReader = CreateAndPrepareJsonReader("invalid-input");
+
+            // Act
+            var output = converter.ReadJson(jsonReader, typeof(OrderEventType), null, null!);
+
+            // Assert
+            Assert.NotNull(output);
+            Assert.Equal(OrderEventType.Unknown, output);
+        }
+
         [Theory]
         [ClassData(typeof(OrderEventTypeTestData))]
         public void OrderEventType_ValidInput_Parsed(string input)

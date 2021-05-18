@@ -21,6 +21,6 @@ jobs:
     - name: Test
       run: dotnet test --no-restore --no-build --configuration Release --verbosity normal
     - name: Publish
-      run: dotnet nuget push "src/**/Release/*.nupkg" --source https://api.nuget.org/v3/index.json --api-key "$NUGET_PUBLISH"
+      run: dotnet nuget push "src/**/Release/*.nupkg" --source https://api.nuget.org/v3/index.json --api-key "$NUGET_PUBLISH" --skip-duplicate
       env:
         NUGET_PUBLISH: ${{ secrets.NUGET_PUBLISH }}

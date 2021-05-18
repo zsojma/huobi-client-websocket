@@ -52,7 +52,7 @@ There are three types of clients where each connects to different Huobi API to g
 
 More usage examples:
 * integration tests ([link](test_integration/Huobi.Client.Websocket.Sample))
-  * setup which client to run by registration to DI container [here](https://github.com/zsojma/huobi-client-websocket/blob/master/test_integration/Huobi.Client.Websocket.Sample/Program.cs#L60)
+  * you can setup which client to run by registration to DI container [here](https://github.com/zsojma/huobi-client-websocket/blob/master/test_integration/Huobi.Client.Websocket.Sample/Setup.cs#L31)
 
 ### API coverage
 

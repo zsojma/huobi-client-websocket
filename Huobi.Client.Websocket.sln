@@ -19,14 +19,18 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Huobi.Client.Websocket.Samp
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B771F515-0677-409B-BEC1-B84BC88E7392}"
 	ProjectSection(SolutionItems) = preProject
-		.github\workflows\continuous-deployment.yml = .github\workflows\continuous-deployment.yml
-		.github\workflows\continuous-integration.yml = .github\workflows\continuous-integration.yml
 		Directory.Build.props = Directory.Build.props
 		LICENSE = LICENSE
 		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Huobi.Client.Websocket.ComponentTests", "test\Huobi.Client.Websocket.ComponentTests\Huobi.Client.Websocket.ComponentTests.csproj", "{11A9A5C0-8B1C-4DC8-831D-D400BD9DB045}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{99305620-C12F-40AB-AF21-F48F39E09EE8}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\deployment.yml = .github\workflows\deployment.yml
+		.github\workflows\integration.yml = .github\workflows\integration.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -64,6 +68,7 @@ Global
 		{120B8005-7858-4D04-A11B-ACCFFACAC91B} = {42E4078C-4FBE-4B03-B889-1573332945A9}
 		{7B649867-E540-4592-A821-8EB06BFB01C6} = {42E4078C-4FBE-4B03-B889-1573332945A9}
 		{11A9A5C0-8B1C-4DC8-831D-D400BD9DB045} = {0544BC01-B569-4729-86B0-5AFDBF7EED46}
+		{99305620-C12F-40AB-AF21-F48F39E09EE8} = {B771F515-0677-409B-BEC1-B84BC88E7392}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EE3E0B94-CF20-4C22-B50B-E720E8DFD675}

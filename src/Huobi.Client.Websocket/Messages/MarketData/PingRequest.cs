@@ -12,7 +12,7 @@ namespace Huobi.Client.Websocket.Messages.MarketData
             Value = value;
         }
 
-        [JsonProperty("ping")]
+        [JsonProperty("ts")]
         public long Value { get; }
 
         internal static bool TryParse(

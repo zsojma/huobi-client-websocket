@@ -5,19 +5,25 @@ namespace Huobi.Client.Websocket.Messages.Account
 {
     public abstract class AccountRequestBase
     {
-        protected AccountRequestBase(string action, string channel)
+        protected AccountRequestBase(string action, string? channel = null)
         {
             Validations.ValidateInput(action, nameof(action));
-            Validations.ValidateInput(channel, nameof(channel));
+            // Validations.ValidateInput(channel, nameof(channel));
 
             Action = action;
-            Channel = channel;
+            if (string.IsNullOrEmpty(channel) == false) {
+                Channel = channel;
+            }
+
         }
 
-        [JsonProperty("action")]
+        // [JsonProperty("op")]
+        // public string Op { get; }
+
+        [JsonProperty("op")]
         public string Action { get; }
 
-        [JsonProperty("ch")]
-        public string Channel { get; }
+        [JsonProperty("topic")]
+        public string? Channel { get; }
     }
 }

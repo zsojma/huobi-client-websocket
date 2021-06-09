@@ -19,7 +19,7 @@ namespace Huobi.Client.Websocket.Messages.Account
             Data = data;
         }
 
-        [JsonProperty("action")]
+        [JsonProperty("op")]
         public string Action { get; }
 
         [JsonProperty("data")]

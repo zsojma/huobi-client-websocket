@@ -49,7 +49,7 @@ namespace Huobi.Client.Websocket.Sample.Examples
                 x => _logger.LogError($"Error message received! Code: {x.ErrorCode}; Message: {x.Message}"));
             _client.Streams.AuthenticationResponseStream.Subscribe(
                 x => _logger.LogInformation($"Authenticated with response code: {x.Code}"));
-            _client.Streams.SubscribeResponseStream.Subscribe(x => _logger.LogInformation($"Subscribed to channel: {x.Channel}"));
+            _client.Streams.SubscribeResponseStream.Subscribe(x => _logger.LogInformation($"Subscribed to channel: {x.Topic}"));
 
             _client.Streams.ConditionalOrderTriggerFailureMessageStream.Subscribe(Handle);
             _client.Streams.ConditionalOrderCanceledMessageStream.Subscribe(Handle);

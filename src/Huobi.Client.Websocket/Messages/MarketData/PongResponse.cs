@@ -8,9 +8,13 @@ namespace Huobi.Client.Websocket.Messages.MarketData
         public PongResponse(long value)
         {
             Value = value;
+            Op = "pong";
         }
 
-        [JsonProperty("pong")]
+        [JsonProperty("ts")]
         public long Value { get; }
+
+        [JsonProperty("op")]
+        public string Op { get; }
     }
 }

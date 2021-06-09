@@ -5,11 +5,10 @@ using Huobi.Client.Websocket.Messages.Account;
 using Huobi.Client.Websocket.Messages.Account.AccountUpdates;
 using Huobi.Client.Websocket.Messages.Account.OrderUpdates;
 using Huobi.Client.Websocket.Messages.Account.TradeDetails;
-using Huobi.Client.Websocket.Messages.Account.FuturesLiquidation;
 
 namespace Huobi.Client.Websocket.Clients.Streams
 {
-    public class HuobiAccountClientStreams : HuobiClientStreamsBase
+    public class HuobiFuturesClientStreams : HuobiClientStreamsBase
     {
         internal readonly Subject<AuthenticationResponse> AuthenticationResponseSubject = new();
         internal readonly Subject<AccountSubscribeResponse> SubscribeResponseSubject = new();
@@ -23,7 +22,7 @@ namespace Huobi.Client.Websocket.Clients.Streams
         internal readonly Subject<TradeDetailsMessage> TradeDetailsMessageSubject = new();
 
         internal readonly Subject<AccountUpdateMessage> AccountUpdateMessageSubject = new();
-        internal readonly Subject<FuturesLiquidationMessage> FuturesLiquidationSubject = new();
+        internal readonly Subject<AccountUpdateMessage> FuturesLiquidationSubject = new();
 
         public IObservable<AuthenticationResponse> AuthenticationResponseStream => AuthenticationResponseSubject.AsObservable();
         public IObservable<AccountSubscribeResponse> SubscribeResponseStream => SubscribeResponseSubject.AsObservable();
@@ -37,6 +36,7 @@ namespace Huobi.Client.Websocket.Clients.Streams
         public IObservable<TradeDetailsMessage> TradeDetailsMessageStream => TradeDetailsMessageSubject.AsObservable();
 
         public IObservable<AccountUpdateMessage> AccountUpdateMessageStream => AccountUpdateMessageSubject.AsObservable();
-        public IObservable<FuturesLiquidationMessage> FuturesLiquidationMessageStream => FuturesLiquidationSubject.AsObservable();
+        public IObservable<AccountUpdateMessage> FuturesLiquidationMessageStream => FuturesLiquidationSubject.AsObservable();
+
     }
 }

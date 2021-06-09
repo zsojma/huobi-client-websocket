@@ -7,6 +7,7 @@ using Huobi.Client.Websocket.Messages.Account;
 using Huobi.Client.Websocket.Messages.Account.AccountUpdates;
 using Huobi.Client.Websocket.Messages.Account.OrderUpdates;
 using Huobi.Client.Websocket.Messages.Account.TradeDetails;
+using Huobi.Client.Websocket.Messages.Account.FuturesLiquidation;
 using Huobi.Client.Websocket.Serializer;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -17,6 +18,7 @@ namespace Huobi.Client.Websocket.Clients
     {
         private readonly IOptions<HuobiAccountWebsocketClientConfig> _config;
         private readonly IHuobiAuthenticationRequestFactory _authenticationRequestFactory;
+        private readonly ILogger<HuobiAccountWebsocketClient> _logger;
 
         public HuobiAccountWebsocketClient(
             IOptions<HuobiAccountWebsocketClientConfig> config,
@@ -28,6 +30,7 @@ namespace Huobi.Client.Websocket.Clients
         {
             _config = config;
             _authenticationRequestFactory = authenticationRequestFactory;
+            _logger = logger;
         }
 
         public override async Task Start()
@@ -44,10 +47,12 @@ namespace Huobi.Client.Websocket.Clients
 
         protected override bool TryHandleMessage(string message)
         {
+            _logger.LogError($"tryHandleMsg: {message}");
             return TryHandleTradeDetailsMessages(message)
                 || TryHandleOrderUpdateMessages(message)
-                || TryHandleAccountUpdateMessages(message)
                 || TryHandleSubscribeResponses(message)
+                || TryHandleLiquidationsMessages(message)
+                || TryHandleAccountUpdateMessages(message)
                 || TryHandleAuthenticationResponses(message);
         }
 
@@ -117,10 +122,23 @@ namespace Huobi.Client.Websocket.Clients
             return false;
         }
 
+        private bool TryHandleLiquidationsMessages(string message)
+        {
+            // TODO:::
+            if (FuturesLiquidationMessage.TryParse(Serializer, message, out var futuresLiquidationMessage))
+            {
+                Streams.FuturesLiquidationSubject.OnNext(futuresLiquidationMessage);
+                return true;
+            }
+
+            return false;
+        }
+
         private bool TryHandleSubscribeResponses(string message)
         {
             if (AccountSubscribeResponse.TryParse(Serializer, message, out var subscribeResponse))
             {
+                _logger.LogError($"Subscribed to topic: {message}");
                 Streams.SubscribeResponseSubject.OnNext(subscribeResponse);
                 return true;
             }

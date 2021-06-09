@@ -5,17 +5,18 @@ namespace Huobi.Client.Websocket.Messages.Account
     public abstract class AccountResponseBase<TData>
         where TData : class
     {
-        protected AccountResponseBase(string? action, string? channel, TData? data)
+        protected AccountResponseBase(string? action, string? topic, TData? data)
         {
             Action = action ?? string.Empty;
-            Channel = channel ?? string.Empty;
+            Topic = topic ?? string.Empty;
             Data = data;
         }
 
+        [JsonProperty("op")]
         public string Action { get; }
 
-        [JsonProperty("ch")]
-        public string Channel { get; }
+        [JsonProperty("topic")]
+        public string Topic { get; }
 
         public TData? Data { get; }
     }

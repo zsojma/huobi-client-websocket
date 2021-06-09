@@ -12,30 +12,34 @@ namespace Huobi.Client.Websocket.Messages.Account
             Validations.ValidateInput(accessKey, nameof(accessKey));
             Validations.ValidateInput(signature, nameof(signature));
 
-            AuthType = "api";
+            type = "api";
             AccessKey = accessKey;
             SignatureMethod = HuobiSignature.SIGNATURE_METHOD_VALUE;
             SignatureVersion = HuobiSignature.SIGNATURE_VERSION_VERSION;
             Timestamp = timestamp.ToHuobiUtcString();
             Signature = signature;
+            Op = "auth";
         }
 
-        [JsonProperty("authType")]
-        public string AuthType { get; }
+        [JsonProperty("type")]
+        public string type { get; }
 
-        [JsonProperty("accessKey")]
+        [JsonProperty("op")]
+        public string Op { get; }
+
+        [JsonProperty("AccessKeyId")]
         public string AccessKey { get; }
 
-        [JsonProperty("signatureMethod")]
+        [JsonProperty("SignatureMethod")]
         public string SignatureMethod { get; }
 
-        [JsonProperty("signatureVersion")]
+        [JsonProperty("SignatureVersion")]
         public string SignatureVersion { get; }
 
-        [JsonProperty("timestamp")]
+        [JsonProperty("Timestamp")]
         public string Timestamp { get; }
 
-        [JsonProperty("signature")]
+        [JsonProperty("Signature")]
         public string Signature { get; }
     }
 }

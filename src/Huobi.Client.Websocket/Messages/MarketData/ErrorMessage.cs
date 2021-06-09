@@ -34,7 +34,7 @@ namespace Huobi.Client.Websocket.Messages.MarketData
         internal static bool TryParse(IHuobiSerializer serializer, string input, [MaybeNullWhen(false)] out ErrorMessage response)
         {
             var result = serializer.TryDeserializeIfContains(input, "\"err-code\"", out response);
-            return result && !string.IsNullOrEmpty(response?.ErrorCode);
+            return result && !string.IsNullOrEmpty(response?.ErrorCode) && response?.ErrorCode.Equals("0") == false;
         }
     }
 }

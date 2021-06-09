@@ -4,6 +4,7 @@
     {
         AccountUpdates,
         Orders,
-        TradeDetails
+        TradeDetails,
+        Liquidations,
     }
 }

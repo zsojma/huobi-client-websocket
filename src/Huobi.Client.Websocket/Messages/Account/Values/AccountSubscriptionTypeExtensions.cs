@@ -11,6 +11,7 @@ namespace Huobi.Client.Websocket.Messages.Account.Values
                 AccountSubscriptionType.Orders => "orders",
                 AccountSubscriptionType.TradeDetails => "trade.clearing",
                 AccountSubscriptionType.AccountUpdates => "accounts.update",
+                AccountSubscriptionType.Liquidations => "liquidation_orders",
                 _ => throw new ArgumentOutOfRangeException(
                     nameof(subscriptionType),
                     subscriptionType,

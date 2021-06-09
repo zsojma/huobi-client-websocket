@@ -16,7 +16,7 @@ namespace Huobi.Client.Websocket.Messages.Account
 
         public int Code { get; }
 
-        [JsonProperty("ch")]
+        [JsonProperty("topic")]
         public string Topic { get; }
 
         public string Message { get; }
@@ -30,12 +30,12 @@ namespace Huobi.Client.Websocket.Messages.Account
                 input,
                 new[]
                 {
-                    "\"code\"",
+                    "\"err-code\"",
                     "\"message\""
                 },
                 out response);
 
-            return result && response?.Code != 200;
+            return result && response?.Code == 0;
         }
     }
 }

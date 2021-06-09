@@ -29,10 +29,10 @@ namespace Huobi.Client.Websocket.Sample
             // Comment out services for which you don't want to run the example:
 
             serviceCollection
-                //.AddTransient<IExample, GenericClientExample>()
+                // .AddTransient<IExample, GenericClientExample>()
                 //.AddTransient<IExample, MarketClientExample>()
-                .AddTransient<IExample, MarketByPriceClientExample>()
-                //.AddTransient<IExample, AccountClientExample>()
+                // .AddTransient<IExample, AccountClientExample>()
+                .AddTransient<IExample, FuturesClientExample>()
                 ;
         }
 
@@ -45,18 +45,24 @@ namespace Huobi.Client.Websocket.Sample
                 .AddJsonFile("appsettings.dev.json", true);
 
             var configuration = configurationBuilder.Build();
-            var genericClientConfig = configuration.GetSection("HuobiGenericWebsocketClient");
-            var marketClientConfig = configuration.GetSection("HuobiMarketWebsocketClient");
-            var marketByPriceClientConfig = configuration.GetSection("HuobiMarketByPriceWebsocketClient");
-            var accountClientConfig = configuration.GetSection("HuobiAccountWebsocketClient");
+            //var genericClientConfig = configuration.GetSection("HuobiGenericWebsocketClient");
+            //var marketClientConfig = configuration.GetSection("HuobiMarketWebsocketClient");
+            //var marketByPriceClientConfig = configuration.GetSection("HuobiMarketByPriceWebsocketClient");
+            //var accountClientConfig = configuration.GetSection("HuobiAccountWebsocketClient");
+            var futuresClientConfig = configuration.GetSection("HuobiFuturesAccountWebsocketClient");
+            var futuresClientConfigPerp = configuration.GetSection("HuobiPerpFuturesAccountWebsocketClient");
+            //var futuresPerpClientConfig = configuration.GetSection("HuobiPerpFuturesAccountWebsocketClient");
 
             var serviceCollection = new ServiceCollection()
                 .AddSingleton(configuration)
                 .AddHuobiLogging()
-                .Configure<HuobiGenericWebsocketClientConfig>(genericClientConfig)
-                .Configure<HuobiMarketWebsocketClientConfig>(marketClientConfig)
-                .Configure<HuobiMarketByPriceWebsocketClientConfig>(marketByPriceClientConfig)
-                .Configure<HuobiAccountWebsocketClientConfig>(accountClientConfig)
+                //.Configure<HuobiGenericWebsocketClientConfig>(genericClientConfig)
+                //.Configure<HuobiMarketWebsocketClientConfig>(marketClientConfig)
+                //.Configure<HuobiMarketByPriceWebsocketClientConfig>(marketByPriceClientConfig)
+                // .Configure<HuobiAccountWebsocketClientConfig>(accountClientConfig)//accountClientConfig
+                .Configure<HuobiAccountWebsocketClientConfig>(futuresClientConfigPerp)//accountClientConfig
+                //.Configure<HuobiFuturesAccountWebsocketClient>(futuresClientConfig)
+                //.Configure<HuobiPerpFuturesAccountWebsocketClient>(futuresPerpClientConfig)
                 .AddHuobiWebsocketServices();
 
             SetupExamples(serviceCollection);

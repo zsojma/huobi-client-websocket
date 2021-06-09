@@ -11,6 +11,9 @@ namespace Huobi.Client.Websocket.Messages.Account
 
         private static string FormatChannel(string symbol, AccountSubscriptionType subscriptionType)
         {
+            if (subscriptionType == AccountSubscriptionType.Liquidations) {
+                return $"public.{symbol}.liquidation_orders";
+            }
             return $"{subscriptionType.ToTopicId()}#{symbol}";
         }
     }

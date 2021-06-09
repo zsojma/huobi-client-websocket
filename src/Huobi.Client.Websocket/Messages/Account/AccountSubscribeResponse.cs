@@ -1,14 +1,15 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Huobi.Client.Websocket.Serializer;
 using Newtonsoft.Json;
+using System;
 
 namespace Huobi.Client.Websocket.Messages.Account
 {
     public class AccountSubscribeResponse : AccountResponseBase<object>
     {
         [JsonConstructor]
-        public AccountSubscribeResponse(string action, int code, string channel, object data)
-            : base(action, channel, data)
+        public AccountSubscribeResponse(string op, int code, string topic, object data)
+            : base(op, topic, data)
         {
             Code = code;
         }
@@ -24,15 +25,11 @@ namespace Huobi.Client.Websocket.Messages.Account
                 input,
                 new[]
                 {
-                    "\"sub\"",
-                    "\"code\""
-                },
-                new[]
-                {
-                    "\"message\""
+                    "\"sub\""
                 },
                 out response);
 
+            Console.WriteLine($"tryParseSubResp: {result}");
             return result;
         }
     }

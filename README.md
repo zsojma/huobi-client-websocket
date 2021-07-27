@@ -14,7 +14,7 @@ https://huobiapi.github.io/docs/spot/v1/en/
 
 * installation via NuGet ([Huobi.Client.Websocket](https://www.nuget.org/packages/Huobi.Client.Websocket))
 * public and authenticated API
-* targeting .NET Standard 2.1 (.NET Core, Windows/Linux/MacOS compatible)
+* targeting .NET Standard 2.0 (.NET Core, Windows/Linux/MacOS compatible)
 * reactive extensions ([Rx.NET](https://github.com/Reactive-Extensions/Rx.NET))
 
 ### Usage

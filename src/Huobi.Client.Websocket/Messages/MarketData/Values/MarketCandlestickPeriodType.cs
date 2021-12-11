@@ -1,16 +1,15 @@
-﻿namespace Huobi.Client.Websocket.Messages.MarketData.Values
+﻿namespace Huobi.Client.Websocket.Messages.MarketData.Values;
+
+public enum MarketCandlestickPeriodType
 {
-    public enum MarketCandlestickPeriodType
-    {
-        OneMinute,
-        FiveMinutes,
-        FifteenMinutes,
-        ThirtyMinutes,
-        SixtyMinutes,
-        FourHours,
-        OneDay,
-        OneWeek,
-        OneMonth,
-        OneYear
-    }
+    OneMinute,
+    FiveMinutes,
+    FifteenMinutes,
+    ThirtyMinutes,
+    SixtyMinutes,
+    FourHours,
+    OneDay,
+    OneWeek,
+    OneMonth,
+    OneYear
 }

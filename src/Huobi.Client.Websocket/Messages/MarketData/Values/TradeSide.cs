@@ -1,8 +1,7 @@
-﻿namespace Huobi.Client.Websocket.Messages.MarketData.Values
+﻿namespace Huobi.Client.Websocket.Messages.MarketData.Values;
+
+public enum TradeSide
 {
-    public enum TradeSide
-    {
-        Buy,
-        Sell
-    }
+    Buy,
+    Sell
 }

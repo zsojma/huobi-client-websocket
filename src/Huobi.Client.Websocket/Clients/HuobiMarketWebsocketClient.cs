@@ -10,116 +10,115 @@ using Huobi.Client.Websocket.Messages.MarketData.MarketTradeDetail;
 using Huobi.Client.Websocket.Serializer;
 using Microsoft.Extensions.Logging;
 
-namespace Huobi.Client.Websocket.Clients
+namespace Huobi.Client.Websocket.Clients;
+
+public class HuobiMarketWebsocketClient : HuobiWebsocketClientBase<HuobiMarketClientStreams>, IHuobiMarketWebsocketClient
 {
-    public class HuobiMarketWebsocketClient : HuobiWebsocketClientBase<HuobiMarketClientStreams>, IHuobiMarketWebsocketClient
+    public HuobiMarketWebsocketClient(
+        IHuobiMarketWebsocketCommunicator communicator,
+        IHuobiSerializer serializer,
+        ILogger<HuobiMarketWebsocketClient> logger)
+        : base(communicator, serializer, logger)
     {
-        public HuobiMarketWebsocketClient(
-            IHuobiMarketWebsocketCommunicator communicator,
-            IHuobiSerializer serializer,
-            ILogger<HuobiMarketWebsocketClient> logger)
-            : base(communicator, serializer, logger)
+    }
+
+    public void Send(RequestBase request)
+    {
+        var serialized = Serializer.Serialize(request);
+        Send(serialized);
+    }
+
+    protected override bool TryHandleMessage(string message)
+    {
+        return TryHandlePullResponses(message)
+               || TryHandleUpdateMessages(message)
+               || TryHandleSubscribeResponses(message);
+    }
+
+    private bool TryHandlePullResponses(string message)
+    {
+        if (MarketCandlestickPullResponse.TryParse(Serializer, message, out var marketCandlestick))
         {
+            Streams.CandlestickPullStream.OnNext(marketCandlestick);
+            return true;
         }
 
-        public void Send(RequestBase request)
+        if (MarketDepthPullResponse.TryParse(Serializer, message, out var marketDepth))
         {
-            var serialized = Serializer.Serialize(request);
-            Send(serialized);
+            Streams.DepthPullStream.OnNext(marketDepth);
+            return true;
         }
 
-        protected override bool TryHandleMessage(string message)
+        if (MarketTradeDetailPullResponse.TryParse(Serializer, message, out var marketTradeDetail))
         {
-            return TryHandlePullResponses(message)
-                || TryHandleUpdateMessages(message)
-                || TryHandleSubscribeResponses(message);
+            Streams.TradeDetailPullStream.OnNext(marketTradeDetail);
+            return true;
         }
 
-        private bool TryHandlePullResponses(string message)
+        if (MarketDetailsPullResponse.TryParse(Serializer, message, out var marketDetails))
         {
-            if (MarketCandlestickPullResponse.TryParse(Serializer, message, out var marketCandlestick))
-            {
-                Streams.CandlestickPullSubject.OnNext(marketCandlestick);
-                return true;
-            }
-
-            if (MarketDepthPullResponse.TryParse(Serializer, message, out var marketDepth))
-            {
-                Streams.DepthPullSubject.OnNext(marketDepth);
-                return true;
-            }
-
-            if (MarketTradeDetailPullResponse.TryParse(Serializer, message, out var marketTradeDetail))
-            {
-                Streams.TradeDetailPullSubject.OnNext(marketTradeDetail);
-                return true;
-            }
-
-            if (MarketDetailsPullResponse.TryParse(Serializer, message, out var marketDetails))
-            {
-                Streams.MarketDetailsPullSubject.OnNext(marketDetails);
-                return true;
-            }
-
-            return false;
+            Streams.MarketDetailsPullStream.OnNext(marketDetails);
+            return true;
         }
 
-        private bool TryHandleUpdateMessages(string message)
+        return false;
+    }
+
+    private bool TryHandleUpdateMessages(string message)
+    {
+        if (MarketCandlestickUpdateMessage.TryParse(Serializer, message, out var marketCandlestick))
         {
-            if (MarketCandlestickUpdateMessage.TryParse(Serializer, message, out var marketCandlestick))
-            {
-                Streams.CandlestickUpdateSubject.OnNext(marketCandlestick);
-                return true;
-            }
-
-            if (MarketDepthUpdateMessage.TryParse(Serializer, message, out var marketDepth))
-            {
-                Streams.DepthUpdateSubject.OnNext(marketDepth);
-                return true;
-            }
-
-            if (MarketByPriceRefreshUpdateMessage.TryParse(Serializer, message, out var marketByPriceRefresh))
-            {
-                Streams.MarketByPriceRefreshUpdateSubject.OnNext(marketByPriceRefresh);
-                return true;
-            }
-
-            if (MarketBestBidOfferUpdateMessage.TryParse(Serializer, message, out var marketBestBidOffer))
-            {
-                Streams.BestBidOfferUpdateSubject.OnNext(marketBestBidOffer);
-                return true;
-            }
-
-            if (MarketTradeDetailUpdateMessage.TryParse(Serializer, message, out var marketTradeDetail))
-            {
-                Streams.TradeDetailUpdateSubject.OnNext(marketTradeDetail);
-                return true;
-            }
-
-            if (MarketDetailsUpdateMessage.TryParse(Serializer, message, out var marketDetails))
-            {
-                Streams.MarketDetailsUpdateSubject.OnNext(marketDetails);
-                return true;
-            }
-
-            return false;
+            Streams.CandlestickUpdateStream.OnNext(marketCandlestick);
+            return true;
         }
 
-        private bool TryHandleSubscribeResponses(string message)
+        if (MarketDepthUpdateMessage.TryParse(Serializer, message, out var marketDepth))
         {
-            if (SubscribeResponse.TryParse(Serializer, message, out var subscribeResponse))
-            {
-                Streams.SubscribeResponseSubject.OnNext(subscribeResponse);
-                return true;
-            }
-
-            if (UnsubscribeResponse.TryParse(Serializer, message, out var unsubscribeResponse))
-            {
-                Streams.UnsubscribeResponseSubject.OnNext(unsubscribeResponse);
-                return true;
-            }
-
-            return false;
+            Streams.DepthUpdateStream.OnNext(marketDepth);
+            return true;
         }
+
+        if (MarketByPriceRefreshUpdateMessage.TryParse(Serializer, message, out var marketByPriceRefresh))
+        {
+            Streams.MarketByPriceRefreshUpdateStream.OnNext(marketByPriceRefresh);
+            return true;
+        }
+
+        if (MarketBestBidOfferUpdateMessage.TryParse(Serializer, message, out var marketBestBidOffer))
+        {
+            Streams.BestBidOfferUpdateStream.OnNext(marketBestBidOffer);
+            return true;
+        }
+
+        if (MarketTradeDetailUpdateMessage.TryParse(Serializer, message, out var marketTradeDetail))
+        {
+            Streams.TradeDetailUpdateStream.OnNext(marketTradeDetail);
+            return true;
+        }
+
+        if (MarketDetailsUpdateMessage.TryParse(Serializer, message, out var marketDetails))
+        {
+            Streams.MarketDetailsUpdateStream.OnNext(marketDetails);
+            return true;
+        }
+
+        return false;
+    }
+
+    private bool TryHandleSubscribeResponses(string message)
+    {
+        if (SubscribeResponse.TryParse(Serializer, message, out var subscribeResponse))
+        {
+            Streams.SubscribeResponseStream.OnNext(subscribeResponse);
+            return true;
+        }
+
+        if (UnsubscribeResponse.TryParse(Serializer, message, out var unsubscribeResponse))
+        {
+            Streams.UnsubscribeResponseStream.OnNext(unsubscribeResponse);
+            return true;
+        }
+
+        return false;
     }
 }

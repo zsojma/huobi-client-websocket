@@ -1,12 +1,11 @@
 ﻿using System;
 
-namespace Huobi.Client.Websocket
+namespace Huobi.Client.Websocket;
+
+public class HuobiWebsocketClientException : Exception
 {
-    public class HuobiWebsocketClientException : Exception
+    public HuobiWebsocketClientException(string message)
+        : base(message)
     {
-        public HuobiWebsocketClientException(string message)
-            : base(message)
-        {
-        }
     }
 }

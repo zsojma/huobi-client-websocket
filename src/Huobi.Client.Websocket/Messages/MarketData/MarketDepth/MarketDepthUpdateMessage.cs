@@ -3,30 +3,29 @@ using System.Diagnostics.CodeAnalysis;
 using Huobi.Client.Websocket.Messages.MarketData.Values;
 using Huobi.Client.Websocket.Serializer;
 
-namespace Huobi.Client.Websocket.Messages.MarketData.MarketDepth
+namespace Huobi.Client.Websocket.Messages.MarketData.MarketDepth;
+
+public class MarketDepthUpdateMessage : UpdateMessage<MarketDepthTick>
 {
-    public class MarketDepthUpdateMessage : UpdateMessage<MarketDepthTick>
+    public MarketDepthUpdateMessage(string topic, DateTimeOffset timestamp, MarketDepthTick tick)
+        : base(topic, timestamp, tick)
     {
-        public MarketDepthUpdateMessage(string topic, DateTimeOffset timestamp, MarketDepthTick tick)
-            : base(topic, timestamp, tick)
-        {
-        }
+    }
 
-        internal static bool TryParse(
-            IHuobiSerializer serializer,
-            string input,
-            [MaybeNullWhen(false)] out MarketDepthUpdateMessage response)
-        {
-            var result = serializer.TryDeserializeIfContains(
-                input,
-                new[]
-                {
-                    "\"tick\"",
-                    SubscriptionType.MarketDepth.ToTopicId()
-                },
-                out response);
+    internal static bool TryParse(
+        IHuobiSerializer serializer,
+        string input,
+        [MaybeNullWhen(false)] out MarketDepthUpdateMessage response)
+    {
+        var result = serializer.TryDeserializeIfContains(
+            input,
+            new[]
+            {
+                "\"tick\"",
+                SubscriptionType.MarketDepth.ToTopicId()
+            },
+            out response);
 
-            return result && response?.Tick?.Timestamp.Ticks > 0;
-        }
+        return result && response?.Tick?.Timestamp.Ticks > 0;
     }
 }

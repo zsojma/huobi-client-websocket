@@ -1,12 +1,8 @@
-﻿using System;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
+﻿using System.Reactive.Subjects;
 
-namespace Huobi.Client.Websocket.Clients.Streams
+namespace Huobi.Client.Websocket.Clients.Streams;
+
+public class HuobiGenericClientStreams : HuobiClientStreamsBase
 {
-    public class HuobiGenericClientStreams : HuobiClientStreamsBase
-    {
-        internal readonly Subject<string> ResponseMessageSubject = new();
-        public IObservable<string> ResponseMessageStream => ResponseMessageSubject.AsObservable();
-    }
+    public readonly Subject<string> ResponseMessageStream = new();
 }

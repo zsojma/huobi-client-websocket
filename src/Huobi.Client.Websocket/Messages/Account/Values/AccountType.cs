@@ -1,10 +1,9 @@
-﻿namespace Huobi.Client.Websocket.Messages.Account.Values
+﻿namespace Huobi.Client.Websocket.Messages.Account.Values;
+
+public enum AccountType
 {
-    public enum AccountType
-    {
-        Unknown,
-        Trade,
-        Loan,
-        Interest
-    }
+    Unknown,
+    Trade,
+    Loan,
+    Interest
 }

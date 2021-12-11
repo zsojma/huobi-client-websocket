@@ -1,8 +1,7 @@
 ﻿using Websocket.Client;
 
-namespace Huobi.Client.Websocket.Communicator
+namespace Huobi.Client.Websocket.Communicator;
+
+public interface IHuobiGenericWebsocketCommunicator : IWebsocketClient
 {
-    public interface IHuobiGenericWebsocketCommunicator : IWebsocketClient
-    {
-    }
 }

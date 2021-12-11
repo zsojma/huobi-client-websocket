@@ -1,9 +1,8 @@
-﻿namespace Huobi.Client.Websocket.Messages.Account.Values
+﻿namespace Huobi.Client.Websocket.Messages.Account.Values;
+
+public enum TradeEventType
 {
-    public enum TradeEventType
-    {
-        Unknown,
-        Trade,
-        Cancellation
-    }
+    Unknown,
+    Trade,
+    Cancellation
 }

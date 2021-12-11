@@ -1,9 +1,8 @@
-﻿namespace Huobi.Client.Websocket.Messages.Account.Values
+﻿namespace Huobi.Client.Websocket.Messages.Account.Values;
+
+public enum OrderSide
 {
-    public enum OrderSide
-    {
-        Unknown,
-        Buy,
-        Sell
-    }
+    Unknown,
+    Buy,
+    Sell
 }

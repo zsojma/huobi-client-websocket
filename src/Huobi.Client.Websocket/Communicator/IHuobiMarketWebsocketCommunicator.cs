@@ -1,6 +1,5 @@
-﻿namespace Huobi.Client.Websocket.Communicator
+﻿namespace Huobi.Client.Websocket.Communicator;
+
+public interface IHuobiMarketWebsocketCommunicator : IHuobiGenericWebsocketCommunicator
 {
-    public interface IHuobiMarketWebsocketCommunicator : IHuobiGenericWebsocketCommunicator
-    {
-    }
 }

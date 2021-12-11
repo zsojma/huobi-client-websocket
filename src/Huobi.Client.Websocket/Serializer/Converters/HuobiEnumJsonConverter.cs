@@ -1,52 +1,51 @@
 ﻿using System;
 using Newtonsoft.Json;
 
-namespace Huobi.Client.Websocket.Serializer.Converters
+namespace Huobi.Client.Websocket.Serializer.Converters;
+
+public class HuobiEnumJsonConverter : JsonConverter
 {
-    public class HuobiEnumJsonConverter : JsonConverter
+    public override bool CanWrite => false;
+
+    public override bool CanConvert(Type objectType)
     {
-        public override bool CanWrite => false;
+        return objectType.IsEnum;
+    }
 
-        public override bool CanConvert(Type objectType)
+    public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
+    {
+        if (reader.ValueType == objectType)
         {
-            return objectType.IsEnum;
+            return reader.Value;
         }
 
-        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
+        if (reader.Value is string str)
         {
-            throw new NotImplementedException();
+            return TryConvertFromString(objectType, str);
         }
 
-        public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
+        return null;
+    }
+
+    private static object? TryConvertFromString(Type objectType, string input)
+    {
+        try
         {
-            if (reader.ValueType == objectType)
-            {
-                return reader.Value;
-            }
-
-            if (reader.Value is string str)
-            {
-                return TryConvertFromString(objectType, str);
-            }
-
-            return null;
+            var sanitized = input.Replace("-", "");
+            var type = Enum.Parse(objectType, sanitized, true);
+            return type;
         }
-
-        private static object? TryConvertFromString(Type objectType, string input)
+        catch (ArgumentException)
         {
-            try
-            {
-                var sanitized = input.Replace("-", "");
-                var type = Enum.Parse(objectType, sanitized, true);
-                return type;
-            }
-            catch (ArgumentException)
-            {
-                // ignore exception when input is not valid, just return default
-                return objectType.IsEnum
-                    ? objectType.GetEnumValues().GetValue(0)
-                    : null;
-            }
+            // ignore exception when input is not valid, just return default
+            return objectType.IsEnum
+                ? objectType.GetEnumValues().GetValue(0)
+                : null;
         }
     }
 }

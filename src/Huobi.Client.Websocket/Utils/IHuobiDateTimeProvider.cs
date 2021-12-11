@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace Huobi.Client.Websocket.Utils
+namespace Huobi.Client.Websocket.Utils;
+
+public interface IHuobiDateTimeProvider
 {
-    public interface IHuobiDateTimeProvider
-    {
-        DateTimeOffset UtcNow { get; }
-    }
+    DateTimeOffset UtcNow { get; }
 }

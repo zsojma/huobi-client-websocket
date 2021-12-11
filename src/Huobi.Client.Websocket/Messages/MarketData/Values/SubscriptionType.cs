@@ -1,13 +1,12 @@
-﻿namespace Huobi.Client.Websocket.Messages.MarketData.Values
+﻿namespace Huobi.Client.Websocket.Messages.MarketData.Values;
+
+public enum SubscriptionType
 {
-    public enum SubscriptionType
-    {
-        MarketCandlestick,
-        MarketDepth,
-        MarketByPrice,
-        MarketByPriceRefresh,
-        MarketBestBidOffer,
-        MarketTradeDetail,
-        MarketDetails
-    }
+    MarketCandlestick,
+    MarketDepth,
+    MarketByPrice,
+    MarketByPriceRefresh,
+    MarketBestBidOffer,
+    MarketTradeDetail,
+    MarketDetails
 }

@@ -2,24 +2,23 @@
 using Huobi.Client.Websocket.Utils;
 using Newtonsoft.Json;
 
-namespace Huobi.Client.Websocket.Messages.MarketData
+namespace Huobi.Client.Websocket.Messages.MarketData;
+
+public class UnsubscribeRequest : RequestBase
 {
-    public class UnsubscribeRequest : RequestBase
+    public UnsubscribeRequest(string reqId, string symbol, SubscriptionType subscriptionType, string? step = null)
+        : base(reqId)
     {
-        public UnsubscribeRequest(string reqId, string symbol, SubscriptionType subscriptionType, string? step = null)
-            : base(reqId)
+        Validations.ValidateInput(symbol, nameof(symbol));
+
+        if (!string.IsNullOrEmpty(step))
         {
-            Validations.ValidateInput(symbol, nameof(symbol));
-
-            if (!string.IsNullOrEmpty(step))
-            {
-                step = $".{step}";
-            }
-
-            Topic = $"{HuobiConstants.MARKET_PREFIX}.{symbol}.{subscriptionType.ToTopicId()}{step}";
+            step = $".{step}";
         }
 
-        [JsonProperty("unsub")]
-        public string Topic { get; }
+        Topic = $"{HuobiConstants.MARKET_PREFIX}.{symbol}.{subscriptionType.ToTopicId()}{step}";
     }
+
+    [JsonProperty("unsub")]
+    public string Topic { get; }
 }

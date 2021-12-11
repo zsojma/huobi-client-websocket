@@ -1,7 +1,6 @@
-﻿namespace Huobi.Client.Websocket.Messages.MarketData
+﻿namespace Huobi.Client.Websocket.Messages.MarketData;
+
+public interface IResponse
 {
-    public interface IResponse
-    {
-        string Topic { get; }
-    }
+    string Topic { get; }
 }

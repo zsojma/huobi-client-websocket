@@ -1,16 +1,15 @@
 ﻿using Newtonsoft.Json;
 
-namespace Huobi.Client.Websocket.Messages.MarketData
-{
-    public class PongResponse
-    {
-        [JsonConstructor]
-        public PongResponse(long value)
-        {
-            Value = value;
-        }
+namespace Huobi.Client.Websocket.Messages.MarketData;
 
-        [JsonProperty("pong")]
-        public long Value { get; }
+public class PongResponse
+{
+    [JsonConstructor]
+    public PongResponse(long value)
+    {
+        Value = value;
     }
+
+    [JsonProperty("pong")]
+    public long Value { get; }
 }

@@ -1,19 +1,18 @@
-﻿namespace Huobi.Client.Websocket.Messages.Account.Values
+﻿namespace Huobi.Client.Websocket.Messages.Account.Values;
+
+public enum AccountChangeType
 {
-    public enum AccountChangeType
-    {
-        Unknown,
-        OrderPlace,
-        OrderMatch,
-        OrderRefund,
-        OrderCancel,
-        OrderFeeRefund,
-        MarginTransfer,
-        MarginLoan,
-        MarginInterest,
-        MarginRepay,
-        Deposit,
-        Withdraw,
-        Other
-    }
+    Unknown,
+    OrderPlace,
+    OrderMatch,
+    OrderRefund,
+    OrderCancel,
+    OrderFeeRefund,
+    MarginTransfer,
+    MarginLoan,
+    MarginInterest,
+    MarginRepay,
+    Deposit,
+    Withdraw,
+    Other
 }

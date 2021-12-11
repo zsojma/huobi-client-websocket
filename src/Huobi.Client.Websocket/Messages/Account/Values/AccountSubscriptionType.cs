@@ -1,9 +1,8 @@
-﻿namespace Huobi.Client.Websocket.Messages.Account.Values
+﻿namespace Huobi.Client.Websocket.Messages.Account.Values;
+
+public enum AccountSubscriptionType
 {
-    public enum AccountSubscriptionType
-    {
-        AccountUpdates,
-        Orders,
-        TradeDetails
-    }
+    AccountUpdates,
+    Orders,
+    TradeDetails
 }

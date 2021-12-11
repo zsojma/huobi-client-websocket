@@ -1,12 +1,11 @@
 ﻿using Huobi.Client.Websocket.Messages.MarketData.Values;
 
-namespace Huobi.Client.Websocket.Messages.MarketData.MarketTradeDetail
+namespace Huobi.Client.Websocket.Messages.MarketData.MarketTradeDetail;
+
+public class MarketTradeDetailPullRequest : PullRequest
 {
-    public class MarketTradeDetailPullRequest : PullRequest
+    public MarketTradeDetailPullRequest(string reqId, string symbol)
+        : base(reqId, symbol, SubscriptionType.MarketTradeDetail)
     {
-        public MarketTradeDetailPullRequest(string reqId, string symbol)
-            : base(reqId, symbol, SubscriptionType.MarketTradeDetail)
-        {
-        }
     }
 }

@@ -1,15 +1,14 @@
 ﻿using Huobi.Client.Websocket.Messages.MarketData.Values;
 
-namespace Huobi.Client.Websocket.Messages.MarketData.MarketByPrice
+namespace Huobi.Client.Websocket.Messages.MarketData.MarketByPrice;
+
+public class MarketByPricePullRequest : PullRequest
 {
-    public class MarketByPricePullRequest : PullRequest
+    public MarketByPricePullRequest(
+        string reqId,
+        string symbol,
+        int levels)
+        : base(reqId, symbol, SubscriptionType.MarketByPrice, levels.ToString())
     {
-        public MarketByPricePullRequest(
-            string reqId,
-            string symbol,
-            int levels)
-            : base(reqId, symbol, SubscriptionType.MarketByPrice, levels.ToString())
-        {
-        }
     }
 }

@@ -35,7 +35,7 @@ public class HuobiMarketByPriceWebsocketClient : HuobiWebsocketClientBase<HuobiM
     {
         if (MarketByPricePullResponse.TryParse(Serializer, message, out var marketByPrice))
         {
-            Streams.MarketByPricePullSubject.OnNext(marketByPrice);
+            Streams.MarketByPricePullStream.OnNext(marketByPrice);
             return true;
         }
 
@@ -46,7 +46,7 @@ public class HuobiMarketByPriceWebsocketClient : HuobiWebsocketClientBase<HuobiM
     {
         if (MarketByPriceUpdateMessage.TryParse(Serializer, message, out var marketByPrice))
         {
-            Streams.MarketByPriceUpdateSubject.OnNext(marketByPrice);
+            Streams.MarketByPriceUpdateStream.OnNext(marketByPrice);
             return true;
         }
 
@@ -57,13 +57,13 @@ public class HuobiMarketByPriceWebsocketClient : HuobiWebsocketClientBase<HuobiM
     {
         if (SubscribeResponse.TryParse(Serializer, message, out var subscribeResponse))
         {
-            Streams.SubscribeResponseSubject.OnNext(subscribeResponse);
+            Streams.SubscribeResponseStream.OnNext(subscribeResponse);
             return true;
         }
 
         if (UnsubscribeResponse.TryParse(Serializer, message, out var unsubscribeResponse))
         {
-            Streams.UnsubscribeResponseSubject.OnNext(unsubscribeResponse);
+            Streams.UnsubscribeResponseStream.OnNext(unsubscribeResponse);
             return true;
         }
 

@@ -61,7 +61,7 @@ public class HuobiAccountWebsocketClient : HuobiWebsocketClientBase<HuobiAccount
     {
         if (TradeDetailsMessage.TryParse(Serializer, message, out var tradeDetailsMessage))
         {
-            Streams.TradeDetailsMessageSubject.OnNext(tradeDetailsMessage);
+            Streams.TradeDetailsMessageStream.OnNext(tradeDetailsMessage);
             return true;
         }
 
@@ -75,31 +75,31 @@ public class HuobiAccountWebsocketClient : HuobiWebsocketClientBase<HuobiAccount
                 message,
                 out var conditionalOrderTriggerFailureMessage))
         {
-            Streams.ConditionalOrderTriggerFailureMessageSubject.OnNext(conditionalOrderTriggerFailureMessage);
+            Streams.ConditionalOrderTriggerFailureMessageStream.OnNext(conditionalOrderTriggerFailureMessage);
             return true;
         }
 
         if (ConditionalOrderCanceledMessage.TryParse(Serializer, message, out var conditionalOrderCanceledMessage))
         {
-            Streams.ConditionalOrderCanceledMessageSubject.OnNext(conditionalOrderCanceledMessage);
+            Streams.ConditionalOrderCanceledMessageStream.OnNext(conditionalOrderCanceledMessage);
             return true;
         }
 
         if (OrderSubmittedMessage.TryParse(Serializer, message, out var conditionalSubmittedMessage))
         {
-            Streams.OrderSubmittedMessageSubject.OnNext(conditionalSubmittedMessage);
+            Streams.OrderSubmittedMessageStream.OnNext(conditionalSubmittedMessage);
             return true;
         }
 
         if (OrderTradedMessage.TryParse(Serializer, message, out var orderTradedMessage))
         {
-            Streams.OrderTradedMessageSubject.OnNext(orderTradedMessage);
+            Streams.OrderTradedMessageStream.OnNext(orderTradedMessage);
             return true;
         }
 
         if (OrderCanceledMessage.TryParse(Serializer, message, out var orderCanceledMessage))
         {
-            Streams.OrderCanceledMessageSubject.OnNext(orderCanceledMessage);
+            Streams.OrderCanceledMessageStream.OnNext(orderCanceledMessage);
             return true;
         }
 
@@ -110,7 +110,7 @@ public class HuobiAccountWebsocketClient : HuobiWebsocketClientBase<HuobiAccount
     {
         if (AccountUpdateMessage.TryParse(Serializer, message, out var accountUpdateMessage))
         {
-            Streams.AccountUpdateMessageSubject.OnNext(accountUpdateMessage);
+            Streams.AccountUpdateMessageStream.OnNext(accountUpdateMessage);
             return true;
         }
 
@@ -121,7 +121,7 @@ public class HuobiAccountWebsocketClient : HuobiWebsocketClientBase<HuobiAccount
     {
         if (AccountSubscribeResponse.TryParse(Serializer, message, out var subscribeResponse))
         {
-            Streams.SubscribeResponseSubject.OnNext(subscribeResponse);
+            Streams.SubscribeResponseStream.OnNext(subscribeResponse);
             return true;
         }
 
@@ -132,7 +132,7 @@ public class HuobiAccountWebsocketClient : HuobiWebsocketClientBase<HuobiAccount
     {
         if (AuthenticationResponse.TryParse(Serializer, message, out var authenticationResponse))
         {
-            Streams.AuthenticationResponseSubject.OnNext(authenticationResponse);
+            Streams.AuthenticationResponseStream.OnNext(authenticationResponse);
             return true;
         }
 

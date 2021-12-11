@@ -39,25 +39,25 @@ public class HuobiMarketWebsocketClient : HuobiWebsocketClientBase<HuobiMarketCl
     {
         if (MarketCandlestickPullResponse.TryParse(Serializer, message, out var marketCandlestick))
         {
-            Streams.CandlestickPullSubject.OnNext(marketCandlestick);
+            Streams.CandlestickPullStream.OnNext(marketCandlestick);
             return true;
         }
 
         if (MarketDepthPullResponse.TryParse(Serializer, message, out var marketDepth))
         {
-            Streams.DepthPullSubject.OnNext(marketDepth);
+            Streams.DepthPullStream.OnNext(marketDepth);
             return true;
         }
 
         if (MarketTradeDetailPullResponse.TryParse(Serializer, message, out var marketTradeDetail))
         {
-            Streams.TradeDetailPullSubject.OnNext(marketTradeDetail);
+            Streams.TradeDetailPullStream.OnNext(marketTradeDetail);
             return true;
         }
 
         if (MarketDetailsPullResponse.TryParse(Serializer, message, out var marketDetails))
         {
-            Streams.MarketDetailsPullSubject.OnNext(marketDetails);
+            Streams.MarketDetailsPullStream.OnNext(marketDetails);
             return true;
         }
 
@@ -68,37 +68,37 @@ public class HuobiMarketWebsocketClient : HuobiWebsocketClientBase<HuobiMarketCl
     {
         if (MarketCandlestickUpdateMessage.TryParse(Serializer, message, out var marketCandlestick))
         {
-            Streams.CandlestickUpdateSubject.OnNext(marketCandlestick);
+            Streams.CandlestickUpdateStream.OnNext(marketCandlestick);
             return true;
         }
 
         if (MarketDepthUpdateMessage.TryParse(Serializer, message, out var marketDepth))
         {
-            Streams.DepthUpdateSubject.OnNext(marketDepth);
+            Streams.DepthUpdateStream.OnNext(marketDepth);
             return true;
         }
 
         if (MarketByPriceRefreshUpdateMessage.TryParse(Serializer, message, out var marketByPriceRefresh))
         {
-            Streams.MarketByPriceRefreshUpdateSubject.OnNext(marketByPriceRefresh);
+            Streams.MarketByPriceRefreshUpdateStream.OnNext(marketByPriceRefresh);
             return true;
         }
 
         if (MarketBestBidOfferUpdateMessage.TryParse(Serializer, message, out var marketBestBidOffer))
         {
-            Streams.BestBidOfferUpdateSubject.OnNext(marketBestBidOffer);
+            Streams.BestBidOfferUpdateStream.OnNext(marketBestBidOffer);
             return true;
         }
 
         if (MarketTradeDetailUpdateMessage.TryParse(Serializer, message, out var marketTradeDetail))
         {
-            Streams.TradeDetailUpdateSubject.OnNext(marketTradeDetail);
+            Streams.TradeDetailUpdateStream.OnNext(marketTradeDetail);
             return true;
         }
 
         if (MarketDetailsUpdateMessage.TryParse(Serializer, message, out var marketDetails))
         {
-            Streams.MarketDetailsUpdateSubject.OnNext(marketDetails);
+            Streams.MarketDetailsUpdateStream.OnNext(marketDetails);
             return true;
         }
 
@@ -109,13 +109,13 @@ public class HuobiMarketWebsocketClient : HuobiWebsocketClientBase<HuobiMarketCl
     {
         if (SubscribeResponse.TryParse(Serializer, message, out var subscribeResponse))
         {
-            Streams.SubscribeResponseSubject.OnNext(subscribeResponse);
+            Streams.SubscribeResponseStream.OnNext(subscribeResponse);
             return true;
         }
 
         if (UnsubscribeResponse.TryParse(Serializer, message, out var unsubscribeResponse))
         {
-            Streams.UnsubscribeResponseSubject.OnNext(unsubscribeResponse);
+            Streams.UnsubscribeResponseStream.OnNext(unsubscribeResponse);
             return true;
         }
 

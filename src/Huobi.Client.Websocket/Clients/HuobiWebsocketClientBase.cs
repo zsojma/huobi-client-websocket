@@ -91,39 +91,39 @@ public abstract class HuobiWebsocketClientBase<TStreams> : IDisposable
 
             if (!processed)
             {
-                Streams.UnhandledMessageSubject.OnNext(message);
+                Streams.UnhandledMessageStream.OnNext(message);
                 _logger.LogError($"Unhandled message received: {message}");
             }
         }
         catch (Exception e)
         {
-            Streams.UnhandledMessageSubject.OnNext(message);
+            Streams.UnhandledMessageStream.OnNext(message);
             _logger.LogError(e, "Exception while processing of response message");
         }
     }
 
     private void HandleReconnectionInfoMessage(ReconnectionInfo info)
     {
-        Streams.ReconnectionInfoSubject.OnNext(info);
+        Streams.ReconnectionInfoStream.OnNext(info);
     }
 
     private void HandleDisconnectionInfoMessage(DisconnectionInfo info)
     {
-        Streams.DisconnectionInfoSubject.OnNext(info);
+        Streams.DisconnectionInfoStream.OnNext(info);
     }
 
     private bool TryHandleServerPingRequest(string message)
     {
         if (PingRequest.TryParse(Serializer, message, out var pingRequest))
         {
-            Streams.PingMessageSubject.OnNext(pingRequest);
+            Streams.PingMessageStream.OnNext(pingRequest);
             RespondWithPong(pingRequest);
             return true;
         }
 
         if (AccountPingRequest.TryParse(Serializer, message, out var pingAuthRequest))
         {
-            Streams.AccountPingMessageSubject.OnNext(pingAuthRequest);
+            Streams.AccountPingMessageStream.OnNext(pingAuthRequest);
             RespondWithPong(pingAuthRequest);
             return true;
         }
@@ -135,13 +135,13 @@ public abstract class HuobiWebsocketClientBase<TStreams> : IDisposable
     {
         if (ErrorMessage.TryParse(Serializer, message, out var errorMessage))
         {
-            Streams.ErrorMessageSubject.OnNext(errorMessage);
+            Streams.ErrorMessageStream.OnNext(errorMessage);
             return true;
         }
 
         if (AccountErrorMessage.TryParse(Serializer, message, out var authErrorMessage))
         {
-            Streams.AccountErrorMessageSubject.OnNext(authErrorMessage);
+            Streams.AccountErrorMessageStream.OnNext(authErrorMessage);
             return true;
         }
 

@@ -23,7 +23,7 @@ public class HuobiGenericWebsocketClient : HuobiWebsocketClientBase<HuobiGeneric
 
     protected override bool TryHandleMessage(string message)
     {
-        Streams.ResponseMessageSubject.OnNext(message);
+        Streams.ResponseMessageStream.OnNext(message);
         return true;
     }
 }
